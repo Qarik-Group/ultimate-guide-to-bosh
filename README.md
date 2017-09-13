@@ -36,6 +36,7 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
       * [Monit process monitoring](#monit-process-monitoring)
       * [Job templates describe processes](#job-templates-describe-processes)
       * [Job templates](#job-templates)
+      * [Running processes, summary-in-progress](#running-processes-summary-in-progress)
       * [Logs](#logs)
 
 NOTE: update TOC using `bin/replace-toc`
@@ -539,7 +540,11 @@ $ sudo su -
 root
 ```
 
-But right now, we need to be the root user to access Monit.
+If an example does not include a shell prompt (`>`, `$`, or `#`) then it is the contents of a shell script, or the output from a command.
+
+Right now we need to be the root user to inspect Monit. Generally you should not need to be `root` user.
+
+**If you `bosh ssh` into a production system and have changed to `root` user then please place a large cowboy hat on your head. A big one. Everyone needs to know you're a cowboy.**
 
 ## Monit process monitoring
 
@@ -754,6 +759,36 @@ exec chpst -u vcap:vcap \
   /var/vcap/packages/zookeeper/bin/zkServer.sh start-foreground
 ```
 
-More commonly, Monit wrapper scripts (`bin/ctl`) will directly invoke the software rather than another wrapper script.
+An alternate pattern to using `exec chpst -u vcap:vcap run-something` that you might find is the use of `su - vcap -c "run-something"`.
+
+## Running processes, summary-in-progress
+
+We have now covered the most important primary concepts of BOSH: it will provision virtual machines on your target cloud infrastructure, it will install job templates that describe how software is to be started and stopped, and it uses Monit to continuously monitor the health of these processes.
+
+We can see the overall health of a BOSH deployment using:
+
+```
+> bosh instances --ps
+```
+
+From inside a BOSH instance you can see similar information:
+
+```
+# monit summary
+```
+
+If you want to see all the Linux processes currently running on a BOSH instance, try the `ps` command:
+
+```
+$ ps axwwf
+```
+
+This command will show all running processes in wide screen mode. You will see the full explicit commands that were run to start Linux processes. From a `zookeeper` instance this will include this Java monster command:
+
+```
+ 7913 ?        S<l    0:08 /var/vcap/packages/java/jdk/bin/java -Dzookeeper.log.dir=/var/vcap/sys/log/zookeeper -Dzookeeper.root.logger=INFO,CONSOLE,ROLLINGFILE -cp /var/vcap/packages/zookeeper/bin/../build/classes:/var/vcap/packages/zookeeper/bin/../build/lib/*.jar:/var/vcap/packages/zookeeper/bin/../lib/slf4j-log4j12-1.6.1.jar:/var/vcap/packages/zookeeper/bin/../lib/slf4j-api-1.6.1.jar:/var/vcap/packages/zookeeper/bin/../lib/netty-3.10.5.Final.jar:/var/vcap/packages/zookeeper/bin/../lib/log4j-1.2.16.jar:/var/vcap/packages/zookeeper/bin/../lib/jline-0.9.94.jar:/var/vcap/packages/zookeeper/bin/../zookeeper-3.4.10.jar:/var/vcap/packages/zookeeper/bin/../src/java/lib/*.jar:/var/vcap/jobs/zookeeper/config:/var/vcap/packages/zookeeper/lib/slf4j-log4j12-1.6.1.jar:/var/vcap/packages/zookeeper/lib/slf4j-api-1.6.1.jar:/var/vcap/packages/zookeeper/lib/netty-3.10.5.Final.jar:/var/vcap/packages/zookeeper/lib/log4j-1.2.16.jar:/var/vcap/packages/zookeeper/lib/jline-0.9.94.jar:/var/vcap/packages/zookeeper/dist-maven/zookeeper-3.4.10.jar:/var/vcap/packages/zookeeper/dist-maven/zookeeper-3.4.10-tests.jar:/var/vcap/packages/zookeeper/dist-maven/zookeeper-3.4.10-sources.jar:/var/vcap/packages/zookeeper/dist-maven/zookeeper-3.4.10-javadoc.jar: -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.local.only=false org.apache.zookeeper.server.quorum.QuorumPeerMain /var/vcap/jobs/zookeeper/config/zoo.cfg
+ ```
+
+ Perhaps seeing all that will help you debug Zookeeper. Perhaps it will prompt you to change professions.
 
 ## Logs

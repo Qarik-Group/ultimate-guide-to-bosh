@@ -19,11 +19,17 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
       * [Brief history of BOSH](#brief-history-of-bosh)
       * [BOSH in production](#bosh-in-production)
       * [Why write the Ultimate Guide to BOSH?](#why-write-the-ultimate-guide-to-bosh)
+      * [Additional sources of information](#additional-sources-of-information)
    * [What is BOSH?](#what-is-bosh)
       * [What is a running software system?](#what-is-a-running-software-system)
       * [Choose your own deployment level](#choose-your-own-deployment-level)
       * [Assumptions](#assumptions)
       * [Continuous Integration and Continuous Delivery](#continuous-integration-and-continuous-delivery)
+   * [Deployments](#deployments)
+      * [New deployments](#new-deployments)
+         * [New deployment of Zookeeper](#new-deployment-of-zookeeper)
+   * [BOSH Architecture, Part 1](#bosh-architecture-part-1)
+      * [CPI - the ultimate Cloud Provider Interface abstraction](#cpi---the-ultimate-cloud-provider-interface-abstraction)
 
 NOTE: update TOC using `bin/replace-toc`
 
@@ -35,11 +41,14 @@ I recently started writing this. If you're actually reading this guide now, plea
 
 ## Guide to the guide
 
-This guide is to be read linearly. Each section will add to the preceding sections.
-
-I'll use videos to show you real systems instead of expecting that you can deploy systems yourself on day 1. Eventually you'll feel comfortable and doing it yourself will be easy.
+This Ultimate Guide to BOSH is to be read linearly. Each section will build upon the preceding sections.
 
 This guide will be a single [README.md](README.md) until that just doesn't make sense anymore.
+
+The guide use sample commands and videos to show you real systems instead of expecting that you can deploy systems yourself on day 1.
+
+Later in the guide you will deploy your own BOSH and use it to deploy systems. At that point you will install the `bosh` command-line tool, and you will need to decide which target cloud infrastructure you will use.
+
 
 ## Joyful operations
 
@@ -163,7 +172,21 @@ I want to share all the wonders of BOSH with you. I want you to use BOSH. I want
 
 I also want you to switch to Queen's English, learn more about Australia, and to use the Oxford comma.
 
+## Additional sources of information
 
+In addition to this Ultimate Guide to BOSH, there are some other sources of factual knowledge and tutorials.
+
+[BOSH documentation website](https://bosh.io/docs/) is very thorough and new features of BOSH now regularly appear simultaneously in this documentation site.
+
+Duncan Winn's [Cloud Foundry: The Definitive Guide](http://shop.oreilly.com/product/0636920042501.do) he includes an entire chapter "BOSH All the Things" towards helping you deploy and operate Cloud Foundry.
+
+Stark & Wayne's own blog (["bosh" tag](https://www.starkandwayne.com/blog/tag/bosh/)) has over fifty articles, tutorials and tiny tips on BOSH.
+
+BOSH is an open source project. You can read the source code and learn how it works. A selection of repositories include:
+
+* https://github.com/cloudfoundry/bosh-cli - the `bosh` CLI
+* https://github.com/cloudfoundry/bosh - the BOSH director
+* https://github.com/cloudfoundry/bosh-deployment - manifests for various permutations of deploying your own BOSH director
 
 # What is BOSH?
 
@@ -221,3 +244,114 @@ The Ultimate Guide to BOSH assumes you are prepared to learn a new tool, its fea
 ## Continuous Integration and Continuous Delivery
 
 BOSH slots in very nicely into any continuous deployment systems you might already be using. The `bosh` command-line tool is a perfect abstraction for "please make this happen" that will make it pleasurable to move BOSH deployments into your CI/CD systems.
+
+# Deployments
+
+Let's begin!
+
+The highest level concept of BOSH is the "deployment" of a system. The purpose of BOSH is to continuous run one or more deployments. For example, a cluster of servers that form a Zookeeper cluster is a deployment of the Zookeeper system.
+
+In [Joyful operations](#joyful-operations) we began by creating a deployment:
+
+```
+export BOSH_DEPLOYMENT=zookeeper
+bosh deploy manifests/zookeeper.yml
+```
+
+And we finished the lifecycle of that system by deleting the BOSH deployment:
+
+```
+bosh delete-deployment
+```
+
+## New deployments
+
+When we ask BOSH to provision a new system, BOSH takes upon the entire responsibility for making this happen:
+
+* BOSH will communicate with your cloud infrastructure API to request new servers/virtual machines (called "instances")
+* BOSH manages the base machine image used for each virtual machine (called "stemcells")
+* BOSH will allocate an available IP address for each instance
+* BOSH will communicate with your cloud infrastructure API to request persistent disk volumes (we will see soon that the `zookeeper.yml` manifest requires a persistent disk volume for each instance in the deployment)
+* BOSH will request that the disk volumes are attached to the instances
+
+Once the instances are provisioned and the disks are attached, BOSH then starts communicating with each instance:
+
+* BOSH will format disk volumes if necessary
+* BOSH will download the software required (called "packages")
+* BOSH will construct configuration files for the packages and commence running the software (called "job templates")
+* BOSH provides service discovery information to each job template about the location and credentials of other instances (called "links")
+
+At this point, it becomes the installed software's responsibility to do thing that it needs to do. It now has been given a brand new instance running on a hardened base operating system, with a mounted persistent disk for it to store data, and has been configured with the information for forming a cluster with its peers, and connecting as a client to any other systems.
+
+### New deployment of Zookeeper
+
+Let's revisit each of these actions for the specific case of our 5-instance deployment of Zookeeper running on Amazon AWS.
+
+```
+export BOSH_DEPLOYMENT=zookeeper
+bosh deploy manifests/zookeeper.yml
+```
+
+Inside `zookeeper.yml` is the description of an group of five instances (we will review the contents of this file soon), each with a 10GB persistent disk volume.
+
+In our Zookeeper example:
+
+* BOSH downloads special BOSH packages of Apache Zookeeper, plus the Java JDK which is a dependency for running Zookeeper.
+* BOSH downloads special BOSH job templates that describe how to configure and run a single node of Zookeeper on each instance
+* BOSH provides each Zookeeper job template with the IP address, client port, quorum port and leader election port for every other member of the deployment (these are Zookeeper specific requirements to for a cluster of Zookeeper instances)
+
+# BOSH Architecture, Part 1
+
+In the previous sections I've made reference to a `bosh` CLI but have otherwise danced around the topic of "what is BOSH really?"
+
+From now onwards I will stop simplistically saying "BOSH does a thing" and start to be consistently discerning about which aspect of BOSH is doing something.
+
+Right now think of BOSH as three things:
+
+* BOSH CLI - the `bosh` command being referenced in the earlier examples. The CLI is a client to the:
+* BOSH director - an HTTP API that receives requests from the CLI and either communicates directly with instances or with your cloud infrastructure. Communication with your cloud infrastructure is via a:
+* Cloud Provider Interface (CPI) - the specific implementation of how a BOSH director communicates with Amazon AWS, Google Compute, vSphere, OpenStack or any other target.
+
+## CPI - the ultimate Cloud Provider Interface abstraction
+
+The CLI, the director and a CPI are the basic components that bring a deployment to life on your target cloud infrastructure.
+
+For our Zookeeper example, we began with:
+
+```
+bosh deploy manifests/zookeeper.yml
+```
+
+The BOSH CLI loads the `zookeeper.yml` file from your local machine (which originally came from a [Github repository](https://github.com/cppforlife/zookeeper-release/blob/master/manifests/zookeeper.yml) in the [Joyful operations](#joyful-operations) section above).
+
+The BOSH CLI forwards this file on to the BOSH director.
+
+The BOSH director decides that it is a new deployment (it has a name that the BOSH director does not know yet). The BOSH director decides it needs to provision five new virtual machines and five persistent disks (we will investigate the contents of `zookeeper.yml` soon). The BOSH director delegates this activity to the BOSH CPI for Amazon AWS (where we are attempting to deploy Zookeeper in our example).
+
+The BOSH CPI is a local command line application hosted inside the BOSH director. You will never need to touch it or find it or run it manually. But it can be helpful to understand its nature. A CPI - the abstraction for how an BOSH director can interact with any cloud infrastructure - is just a CLI. The BOSH director - a long-running HTTP API process - calls out to the CPI executable and invokes commands using a JSON payload. When the CPI completes its task - creating a VM, creating a disk, etc - it will return JSON with success/failure information.
+
+For Zookeeper running on Amazon AWS, our BOSH director will be running with the AWS CPI CLI (TLA BINGO - three three letter acronyms in a row) installed on the same server. The combination of the BOSH director and a collocated CPI CLI is the magic of how a BOSH director can be configured to communicate with any cloud infrastructure.  The CPI CLIs can be written in different programming languages than BOSH director, and be maintained by different engineering teams at different companies. It is a wonderfully powerful design pattern.
+
+This will be the last we will reference the CPIs for a long time. They exist. They allow a BOSH director to interact with any cloud infrastructure. There are many of them already implemented (Amazon AWS, Google Compute Platform, Microsoft Azure, VMWare vSphere, OpenStack, IBM SoftLayer, VirtualBox, Warden/Garden, Docker).
+
+And you will mostly never need to know about them.
+
+Here is the command for deploying five Amazon EC2 servers running Zookeeper, backed by Amazon EBS volumes, running inside Amazon VPC networking:
+
+```
+bosh deploy manifests/zookeeper.yml
+```
+
+Here is the command for deploying five Google Compute VM Instances, backed by Google Compute Disks, running inside GCP networking, installed and configured to be a Zookeeper cluster:
+
+```
+bosh deploy manifests/zookeeper.yml
+```
+
+Never used VMWare vSphere before? Here is the command for deploying a five ESXi virtual machines using a concept of persistent disks, on any cluster of physical servers in the world. And they will be Zookeeper:
+
+```
+bosh deploy manifests/zookeeper.yml
+```
+
+For sure there are distinctions in deploying any system to any infrastructure that need to be made, but the command above is valid and will work once we have a running BOSH director configured with a CPI. That's fantastic.

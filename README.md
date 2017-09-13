@@ -348,16 +348,26 @@ Here is the command for deploying five Amazon EC2 servers running Zookeeper, bac
 bosh deploy manifests/zookeeper.yml
 ```
 
+In the Amazon AWS console, your list of EC2 servers (including the BOSH director VM) might look like:
+
+![zookeeper-deployment-aws](images/zookeeper-deployment-aws.png)
+
 Here is the command for deploying five Google Compute VM Instances, backed by Google Compute Disks, running inside GCP networking, installed and configured to be a Zookeeper cluster:
 
 ```
 bosh deploy manifests/zookeeper.yml
 ```
 
+In the Google Compute Platform console, your list of VM instances (including a NAT VM, bastion VM, and BOSH director VM) might look like:
+
+![zookeeper-deployment-google](images/zookeeper-deployment-google.png)
+
 Never used VMWare vSphere before? Here is the command for deploying a five ESXi virtual machines using a concept of persistent disks, on any cluster of physical servers in the world. And they will be Zookeeper:
 
 ```
 bosh deploy manifests/zookeeper.yml
 ```
+
+In VMWare vCenter your deployment will not specifically look like anything. vSphere is a crazy mess to me.
 
 For sure there are distinctions in deploying any system to any infrastructure that need to be made, but the command above is valid and will work once we have a running BOSH director configured with a CPI. That's fantastic.

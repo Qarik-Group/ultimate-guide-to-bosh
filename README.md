@@ -611,3 +611,9 @@ All job templates - the definition of how anything is configured and run - are l
 **Conventions like this radically lower the mental challenges of providing support/debugging on running production systems.**
 
 Job templates must contain a `monit` file, but that `monit` file can be empty if the job template does not require any processes to be run.
+
+If the `monit` file does specify processes to run then the job template must include the scripts that can perform start/stop behaviour.
+
+A very common pattern across BOSH job templates is to provide a `/var/vcap/jobs/zookeeper/bin/ctl` wrapper script that supports two subcommands: `start` and `stop`. We will investigate more about authoring your own BOSH deployments later.
+
+Job templates will also be able to provide any configuration files used by the running processes. Some software requires configuration files. Or software might be configured with environment variables. Job templates will be written to suite the software it is configuring to run.

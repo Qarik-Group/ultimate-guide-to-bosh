@@ -1,10 +1,11 @@
 # Ultimate Guide to BOSH
 
-BOSH is an open source tool for release engineering, deployment, lifecycle management, and monitoring of distributed systems.
+[BOSH](https://bosh.io) is an open source tool for release engineering, deployment, lifecycle management, and monitoring of distributed systems.
 
-It's incredible. You should be using it.
+It's incredible. Huge companies are using. Tiny companies are using it. You too could be using it.
 
 This is the Ultimate Guide to BOSH.
+
 ## WIP
 
 I recently started writing this. If you're actually reading this guide now, please let me know (I'll actively ask you to review bits as I write them) and please "Watch" this repo. Perhaps I can update it via Github Releases so you can get notifications of new sections or updates. Or better jokes.
@@ -17,7 +18,7 @@ In past lives you might have been called: developer, sysadmin, or devops.
 
 You're always on the look out for better tools, better mental models, and better systems.
 
-I'm going to show you how I do some day-to-day activities using BOSH. You decide if you'd like to level up your superhero status and learn how to do this too.
+I'm going to show you how I do some day-to-day activities using BOSH. You get to decide if you'd like to level up your superhero status and learn how to do this too. Learning is involved. Effort. New tools. New ecosystem. I definitely think its worth it. Let me know what you decide!
 
 Deploy a 5-node cluster of Zookeeper to Amazon AWS:
 
@@ -137,7 +138,9 @@ I also want you to switch to Queen's English, learn more about Australia, and to
 
 ## What is BOSH?
 
-First, let's answer the question: What is a running software system?
+First, let's answer the question:
+
+### What is a running software system?
 
 ![app-stack](images/handdrawn/app-stack.jpg)
 
@@ -162,3 +165,5 @@ Servers need to be powered, so you'll need stable affordable electricity. Server
 It's incredible that it all works. Click on https://google.com to check that it all works.
 
 Note: The Ultimate Guide to BOSH will include unsolicited sarcasm and humour. With luck, you'll enjoy both the Ultimate Guide BOSH and the humour.
+
+### Choose your own deployment level

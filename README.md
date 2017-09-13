@@ -30,6 +30,7 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
       * [New deployments of Zookeeper](#new-deployments-of-zookeeper)
       * [BOSH Architecture, Part 1](#bosh-architecture-part-1)
       * [CPI - the ultimate Cloud Provider Interface abstraction](#cpi---the-ultimate-cloud-provider-interface-abstraction)
+      * [Instances](#instances)
 
 NOTE: update TOC using `bin/replace-toc`
 
@@ -371,3 +372,86 @@ bosh deploy manifests/zookeeper.yml
 In VMWare vCenter your deployment will not specifically look like anything. vSphere is a crazy mess to me.
 
 For sure there are distinctions in deploying any system to any infrastructure that need to be made, but the command above is valid and will work once we have a running BOSH director configured with a CPI. That's fantastic.
+
+## Instances
+
+A deployment is made up of instances. Normally instances represent long-running servers on your cloud infrastructure. They can also represent "errands" - one-off tasks that are run inside of temporary servers.
+
+The BOSH CLI makes it easy to see the list of instances for a deployment and their basic health status with the `bosh instances` command:
+
+```
+$ bosh instances
+Using environment '10.0.0.4' as client 'admin'
+
+Task 1808. Done
+
+Deployment 'zookeeper'
+
+Instance                                          Process State  IPs
+smoke-tests/dd931466-4329-46cc-971e-34aeee3f8baf  -              -
+zookeeper/146229c3-648a-4280-b725-692b0092eae9    running        10.0.0.9
+zookeeper/5b879e13-48b1-40f3-b6a7-ae18ef375bcb    running        10.0.0.7
+zookeeper/680367f6-2303-4416-877f-8f1d68d4d978    running        10.0.0.6
+zookeeper/aa88d2b6-4a94-4801-b0f4-b82d7b6c05b8    running        10.0.0.5
+zookeeper/bc988e19-a8e6-41c4-bc2d-3cad00306aef    running        10.0.0.8
+
+6 instances
+
+Succeeded
+```
+
+This is my 5-node cluster of Zookeper, running on one cloud infrastructure or another.
+
+We can see that all the `zookeeper` instances are `running`. There is a 6th instance `smoke-tests` which does not have a Process State. It is an errand instance.
+
+For now we will focus on the long-running instances, and return to errands later.
+
+Each instance has at least one assigned IP address. The `zookeeper.yml` manifest did not need to allocate these IP addresses, rather if left this assignment to the BOSH director, the CPI, and the cloud infrastructure. It is possible to statically assign IP addresses in a deployment manifest, but ideally there are few reasons to do so. It is not a fun part of a human's day to keep track of IP allocations.
+
+With the BOSH CLI we can also start to introspect what is running on each instance with `bosh instances --ps`:
+
+```
+Instance                                          Process    Process State  IPs
+smoke-tests/dd931466-4329-46cc-971e-34aeee3f8baf  -          -              -
+zookeeper/146229c3-648a-4280-b725-692b0092eae9    -          running        10.0.0.9
+~                                                 zookeeper  running        -
+zookeeper/5b879e13-48b1-40f3-b6a7-ae18ef375bcb    -          running        10.0.0.7
+~                                                 zookeeper  running        -
+zookeeper/680367f6-2303-4416-877f-8f1d68d4d978    -          running        10.0.0.6
+~                                                 zookeeper  running        -
+zookeeper/aa88d2b6-4a94-4801-b0f4-b82d7b6c05b8    -          running        10.0.0.5
+~                                                 zookeeper  running        -
+zookeeper/bc988e19-a8e6-41c4-bc2d-3cad00306aef    -          running        10.0.0.8
+~                                                 zookeeper  running        -
+```
+
+Each `zookeeper` instance is running a process called `zookeeper`. Very educational information.
+
+Let's look at another BOSH deployment that collocates more processes and is more interesting. The following deployment is for the Stark & Wayne CI system https://ci.starkandwayne.com.
+
+```
+Deployment 'concourse'
+
+Instance                                        Process       Process State   IPs
+db/af2a4827-82fd-45f1-b37b-cb7d3c6f4ab9         -             running         10.57.111.7
+~                                               postgresql    running         -
+haproxy/93ee7e45-8190-4f53-86b2-b1ea211f5cf9    -             running         10.57.111.6
+                                                                              184.98.185.163
+~                                               haproxy       running         -
+web/66bac8cf-3af8-4f7e-b587-b82856f47cdc        -             running         10.57.111.8
+~                                               atc           running         -
+~                                               tsa           running         -
+web/bed6bd94-eecc-4147-9653-5d4bdf40dcf9        -             running         10.57.111.9
+~                                               atc           running         -
+~                                               tsa           running         -
+worker/194ac3c7-0a07-4681-ade9-afbf0e47a1a9     -             running         10.57.111.15
+~                                               baggageclaim  running         -
+~                                               beacon        running         -
+~                                               garden        running         -
+```
+
+In this deployment we have 4 different instance groups: `db`, `haproxy`, `web` (there are two instances), and `worker` (I've show one of them above but our deployment of [Concourse](https://concourse.ci/) has many `worker` instances).
+
+Each `worker` instance is running three processes: `baggageclaim`, `beacon`, and `garden`.
+
+The `haproxy` instance has two IP addresses. The latter `184.98.185.163` is a public IP on the Internet. All the other IPs are private to the vSphere data centre. This `haproxy` instance is an inbound HTTP load balancer and has a statically assigned public IP for the benefit of configuring the external CloudFlare service which sits in front receiving https://ci.starkandwayne.com traffic.

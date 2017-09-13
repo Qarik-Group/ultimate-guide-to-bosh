@@ -1,18 +1,19 @@
 #!/bin/bash
 
+# Shows how many words added (to README.md) today
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
-wordcount_head=$(git show HEAD:README.md | wc -w | awk '{print $1}')
+last_commit_yesterday=$(git log --since=yesterday.midnight --before today.midnight --oneline | head -n1 | awk '{print $1}')
+wordcount_head=$(git show ${last_commit_yesterday}:README.md | wc -w | awk '{print $1}')
 wordcount_latest=$(cat README.md | wc -w | awk '{print $1}')
 wordcount_diff=`expr $wordcount_latest - $wordcount_head`
 
 colour=$NC
 if [[ $wordcount_diff -gt 0 ]]; then
-  colour=$GREEN
+  printf "${GREEN}${wordcount_diff}${NC} words added today\n"
 elif [[ $wordcount_diff -lt 0 ]]; then
-  colour=$RED
+  printf "${RED}${wordcount_diff}${NC} words removed today\n"
 fi
-
-printf "${colour}${wordcount_diff}${NC}"

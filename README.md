@@ -36,6 +36,7 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
       * [Monit process monitoring](#monit-process-monitoring)
       * [Job templates describe processes](#job-templates-describe-processes)
       * [Job templates](#job-templates)
+      * [Logs](#logs)
 
 NOTE: update TOC using `bin/replace-toc`
 
@@ -754,3 +755,5 @@ exec chpst -u vcap:vcap \
 ```
 
 More commonly, Monit wrapper scripts (`bin/ctl`) will directly invoke the software rather than another wrapper script.
+
+## Logs

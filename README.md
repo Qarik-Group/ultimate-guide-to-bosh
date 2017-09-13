@@ -673,6 +673,84 @@ $ tree
 │   └── zoo.cfg
 ├── monit
 └── packages
-    ├── java -> /var/vcap/data/packages/java/050ac564c5b047616ea42d0ea451c9c753b5637c
-    └── zookeeper -> /var/vcap/data/packages/zookeeper/be0fe89fd073e3bfd23d464cf3acf3bfb9bc8029
+    ├── java
+    └── zookeeper
 ```
+
+As discussed above, the `monit` file is the entry point for a job template being used to run Linux processes. The contents of this file tell monit what command to run to start or stop any Linux processes that are required:
+
+```
+check process zookeeper
+  with pidfile /var/vcap/sys/run/zookeeper/pid
+  start program "/var/vcap/jobs/zookeeper/bin/ctl start"
+  stop program "/var/vcap/jobs/zookeeper/bin/ctl stop"
+  group vcap
+```
+
+Within our `/var/vcap/jobs/zookeeper` job template directory the `bin/ctl` script has a `start` command, and Monit expects a PID file to be placed at `/var/vcap/sys/run/zookeeper/pid` (a file location outside of the job template directory that we will revisit soon).
+
+The abbreviated `bin/ctl` shell script showing the `start` and `stop` subcommands is below (the full original source code is [online](https://github.com/cppforlife/zookeeper-release/blob/master/jobs/zookeeper/templates/ctl.erb))
+
+```bash
+case $1 in
+  start)
+    # Hidden: setup of other env vars
+    export ZOOCFGDIR=/var/vcap/jobs/zookeeper/config
+
+    # Hidden: create log/pid folders
+    echo $$ > /var/vcap/sys/run/zookeeper/pid
+
+    exec chpst -u vcap:vcap \
+      /var/vcap/packages/zookeeper/bin/zkServer.sh start-foreground \
+      >>/var/vcap/sys/log/zookeeper/stdout.log \
+      2>>/var/vcap/sys/log/zookeeper/stderr.log
+    ;;
+
+  stop)
+    if [ -f $PIDFILE ]; then
+      kill -9 `cat $PIDFILE` || true
+      rm -f $PIDFILE
+    fi
+    ;;
+esac
+exit 0
+```
+
+This `bin/ctl` is a very common implementation of a Monit start/stop wrapper script that you will see in most BOSH job templates. A `case` statement that takes `start` and `stop` from the first argument passed to `bin/ctl` and runs one of two different code paths:
+
+* The `start` subcommand will run a single Linux process and ensure it drops the PID of that process.
+
+* The `stop` subcommand will terminate the Linux process if it is running.
+
+Some software is capable running as a background/daemon process and managing its own PID file. Others do not manage their own PID. Some software can do either and the BOSH job template author will have decided in which mode to run the software.
+
+In the `zookeeper` example above the `bin/ctl start` command it creating the PID file:
+
+```
+echo $$ > /var/vcap/sys/run/zookeeper/pid
+```
+
+The expression `$$` is PID of the current shell (the running `bin/ctl` script). So the command above is inserting the current running script's PID into a file. Importantly, this file is the same as the `check process zookeeper with pidfile /var/vcap/sys/run/zookeeper/pid` from the `monit` file above.
+
+The `bin/ctl` running script is then uses `exec` to replace the current running shell (the wrapper `bin/ctl` script) with a new command `/var/vcap/packages/zookeeper/bin/zkServer.sh`
+
+If the script only used `echo $$ > pid` and `exec run-software` then the software would be run with escalated root user privileges. Instead the zookeeper application will be run as a restricted `vcap` user and `vcap` group using the `chpst` command.
+
+Combined together we have a common pattern in many BOSH job templates:
+
+```
+echo $$ > path/to/pidfile
+
+exec chpst -u user:group run-something-in-foreground
+```
+
+For the `zookeeper` example, the Zookeeper software was run using a shell script provided by the Apache Zookeeper package (`zkServer.sh`):
+
+```
+echo $$ > /var/vcap/sys/run/zookeeper/pid
+
+exec chpst -u vcap:vcap \
+  /var/vcap/packages/zookeeper/bin/zkServer.sh start-foreground
+```
+
+More commonly, Monit wrapper scripts (`bin/ctl`) will directly invoke the software rather than another wrapper script.

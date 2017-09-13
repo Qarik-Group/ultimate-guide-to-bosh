@@ -23,12 +23,11 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
       * [What is a running software system?](#what-is-a-running-software-system)
       * [Choose your own deployment level](#choose-your-own-deployment-level)
       * [Assumptions](#assumptions)
+      * [Continuous Integration and Continuous Delivery](#continuous-integration-and-continuous-delivery)
 
 NOTE: update TOC using `bin/replace-toc`
 
 # Introduction
-
-NOTE: update TOC using `bin/replace-toc`
 
 ## WIP
 
@@ -216,3 +215,9 @@ If you do need to "go down the stack" and take responsibility for more then you 
 The Ultimate Guide to BOSH assumes you need the latter: you need tooling, automation and education.
 
 It also assumes that you have direct access to your virtualisation/cloud infrastructure - you have suitable AWS credentials, or a Google Compute account or vSphere admin access.
+
+The Ultimate Guide to BOSH assumes you are prepared to learn a new tool, its features, and its quirks.
+
+## Continuous Integration and Continuous Delivery
+
+BOSH slots in very nicely into any continuous deployment systems you might already be using. The `bosh` command-line tool is a perfect abstraction for "please make this happen" that will make it pleasurable to move BOSH deployments into your CI/CD systems.

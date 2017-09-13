@@ -27,8 +27,8 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
       * [Continuous Integration and Continuous Delivery](#continuous-integration-and-continuous-delivery)
    * [Deployments](#deployments)
       * [New deployments](#new-deployments)
-         * [New deployment of Zookeeper](#new-deployment-of-zookeeper)
-   * [BOSH Architecture, Part 1](#bosh-architecture-part-1)
+      * [New deployments of Zookeeper](#new-deployments-of-zookeeper)
+      * [BOSH Architecture, Part 1](#bosh-architecture-part-1)
       * [CPI - the ultimate Cloud Provider Interface abstraction](#cpi---the-ultimate-cloud-provider-interface-abstraction)
 
 NOTE: update TOC using `bin/replace-toc`
@@ -283,7 +283,7 @@ Once the instances are provisioned and the disks are attached, BOSH then starts 
 
 At this point, it becomes the installed software's responsibility to do thing that it needs to do. It now has been given a brand new instance running on a hardened base operating system, with a mounted persistent disk for it to store data, and has been configured with the information for forming a cluster with its peers, and connecting as a client to any other systems.
 
-### New deployment of Zookeeper
+## New deployments of Zookeeper
 
 Let's revisit each of these actions for the specific case of our 5-instance deployment of Zookeeper running on Amazon AWS.
 
@@ -292,15 +292,21 @@ export BOSH_DEPLOYMENT=zookeeper
 bosh deploy manifests/zookeeper.yml
 ```
 
-Inside `zookeeper.yml` is the description of an group of five instances (we will review the contents of this file soon), each with a 10GB persistent disk volume.
+Inside `zookeeper.yml` is the description of an group of five instances, each with a 10GB persistent disk volume (we will review the contents of this file soon).
 
-In our Zookeeper example:
+* BOSH sends requests to Amazon AWS API for five EC2 VMs, using a specified Amazon Machine Image (AMI) as the base file system/operating system
+* BOSH will manage the allocation of IPs within the VPC subnet rather than using DHCP (more on networking later)
+* BOSH sends requests to AWS for five EBS volumes and then attaches each one to a different EC2 VM
+
+Each of the AWS EC2 VMs will eventually "call home" to BOSH saying that they are awake and ready.
+
+BOSH then begins preparing them for their role of "Zookeeper" instance.
 
 * BOSH downloads special BOSH packages of Apache Zookeeper, plus the Java JDK which is a dependency for running Zookeeper.
 * BOSH downloads special BOSH job templates that describe how to configure and run a single node of Zookeeper on each instance
 * BOSH provides each Zookeeper job template with the IP address, client port, quorum port and leader election port for every other member of the deployment (these are Zookeeper specific requirements to for a cluster of Zookeeper instances)
 
-# BOSH Architecture, Part 1
+## BOSH Architecture, Part 1
 
 In the previous sections I've made reference to a `bosh` CLI but have otherwise danced around the topic of "what is BOSH really?"
 

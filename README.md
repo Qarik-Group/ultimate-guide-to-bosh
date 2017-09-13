@@ -8,23 +8,27 @@ This is the Ultimate Guide to BOSH.
 
 It will place you in the middle of daily life with BOSH and gradually guide you towards understanding, and then deploying your own systems, and then through to deep understanding. You'll become a raving fan.
 
-## TOC
+## Introduction
 
-* [Ultimate Guide to BOSH](#ultimate-guide-to-bosh)
-   * [WIP](#wip)
-      * [Guide to the guide](#guide-to-the-guide)
-   * [Joyful operations](#joyful-operations)
-   * [Why the Ultimate Guide to BOSH?](#why-the-ultimate-guide-to-bosh)
-      * [Brief history of BOSH](#brief-history-of-bosh)
-      * [BOSH in production](#bosh-in-production)
-      * [Why write the Ultimate Guide to BOSH?](#why-write-the-ultimate-guide-to-bosh)
-   * [What is BOSH?](#what-is-bosh)
-      * [What is a running software system?](#what-is-a-running-software-system)
-      * [Choose your own deployment level](#choose-your-own-deployment-level)
+### TOC
 
-NOTE: update TOC using `bin/toc`
+   * [Ultimate Guide to BOSH](#ultimate-guide-to-bosh)
+      * [Introduction](#introduction)
+         * [TOC](#toc)
+         * [WIP](#wip)
+         * [Guide to the guide](#guide-to-the-guide)
+      * [Joyful operations](#joyful-operations)
+      * [Why the Ultimate Guide to BOSH?](#why-the-ultimate-guide-to-bosh)
+         * [Brief history of BOSH](#brief-history-of-bosh)
+         * [BOSH in production](#bosh-in-production)
+         * [Why write the Ultimate Guide to BOSH?](#why-write-the-ultimate-guide-to-bosh)
+      * [What is BOSH?](#what-is-bosh)
+         * [What is a running software system?](#what-is-a-running-software-system)
+         * [Choose your own deployment level](#choose-your-own-deployment-level)
 
-## WIP
+NOTE: update TOC using `bin/replace-toc`
+
+### WIP
 
 I recently started writing this. If you're actually reading this guide now, please let me know (I'll actively ask you to review bits as I write them) and please "Watch" this repo. Perhaps I can update it via Github Releases so you can get notifications of new sections or updates. Or better jokes.
 
@@ -193,3 +197,14 @@ It's incredible that it all works. Click on https://google.com to check that it 
 Note: The Ultimate Guide to BOSH will include unsolicited sarcasm and humour. With luck, you'll enjoy both the Ultimate Guide BOSH and the humour.
 
 ### Choose your own deployment level
+
+You might define "deploying my system" at a different level to other people:
+
+* using an application platform, such as Cloud Foundry or Heroku
+* using a container orchestration system provided by someone else, such as Kubernetes, Docker, Amazon ECS
+* using virtual machines provided by someone else, such as Amazon AWS, Google Compute, vSphere
+* using bare metal machines provided by someone else
+* racking bare metal servers or putting Raspberry Pis into the field
+
+From the perspective of your organisation and their goals of efficiently using your time and energy,
+hopefully you can start as high up this stack as possible. For example, there is simply nothing faster, more time efficient, and UI consistent as `cf push`-ing an application to any Cloud Foundry. Every system you deploy should have to first justify why it cannot be deployed to Cloud Foundry.

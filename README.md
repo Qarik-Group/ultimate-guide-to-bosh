@@ -191,9 +191,10 @@ BOSH is an open source project. You can read the source code and learn how it wo
 
 * https://github.com/cloudfoundry/bosh-cli - the `bosh` CLI
 * https://github.com/cloudfoundry/bosh - the BOSH director
+* https://github.com/cloudfoundry/bosh-agent - the BOSH agent
 * https://github.com/cloudfoundry/bosh-deployment - manifests for various permutations of deploying your own BOSH director
 
-# What is BOSH?
+# Why BOSH?
 
 First, let's answer the question:
 
@@ -406,7 +407,7 @@ Succeeded
 
 This is my 5-node cluster of Zookeper, running on one cloud infrastructure or another.
 
-We can see that all the `zookeeper` instances are `running`. There is a 6th instance `smoke-tests` which does not have a Process State. It is an errand instance.
+We can see that all the `zookeeper` instances are `running`. There is a 6th instance `smoke-tests` which does not have a Process State. It is an errand instance which has no VM running for it at the time the instances were listed.
 
 For now we will focus on the long-running instances, and return to errands later.
 
@@ -599,6 +600,8 @@ check process beacon
 
 We see above that the `groundcrew` job template's `monit` file describes `check process beacon`. This is where the `beacon` name comes from. If we ever observe a problem with the `beacon` process, we now know it is configured inside the `groundcrew` job template.
 
+As an aside, `/var/vcap/jobs/garden/monit` is an advanced example of a Monit control file. It includes additional rules for when to automatically trigger a restart of the `garden` process.
+
 ## Job templates
 
 We now also know that the `groundcrew` job template is ALWAYS located at `/var/vcap/jobs/groundcrew`.
@@ -606,3 +609,5 @@ We now also know that the `groundcrew` job template is ALWAYS located at `/var/v
 All job templates - the definition of how anything is configured and run - are located on every BOSH instance around the world in the same location: `/var/vcap/jobs/`
 
 **Conventions like this radically lower the mental challenges of providing support/debugging on running production systems.**
+
+Job templates must contain a `monit` file, but that `monit` file can be empty if the job template does not require any processes to be run.

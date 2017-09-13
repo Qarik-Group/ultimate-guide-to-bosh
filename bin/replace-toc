@@ -3,8 +3,6 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $DIR/..
 
-lead='^### TOC$'
-tail='^### WIP$'
 toc=$(cat README.md | bin/gh-md-toc -)
 
-perl -0777 -i -pe "s/(### TOC\\n).*(\\n### WIP)/\$1\n${toc}\n\nNOTE: update TOC using \`bin\/replace-toc\`\n\$2/s" README.md
+perl -0777 -i -pe "s/(# TOC\\n).*(\\n# Introduction)/\$1\n${toc}\n\nNOTE: update TOC using \`bin\/replace-toc\`\n\$2/s" README.md

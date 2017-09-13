@@ -8,31 +8,32 @@ This is the Ultimate Guide to BOSH.
 
 It will place you in the middle of daily life with BOSH and gradually guide you towards understanding, and then deploying your own systems, and then through to deep understanding. You'll become a raving fan.
 
-## Introduction
-
-### TOC
+# TOC
 
    * [Ultimate Guide to BOSH](#ultimate-guide-to-bosh)
-      * [Introduction](#introduction)
-         * [TOC](#toc)
-         * [WIP](#wip)
-         * [Guide to the guide](#guide-to-the-guide)
+   * [TOC](#toc)
+   * [Introduction](#introduction)
+      * [WIP](#wip)
+      * [Guide to the guide](#guide-to-the-guide)
       * [Joyful operations](#joyful-operations)
-      * [Why the Ultimate Guide to BOSH?](#why-the-ultimate-guide-to-bosh)
-         * [Brief history of BOSH](#brief-history-of-bosh)
-         * [BOSH in production](#bosh-in-production)
-         * [Why write the Ultimate Guide to BOSH?](#why-write-the-ultimate-guide-to-bosh)
-      * [What is BOSH?](#what-is-bosh)
-         * [What is a running software system?](#what-is-a-running-software-system)
-         * [Choose your own deployment level](#choose-your-own-deployment-level)
+      * [Brief history of BOSH](#brief-history-of-bosh)
+      * [BOSH in production](#bosh-in-production)
+      * [Why write the Ultimate Guide to BOSH?](#why-write-the-ultimate-guide-to-bosh)
+   * [What is BOSH?](#what-is-bosh)
+      * [What is a running software system?](#what-is-a-running-software-system)
+      * [Choose your own deployment level](#choose-your-own-deployment-level)
 
 NOTE: update TOC using `bin/replace-toc`
 
-### WIP
+# Introduction
+
+NOTE: update TOC using `bin/replace-toc`
+
+## WIP
 
 I recently started writing this. If you're actually reading this guide now, please let me know (I'll actively ask you to review bits as I write them) and please "Watch" this repo. Perhaps I can update it via Github Releases so you can get notifications of new sections or updates. Or better jokes.
 
-### Guide to the guide
+## Guide to the guide
 
 This guide is to be read linearly. Each section will add to the preceding sections.
 
@@ -111,9 +112,7 @@ Tear down your Zookeeper cluster:
 bosh delete-deployment
 ```
 
-## Why the Ultimate Guide to BOSH?
-
-### Brief history of BOSH
+## Brief history of BOSH
 
 I was fortunate to be invited to the VMWare campus in Palo Alto CA on April 11 2012 for the unveiling of "the Outer Shell" that deploys Cloud Foundry. The Outer Shell was called BOSH. This is an acronym for "BOSH Outer SHell". Engineers know one thing: recursion is funny.
 
@@ -132,7 +131,7 @@ There are many people in the history of BOSH who have directly made BOSH what it
 * Dmitriy Kalinin, Product Manager for BOSH, has been driving his incredible vision for BOSH
 * Original BOSH team at VMware - Mark Lucovsky, Vadim Spivak, Oleg Shaldybin, Martin Englund - who had the original vision and execution to create the ultimate tool for release engineering, deployment, lifecycle management, and monitoring of distributed systems.
 
-### BOSH in production
+## BOSH in production
 
 BOSH is the core technology to Pivotal Ops Manager and its Pivotal Network delivery system for complex on-premise software systems. BOSH is the deployment technology used behind the scenes for [Pivotal Web Services](https://run.pivotal.io) which runs upon Amazon AWS.
 
@@ -146,7 +145,7 @@ These are huge companies who have small teams running huge production systems us
 
 On the smaller end - our consultancy [Stark & Wayne](https://www.starkandwayne.com)  - uses BOSH to run a variety of our internal systems across vSphere, Amazon AWS and Google Compute. (The rest of our systems run upon Cloud Foundry itself, such as https://www.starkandwayne.com and https://www.starkandwayne.com/blog).
 
-### Why write the Ultimate Guide to BOSH?
+## Why write the Ultimate Guide to BOSH?
 
 BOSH has been my not-so-secret weapon since 2012. Yet you might not yet be using BOSH.
 
@@ -166,11 +165,11 @@ I also want you to switch to Queen's English, learn more about Australia, and to
 
 
 
-## What is BOSH?
+# What is BOSH?
 
 First, let's answer the question:
 
-### What is a running software system?
+## What is a running software system?
 
 ![app-stack](images/handdrawn/app-stack.jpg)
 
@@ -196,7 +195,7 @@ It's incredible that it all works. Click on https://google.com to check that it 
 
 Note: The Ultimate Guide to BOSH will include unsolicited sarcasm and humour. With luck, you'll enjoy both the Ultimate Guide BOSH and the humour.
 
-### Choose your own deployment level
+## Choose your own deployment level
 
 You might define "deploying my system" at a different level to other people:
 

@@ -20,7 +20,7 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
       * [BOSH in production](#bosh-in-production)
       * [Why write the Ultimate Guide to BOSH?](#why-write-the-ultimate-guide-to-bosh)
       * [Additional sources of information](#additional-sources-of-information)
-   * [What is BOSH?](#what-is-bosh)
+   * [Why BOSH?](#why-bosh)
       * [What is a running software system?](#what-is-a-running-software-system)
       * [Choose your own deployment level](#choose-your-own-deployment-level)
       * [Assumptions](#assumptions)
@@ -32,6 +32,7 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
       * [CPI - the ultimate Cloud Provider Interface abstraction](#cpi---the-ultimate-cloud-provider-interface-abstraction)
       * [Instances](#instances)
       * [SSH](#ssh)
+      * [Shell user prompts in examples](#shell-user-prompts-in-examples)
       * [Monit process monitoring](#monit-process-monitoring)
       * [Job templates describe processes](#job-templates-describe-processes)
       * [Job templates](#job-templates)
@@ -260,14 +261,14 @@ The highest level concept of BOSH is the "deployment" of a system. The purpose o
 In [Joyful operations](#joyful-operations) we began by creating a deployment:
 
 ```
-export BOSH_DEPLOYMENT=zookeeper
-bosh deploy manifests/zookeeper.yml
+> export BOSH_DEPLOYMENT=zookeeper
+> bosh deploy manifests/zookeeper.yml
 ```
 
 And we finished the lifecycle of that system by deleting the BOSH deployment:
 
 ```
-bosh delete-deployment
+> bosh delete-deployment
 ```
 
 ## New deployments
@@ -294,8 +295,8 @@ At this point, it becomes the installed software's responsibility to do thing th
 Let's revisit each of these actions for the specific case of our 5-instance deployment of Zookeeper running on Amazon AWS.
 
 ```
-export BOSH_DEPLOYMENT=zookeeper
-bosh deploy manifests/zookeeper.yml
+> export BOSH_DEPLOYMENT=zookeeper
+> bosh deploy manifests/zookeeper.yml
 ```
 
 Inside `zookeeper.yml` is the description of an group of five instances, each with a 10GB persistent disk volume (we will review the contents of this file soon).
@@ -331,7 +332,7 @@ The CLI, the director and a CPI are the basic components that bring a deployment
 For our Zookeeper example, we began with:
 
 ```
-bosh deploy manifests/zookeeper.yml
+> bosh deploy manifests/zookeeper.yml
 ```
 
 The BOSH CLI loads the `zookeeper.yml` file from your local machine (which originally came from a [Github repository](https://github.com/cppforlife/zookeeper-release/blob/master/manifests/zookeeper.yml) in the [Joyful operations](#joyful-operations) section above).
@@ -351,7 +352,7 @@ And you will mostly never need to know about them.
 Here is the command for deploying five Amazon EC2 servers running Zookeeper, backed by Amazon EBS volumes, running inside Amazon VPC networking:
 
 ```
-bosh deploy manifests/zookeeper.yml
+> bosh deploy manifests/zookeeper.yml
 ```
 
 In the Amazon AWS console, your list of EC2 servers (including the BOSH director VM) might look like:
@@ -361,7 +362,7 @@ In the Amazon AWS console, your list of EC2 servers (including the BOSH director
 Here is the command for deploying five Google Compute VM Instances, backed by Google Compute Disks, running inside GCP networking, installed and configured to be a Zookeeper cluster:
 
 ```
-bosh deploy manifests/zookeeper.yml
+> bosh deploy manifests/zookeeper.yml
 ```
 
 In the Google Compute Platform console, your list of VM instances (including a NAT VM, bastion VM, and BOSH director VM) might look like:
@@ -371,7 +372,7 @@ In the Google Compute Platform console, your list of VM instances (including a N
 Never used VMWare vSphere before? Here is the command for deploying a five ESXi virtual machines using a concept of persistent disks, on any cluster of physical servers in the world. And they will be Zookeeper:
 
 ```
-bosh deploy manifests/zookeeper.yml
+> bosh deploy manifests/zookeeper.yml
 ```
 
 In VMWare vCenter your deployment will not specifically look like anything. vSphere is a crazy mess to me.
@@ -385,7 +386,7 @@ A deployment is made up of instances. Normally instances represent long-running 
 The BOSH CLI makes it easy to see the list of instances for a deployment and their basic health status with the `bosh instances` command:
 
 ```
-$ bosh instances
+> bosh instances
 Using environment '10.0.0.4' as client 'admin'
 
 Task 1808. Done
@@ -468,19 +469,19 @@ The labels for processes above come directly from inside the running instances. 
 To access a shell session on any instance we can use `bosh ssh`:
 
 ```
-bosh ssh worker/194ac3c7-0a07-4681-ade9-afbf0e47a1a9
+> bosh ssh worker/194ac3c7-0a07-4681-ade9-afbf0e47a1a9
 ```
 
 If you don't know the long UUID for an instance, and you just want to SSH into any instance in the instance group then use a numbered index such as `/0` or `/1`.
 
 ```
-bosh ssh worker/0
+> bosh ssh worker/0
 ```
 
 If your deployment only has a single instance then you can omit the label altogether:
 
 ```
-bosh ssh
+> bosh ssh
 ```
 
 If you attempt this latter command but your deployment has more than one instance you will get a red error message similar to:
@@ -514,7 +515,28 @@ worker/194ac3c7-0a07-4681-ade9-afbf0e47a1a9:~#
 
 The suffix of the prompt subtly changed from `$` to `#` to represent we are now a root user.
 
-In all future shell examples I will abbreviate the prompt to `$` in future for non-root user, and `#` for the root user. Like any good person I will try hard to stick to being a non-root user.
+## Shell user prompts in examples
+
+We now have three different shell users in examples: your local machine, a dynamically created non-root user on an instance, and the root user on an instance.
+
+I would like to help make it obvious at all times from which machine/user a command is being run in the examples within the Ultimate Guide to BOSH.
+
+When an example is being run from a local developer machine (that is, not inside a BOSH instance) I will prefix the commands with the greater-than symbol `>`. For example, `bosh` commands are run from outside of BOSH instances.
+
+```
+> bosh deployments
+```
+
+From inside a BOSH instance I will abbreviate the prompt to `$` in future for non-root user, and `#` for the root user. Like any good person I will try hard to stick to being a non-root user.
+
+```
+> bosh ssh
+$ whoami
+bosh_5510a7b92da9475
+$ sudo su -
+# whoami
+root
+```
 
 But right now, we need to be the root user to access Monit.
 
@@ -633,3 +655,24 @@ In summary, all job templates - the configuration of how software is configured 
 Job templates must contain a `monit` file, but that `monit` file can be empty if the job template does not require any processes to be run.
 
 Job templates will also be able to provide any configuration files used by the running processes. Some software requires configuration files. Or software might be configured with environment variables. Job templates will be written to suite the software it is configuring to run.
+
+Let's look at the files within the `zookeeper` job template on a `zookeeper` deployment instance:
+
+```
+> bosh ssh zookeeper/0
+$ cd /var/vcap/jobs/zookeeper
+$ tree
+.
+├── bin
+│   ├── ctl
+│   └── pre-start
+├── config
+│   ├── configuration.xsl
+│   ├── log4j.properties
+│   ├── myid
+│   └── zoo.cfg
+├── monit
+└── packages
+    ├── java -> /var/vcap/data/packages/java/050ac564c5b047616ea42d0ea451c9c753b5637c
+    └── zookeeper -> /var/vcap/data/packages/zookeeper/be0fe89fd073e3bfd23d464cf3acf3bfb9bc8029
+```

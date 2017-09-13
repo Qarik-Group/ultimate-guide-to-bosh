@@ -31,6 +31,10 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
       * [BOSH Architecture, Part 1](#bosh-architecture-part-1)
       * [CPI - the ultimate Cloud Provider Interface abstraction](#cpi---the-ultimate-cloud-provider-interface-abstraction)
       * [Instances](#instances)
+      * [SSH](#ssh)
+      * [Monit process monitoring](#monit-process-monitoring)
+      * [Job templates describe processes](#job-templates-describe-processes)
+      * [Job templates](#job-templates)
 
 NOTE: update TOC using `bin/replace-toc`
 
@@ -455,3 +459,150 @@ In this deployment we have 4 different instance groups: `db`, `haproxy`, `web` (
 Each `worker` instance is running three processes: `baggageclaim`, `beacon`, and `garden`.
 
 The `haproxy` instance has two IP addresses. The latter `184.98.185.163` is a public IP on the Internet. All the other IPs are private to the vSphere data centre. This `haproxy` instance is an inbound HTTP load balancer and has a statically assigned public IP for the benefit of configuring the external CloudFlare service which sits in front receiving https://ci.starkandwayne.com traffic.
+
+The labels for processes above come directly from inside the running instances. We will now look inside the `worker` instance and match up where this information comes from.
+
+## SSH
+
+To access a shell session on any instance we can use `bosh ssh`:
+
+```
+bosh ssh worker/194ac3c7-0a07-4681-ade9-afbf0e47a1a9
+```
+
+If you don't know the long UUID for an instance, and you just want to SSH into any instance in the instance group then use a numbered index such as `/0` or `/1`.
+
+```
+bosh ssh worker/0
+```
+
+If your deployment only has a single instance then you can omit the label altogether:
+
+```
+bosh ssh
+```
+
+If you attempt this latter command but your deployment has more than one instance you will get a red error message similar to:
+
+```
+Running SSH:
+  Interactive SSH only works for a single host at a time
+```
+
+After successfully running a `bosh ssh` command you will be presented with a shell prompt like:
+
+```
+worker/194ac3c7-0a07-4681-ade9-afbf0e47a1a9:~$
+```
+
+The start of the prompt indicates that you are inside `worker/194ac3c7...`. The `~` segment means you are in the home folder (as an aside, `cd ~` will take you to the home folder on linux machines).
+
+Each time you open an SSH shell using `bosh ssh` you will be allocated a new user account:
+
+```
+$ whoami
+bosh_5510a7b92da9475
+```
+
+To investigate the processes running we will need to change to the root user:
+
+```
+worker/194ac3c7-0a07-4681-ade9-afbf0e47a1a9:~$ sudo su -
+worker/194ac3c7-0a07-4681-ade9-afbf0e47a1a9:~#
+```
+
+The suffix of the prompt subtly changed from `$` to `#` to represent we are now a root user.
+
+In all future shell examples I will abbreviate the prompt to `$` in future for non-root user, and `#` for the root user. Like any good person I will try hard to stick to being a non-root user.
+
+But right now, we need to be the root user to access Monit.
+
+## Monit process monitoring
+
+```
+# monit summary
+The Monit daemon 5.2.5 uptime: 8d 3h 26m
+
+Process 'beacon'                    running
+Process 'baggageclaim'              running
+Process 'garden'                    running
+System 'system_localhost'           running
+```
+
+The three `Process` entries above match directly to the three `Processes` items in the `bosh instances --ps` output in the preceding section. This is where this information comes from.
+
+Inside each VM we delegate to [Monit](https://mmonit.com/monit/) to start, stop, and monitor the health of processes.
+
+Monit plays a small but vital role within every BOSH deployment running on Linux servers. Monit has been the process monitoring heart of BOSH instances since before BOSH was publicly open sourced in 2012. And ever since 2012, every single Product Manager of BOSH has said "we will replace Monit with something else".
+
+If you learn about using BOSH on Windows you will discover that instead of Monit we use native Windows Services to start, stop, repair processes. But for Linux, its Monit.
+
+The good news is that Monit has an [extensive set of configuration](https://mmonit.com/monit/documentation/monit.html#THE-MONIT-CONTROL-FILE) that you might wish to use in future to describe good process behaviour.
+
+Let's regroup and reestablish what we know:
+
+`bosh instances --ps` displays a list of processes and their `running` or otherwise state. This information comes directly from Monit running on each instance.
+
+In daily life you will run `monit summary` or `bosh instances --ps` as part of debugging.
+
+## Job templates describe processes
+
+Earlier in [New deployments](#new-deployments) I introduced the terminology of a "job template":
+
+> BOSH will construct configuration files for the packages and commence running the software (called "job templates")
+
+Job templates are where we configure Monit processes, which in turn runs processes, which in turn results in a running system (of Zookeeper or Concourse or whatever our deployment is designed for). Job templates also configure the processes, describe how to start a process, and how to stop a process.
+
+First, let's finish tying up the story of Monit processes.
+
+Each BOSH instance has a folder `/var/vcap/jobs` containing one or more job templates.
+
+```
+# ls /var/vcap/jobs/
+baggageclaim  garden  groundcrew
+```
+
+This Concourse `worker` instance is configured to run three job templates called `baggageclaim`, `garden`, and `groundcrew`.
+
+These three job template names `baggageclaim garden groundcrew` are ALMOST the same as the Monit process names from above `baggageclaim garden beacon`. If they ever match, it is for convenience.
+
+Each job template folder contains a single `monit` file, which in turn contains zero or more `check process <process name>` instructions.
+
+```
+# tail /var/vcap/jobs/*/monit
+==> /var/vcap/jobs/baggageclaim/monit <==
+check process baggageclaim
+  with pidfile /var/vcap/sys/run/baggageclaim/baggageclaim.pid
+  start program "/var/vcap/jobs/baggageclaim/bin/baggageclaim_ctl start"
+  stop program "/var/vcap/jobs/baggageclaim/bin/baggageclaim_ctl stop"
+  group vcap
+
+==> /var/vcap/jobs/garden/monit <==
+check process garden
+  with pidfile /var/vcap/sys/run/garden/garden.pid
+  start program "/bin/sh -c '/var/vcap/jobs/garden/bin/garden_ctl start'"
+  stop program "/var/vcap/jobs/garden/bin/garden_ctl stop"
+
+  if failed host 127.0.0.1 port 7777
+    with timeout 5 seconds for 12 cycles
+    then restart
+
+  group vcap
+
+==> /var/vcap/jobs/groundcrew/monit <==
+check process beacon
+  with pidfile /var/vcap/sys/run/groundcrew/beacon.pid
+  start program "/var/vcap/jobs/groundcrew/bin/beacon_ctl start"
+  stop program "/var/vcap/jobs/groundcrew/bin/beacon_ctl stop"
+  group vcap
+```
+
+We see above that the `groundcrew` job template's `monit` file describes `check process beacon`. This is where the `beacon` name comes from. If we ever observe a problem with the `beacon` process, we now know it is configured inside the `groundcrew` job template.
+
+## Job templates
+
+We now also know that the `groundcrew` job template is ALWAYS located at `/var/vcap/jobs/groundcrew`.
+
+All job templates - the definition of how anything is configured and run - are located on every BOSH instance around the world in the same location: `/var/vcap/jobs/`
+
+**Conventions like this radically lower the mental challenges of providing support/debugging on running production systems.**

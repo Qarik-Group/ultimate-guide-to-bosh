@@ -600,20 +600,36 @@ check process beacon
 
 We see above that the `groundcrew` job template's `monit` file describes `check process beacon`. This is where the `beacon` name comes from. If we ever observe a problem with the `beacon` process, we now know it is configured inside the `groundcrew` job template.
 
-As an aside, `/var/vcap/jobs/garden/monit` is an advanced example of a Monit control file. It includes additional rules for when to automatically trigger a restart of the `garden` process.
+As an aside, `/var/vcap/jobs/garden/monit` above shows an advanced example of a Monit control file. It includes additional rules for when to automatically trigger a restart of the `garden` process. Monit will monitor port `7777` and if it cannot connect to the application locally then it will restart the process.
+
+Looking again at `groundcrew` job template's `monit` file:
+
+```
+check process beacon
+  with pidfile /var/vcap/sys/run/groundcrew/beacon.pid
+  start program "/var/vcap/jobs/groundcrew/bin/beacon_ctl start"
+  stop program "/var/vcap/jobs/groundcrew/bin/beacon_ctl stop"
+  group vcap
+```
+
+When Monit needs to start `beacon` it will invoke `/var/vcap/jobs/groundcrew/bin/beacon_ctl start`. That is, it invokes `/var/vcap/jobs/groundcrew/bin/beacon_ctl` and passes `start` as the first and only argument.
+
+At this point the Monit `check process beacon` expects that the Linux Process ID (PID) of a running Linux process will be placed at `/var/vcap/sys/run/groundcrew/beacon.pid`. Monit will continuously watch that this Linux process is running. If it isn't - that is, if the process dies unexpectedly - then Monit will restart to process. That is, it will invoke `/var/vcap/jobs/groundcrew/bin/beacon_ctl start` again.
+
+This is Monit's primary role - to monitor processes (by their PID) and ensure they are restarted if faulty or missing.
+
+When Monit needs to stop `beacon` it will invoke `/var/vcap/jobs/groundcrew/bin/beacon_ctl stop`.
 
 ## Job templates
 
-We now also know that the `groundcrew` job template is ALWAYS located at `/var/vcap/jobs/groundcrew`.
+The `groundcrew` job template will always be located at `/var/vcap/jobs/groundcrew`. The `garden` job template will always be located at `/var/vcap/jobs/garden`.
 
-All job templates - the definition of how anything is configured and run - are located on every BOSH instance around the world in the same location: `/var/vcap/jobs/`
+As it happens, within our `zookeeper` example deployment each `zookeeper` instance includes a job template called `zookeeper`. This means there will be a `/vcap/vcap/jobs/zookeeper` job template folder. This folder contains a `monit` control script with `create program zookeeper`. Consistency of names - using `zookeeper` as the name of the instance group, job template, and monit process - is convenient once you understand what is going on and is a common pattern that you will see.
 
-**Conventions like this radically lower the mental challenges of providing support/debugging on running production systems.**
+In summary, all job templates - the configuration of how software is configured and executed - are located on every BOSH instance around the world in the same location: `/var/vcap/jobs/`
+
+**Conventions like this radically lower the mental challenges of support/debugging on running production systems.** You will discover BOSH has many pleasant conventions across all deployments.
 
 Job templates must contain a `monit` file, but that `monit` file can be empty if the job template does not require any processes to be run.
-
-If the `monit` file does specify processes to run then the job template must include the scripts that can perform start/stop behaviour.
-
-A very common pattern across BOSH job templates is to provide a `/var/vcap/jobs/zookeeper/bin/ctl` wrapper script that supports two subcommands: `start` and `stop`. We will investigate more about authoring your own BOSH deployments later.
 
 Job templates will also be able to provide any configuration files used by the running processes. Some software requires configuration files. Or software might be configured with environment variables. Job templates will be written to suite the software it is configuring to run.

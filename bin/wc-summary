@@ -1,0 +1,18 @@
+#!/bin/bash
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
+wordcount_head=$(git show HEAD:README.md | wc -w | awk '{print $1}')
+wordcount_latest=$(cat README.md | wc -w | awk '{print $1}')
+wordcount_diff=`expr $wordcount_latest - $wordcount_head`
+
+colour=$NC
+if [[ $wordcount_diff -gt 0 ]]; then
+  colour=$GREEN
+elif [[ $wordcount_diff -lt 0 ]]; then
+  colour=$RED
+fi
+
+printf "${colour}${wordcount_diff}${NC}"

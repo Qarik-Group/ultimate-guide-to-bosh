@@ -22,6 +22,7 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
    * [What is BOSH?](#what-is-bosh)
       * [What is a running software system?](#what-is-a-running-software-system)
       * [Choose your own deployment level](#choose-your-own-deployment-level)
+      * [Assumptions](#assumptions)
 
 NOTE: update TOC using `bin/replace-toc`
 
@@ -206,4 +207,12 @@ You might define "deploying my system" at a different level to other people:
 * racking bare metal servers or putting Raspberry Pis into the field
 
 From the perspective of your organisation and their goals of efficiently using your time and energy,
-hopefully you can start as high up this stack as possible. For example, there is simply nothing faster, more time efficient, and UI consistent as `cf push`-ing an application to any Cloud Foundry. Every system you deploy should have to first justify why it cannot be deployed to Cloud Foundry.
+hopefully you can start as high up this stack as possible. For example, there is simply nothing faster, more time efficient, and UI consistent as `cf push`-ing an application to any Cloud Foundry. Every system you deploy should have to first justify why it cannot be deployed to Cloud Foundry or Heroku or Google App Engine.
+
+If you do need to "go down the stack" and take responsibility for more then you will need more help. Either your organisation will need to expect less from you and your team, or you'll need more tooling, automation, and education.
+
+## Assumptions
+
+The Ultimate Guide to BOSH assumes you need the latter: you need tooling, automation and education.
+
+It also assumes that you have direct access to your virtualisation/cloud infrastructure - you have suitable AWS credentials, or a Google Compute account or vSphere admin access.

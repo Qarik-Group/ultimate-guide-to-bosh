@@ -39,6 +39,8 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
       * [Running processes, summary-in-progress](#running-processes-summary-in-progress)
       * [Logs](#logs)
       * [Linux pipe operators](#linux-pipe-operators)
+      * [Short-lived infrastructure](#short-lived-infrastructure)
+      * [Persistent volumes](#persistent-volumes)
 
 NOTE: update TOC using `bin/replace-toc`
 
@@ -878,3 +880,29 @@ One option is to explicitly redirect these two pipes to local files. That is wha
 You will now be able to look inside `/var/vcap/sys/log/zookeeper/stderr.log` and see only the error/warning messages.
 
 If the pipe operators `>` and `2>` are used, then new log files will be created when the application is executed. This will effectively erase any previous logs that might have explained the history of the process before it was restarted. Therefore you will typically see the append operators `>>` and `2>>`.
+
+## Short-lived infrastructure
+
+We cannot assume that files or data written to the filesystem will be available forever. Cloud infrastructure providers will not make any commitments to the longevity of their virtual machines and the associated root file systems.
+
+The ephemeral lifespan of virtual machines needs to be considered and fortunately BOSH is here to help.
+
+If the BOSH director ever discovers that an instance has disappeared or has become unresponsive, it will fix the problem. The BOSH director will resurrect any missing instances.
+
+**Resurrection of infrastructure is an incredibly powerful feature of BOSH that makes it essential to your organization.** And your personal life.
+
+If the original server is missing (perhaps the cloud provider lost the host machine or perhaps someone with admin permissions accidentally deleted it), the BOSH director create a new server.
+
+Alternately, if the cloud provider API believes the original server still exists but the BOSH director cannot access it, then the BOSH director will request that the server be destroyed and will then create a replacement.
+
+Cloud servers will also be destroyed and recreated during normal BOSH operations, in additional to the abnormal situations above.
+
+Routinely you will want to upgrade all the base operating systems for all the instances of all your deployments to push out security patches. The base operating system is called a BOSH "stemcell". These are maintained by the BOSH Core team and are regularly released with new security fixes (thanks also go to Canonical who maintain the Ubuntu distribution). You might find one or two new stemcells are released each month containing security fixes in the base operating system alone.
+
+Fortunately upgrading all your deployments to new BOSH stemcells is a very easy operation and we will definitely we returning to this topic soon. For now you need to know that this process will result in your application processes being stopped (via Monit), the original servers being deleted (via the CPI) and new servers being created to replace them (via the CPI). Any files written arbitrarily to the filesystem will be lost.
+
+Another routing operation you will perform that causes instances to be stopped, and the servers deleted and replaced is resizing or scaling up your instances. BOSH CPIs assume that cloud providers do not know how to resizing a running server, so they will emulate "resizing" by deleting the original small server and replacing it with a new larger server. Any files written arbitrarily to the filesystem will be lost.
+
+## Persistent volumes
+
+Fortunately there is a solution to storing data that survives longer than any ephemeral cloud server: persistent volumes.

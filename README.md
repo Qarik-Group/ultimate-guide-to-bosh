@@ -1054,3 +1054,32 @@ To provision a new deployment we provide a deployment manifest to the BOSH direc
 A deployment manifest is the explicit declaration of what software needs to run, with specific configuration properties, on each different instance.
 
 **The same deployment manifest deployed today should produce the same running system if you deployed it again in 5 years time.**
+
+Our first example deployment manifest will be `zookeeper.yml`, which I've been referring to throughout the Ultimate Guide to BOSH so far (the [original file](https://github.com/cppforlife/zookeeper-release/blob/207c9d79eb12399dffe6df7f89abd854d4888f3e/manifests/zookeeper.yml) at time of writing). Below is a subset of the manifest that references the concepts covered so far:
+
+```yaml
+---
+name: zookeeper
+
+releases:
+- name: zookeeper
+  version: 0.0.6
+  url: https://bosh.io/d/github.com/cppforlife/zookeeper-release?v=0.0.6
+  sha1: eea677d086161ada53dc7f6a056e94023384bba0
+
+instance_groups:
+- name: zookeeper
+  instances: 5
+  jobs:
+  - name: zookeeper
+    release: zookeeper
+    properties: {}
+  persistent_disk: 10240
+
+- name: smoke-tests
+  lifecycle: errand
+  jobs:
+  - name: smoke-tests
+    release: zookeeper
+    properties: {}
+```

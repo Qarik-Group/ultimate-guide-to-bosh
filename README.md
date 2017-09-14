@@ -30,7 +30,7 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
       * [New deployments of Zookeeper](#new-deployments-of-zookeeper)
       * [BOSH Architecture, Part 1](#bosh-architecture-part-1)
       * [CPI - the ultimate Cloud Provider Interface abstraction](#cpi---the-ultimate-cloud-provider-interface-abstraction)
-      * [Instances](#instances)
+   * [Instances](#instances)
       * [SSH](#ssh)
       * [Shell user prompts in examples](#shell-user-prompts-in-examples)
       * [Monit process monitoring](#monit-process-monitoring)
@@ -45,6 +45,7 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
       * [What is vcap?](#what-is-vcap)
       * [Packages](#packages)
       * [Releases, Part 1](#releases-part-1)
+   * [Deployment manifests](#deployment-manifests)
 
 NOTE: update TOC using `bin/replace-toc`
 
@@ -388,7 +389,7 @@ In VMWare vCenter your deployment will not specifically look like anything. vSph
 
 For sure there are distinctions in deploying any system to any infrastructure that need to be made, but the command above is valid and will work once we have a running BOSH director configured with a CPI. That's fantastic.
 
-## Instances
+# Instances
 
 A deployment is made up of instances. Normally instances represent long-running servers on your cloud infrastructure. They can also represent "errands" - one-off tasks that are run inside of temporary servers.
 
@@ -1045,3 +1046,11 @@ If you need to switch from Oracle Java to OpenJDK, then a new version of the ent
 For this reason I say that packages and job templates are not first class citizens in BOSH. BOSH releases are the primary unit of deployment into BOSH instances.
 
 The method for selecting specific versions of specific BOSH releases to be combined into a BOSH deployment is using the deployment manifest.
+
+# Deployment manifests
+
+To provision a new deployment we provide a deployment manifest to the BOSH director. To make modifications to an existing deployment we provide the BOSH director with a modified deployment manifest.
+
+A deployment manifest is the explicit declaration of what software needs to run, with specific configuration properties, on each different instance.
+
+**The same deployment manifest deployed today should produce the same running system if you deployed it again in 5 years time.**

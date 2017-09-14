@@ -1073,7 +1073,6 @@ instance_groups:
   jobs:
   - name: zookeeper
     release: zookeeper
-    properties: {}
   persistent_disk: 10240
 
 - name: smoke-tests
@@ -1081,11 +1080,93 @@ instance_groups:
   jobs:
   - name: smoke-tests
     release: zookeeper
-    properties: {}
 ```
 
-The top level sections of this YAML file are:
+BOSH deployment manifests use [YAML](http://yaml.org/) markup language. YAML is a relatively human-readable format though your friendship with YAML will be stretched when deployment manifests grow beyond a 100 lines or more.
+
+The goal of a deployment manifest is to describe a deployment that will be reproducible again and again in the future. Three years from now we do not want to accidentally see different packages or configuration files being installed unless we explicit upgraded to them.
+
+In the example manifest above, the top level sections of this YAML file are:
 
 * `name` is the unique name of this deployment within a BOSH director. When a BOSH director receives subsequent deployment manifests with the same `name` it will assume it is an upgrade of the existing deployment.
 * `releases` lists the specific BOSH release versions that are to be used, which almost means the specific sets of job templates and packages.
 * `instance_groups` lists the sets of instances that will run the same job templates/packages as each other. Instance groups will be deployed as long running instances by default. The configuration `lifecycle: errand` means they will instead be errands (to be discussed later).
+
+If we keep this manifest the same we will always get the same deployment of instances, job templates, and packages year after year. This is achieved by our explicit declaration of `releases`.
+
+In the example above, we explicit require `zookeeper/0.0.6` BOSH release. The `0.0.6` version number is only relative to preceding versions of the same BOSH release, not to any upstream packages. At the time of writing, the `zookeeper` BOSH release being used was packaging Apache Zookeeper v3.4.10 ([list of source blobs](https://github.com/cppforlife/zookeeper-release/blob/207c9d79eb12399dffe6df7f89abd854d4888f3e/config/blobs.yml)).
+
+If you deployed `zookeeper/0.0.6` every day for a year you would always be deploying Apache Zookeeper v3.4.10 as it is packaged inside the BOSH release. It would always use the same Monit control script, the same Monit start/stop wrapper script, and the same configuration templates.
+
+In the deployment manifest we decide which instances install which job templates/packages within the `instance_groups` section.
+
+The `zookeeper.yml` example above specifies as single long-running group of instances:
+
+```yaml
+instance_groups:
+- name: zookeeper
+  instances: 5
+  jobs:
+  - name: zookeeper
+    release: zookeeper
+  persistent_disk: 10240
+```
+
+This group of instances will be known within the deployment by its name `zookeeper`. This instance group name is coincidentally the same name as the entire deployment. Whilst deployment names are unique across deployments within the same BOSH director, instance group names only need to be unique within a deployment. You can have many different deployments in one BOSH director with an instance group called `zookeeper`, but they would all need different deployment names.
+
+The software, configuration, and start/stop scripts running on each `zookeeper` instance is described by the `jobs:` section of an instance group.
+
+```yaml
+jobs:
+- name: zookeeper
+  release: zookeeper
+  properties: {}
+```
+
+This `jobs` section declares that it will install a job template called `zookeeper` from the release named `zookeeper`. The consistency of naming the deployment, instance group, release, and job templates all `zookeeper` is mentally efficient eventually.
+
+But right now, you might find it confusing.
+
+Let's rename as many attributes in this manifest as we can and discuss which attributes we cannot modify.
+
+```yaml
+---
+name: zookeeper-deployment
+
+releases:
+- name: zookeeper
+  version: 0.0.6
+  url: https://bosh.io/d/github.com/cppforlife/zookeeper-release?v=0.0.6
+  sha1: eea677d086161ada53dc7f6a056e94023384bba0
+
+instance_groups:
+- name: zookeeper-instances
+  instances: 3
+  jobs:
+  - name: zookeeper
+    release: zookeeper
+  persistent_disk: 20480
+
+- name: smoke-tests-errand
+  lifecycle: errand
+  jobs:
+  - name: smoke-tests
+    release: zookeeper
+```
+
+Compare this manifest to the earlier version and see that we have modified the following attributes:
+
+* deployment name changed to `zookeeper-deployment`
+* instance group `zookeeper` renamed to `zookeeper-instances`
+* we've reduced the cluster size from 5 instances to 3
+* we've resized the persistent disk from 10GB to 20GB
+* errand `smoke-tests` renamed to `smoke-tests-errand`
+
+These were the only attributes in our manifest subset that were easily modifiable or renamable.
+
+Conversely the following attributes of the manifest were not easily modifiable:
+
+* the `name` of each item in the `releases` section comes from the BOSH release we use; we cannot rename or alias them within the manifest
+* the `verion`, `url`, and `sha1` are related to each other to describe which BOSH release to use; if we want to upgrade to a newer release we would change these
+* within `jobs` sections of instance groups the `release` must match one of the names in the top-level `releases` section. At the top-level these are immutable, so they are correspondingly immutable within the `jobs` sections of instance groups.
+* within `jobs` sections of instance groups, the `name` of a job template is derived from the BOSH release itself (more on this soon), and cannot be renamed or aliased within a deployment manifest.

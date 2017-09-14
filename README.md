@@ -38,6 +38,7 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
       * [Job templates](#job-templates)
       * [Running processes, summary-in-progress](#running-processes-summary-in-progress)
       * [Logs](#logs)
+      * [Linux pipe operators](#linux-pipe-operators)
 
 NOTE: update TOC using `bin/replace-toc`
 
@@ -825,7 +826,7 @@ You have some options to survive log overload.
     For example, if you're looking for log lines that contain `stderr` string:
 
     ```
-    bosh logs -f | grep stderr
+    > bosh logs -f | grep stderr
     ```
 
 * Use `bosh logs` (without the `--follow` or `-f` following flag) and all the current logs will be downloaded to your local machine.
@@ -839,3 +840,41 @@ You have some options to survive log overload.
 The reason that `bosh logs` can find all the process logs is a convention used amongst all BOSH deployments to place their process logs in the same subfolder `/var/vcap/sys/log`.
 
 Note, this log location is different from many other Linux conventions, such as `/var/log`. We will discuss the alternate filesystem layout of BOSH instances soon.
+
+Within a BOSH instance you can try watching all the logs using `tail`:
+
+```
+$ tail -f /var/vcap/sys/log/{*.log,*/*.log}
+```
+
+Different job templates in different deployments will produce different sets of logs, but there is a convention that they will be placed under `/var/vcap/sys/log`.
+
+If we revisit the `bin/ctl start` for `zookeeper` above, we can see how it is storing some logs:
+
+```
+exec chpst -u vcap:vcap \
+  /var/vcap/packages/zookeeper/bin/zkServer.sh start-foreground \
+  >>/var/vcap/sys/log/zookeeper/stdout.log \
+  2>>/var/vcap/sys/log/zookeeper/stderr.log
+```
+
+Any regular output will be appended to a file `/var/vcap/sys/log/zookeeper/stdout.log`, and any error or warning messages will be appended to a file `/var/vcap/sys/log/zookeeper/stderr.log`.
+
+## Linux pipe operators
+
+The `>>` and `2>>` symbols in the example above are Linux pipe operators. They are similar to the pipe operators `>` and `2>`.
+
+Every Linux process can emit two pipes called "standard out" (stdout) and "standard error" (stderr). Typically applications will print any regular output for the application to stdout and emit errors and warnings to stderr. This means that any text output to either stdout or stderr has some additional metadata - was it regular output or was it an error/warning message.
+
+When we run applications in a terminal or SSH session, anything appearing in these two pipes will be displayed on the screen.
+
+When we use Monit to run applications there is no terminal screen for a human to see. The contents of these two pipes might be ignored. That is, we would not know if applications were emitting good output or error messages.
+
+One option is to explicitly redirect these two pipes to local files. That is what is happening in the `bin/ctl start` example above.
+
+* `>>` will append any stdout pipe contents to the file `/var/vcap/sys/log/zookeeper/stdout.log`
+* `2>>` will append any stderr pipe contents to the file `/var/vcap/sys/log/zookeeper/stderr.log`
+
+You will now be able to look inside `/var/vcap/sys/log/zookeeper/stderr.log` and see only the error/warning messages.
+
+If the pipe operators `>` and `2>` are used, then new log files will be created when the application is executed. This will effectively erase any previous logs that might have explained the history of the process before it was restarted. Therefore you will typically see the append operators `>>` and `2>>`.

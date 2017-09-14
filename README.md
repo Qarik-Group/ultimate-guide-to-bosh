@@ -542,9 +542,18 @@ root
 
 If an example does not include a shell prompt (`>`, `$`, or `#`) then it is the contents of a shell script, or the output from a command.
 
-Right now we need to be the root user to inspect Monit. Generally you should not need to be `root` user.
 
 **If you `bosh ssh` into a production system and have changed to `root` user then please place a large cowboy hat on your head. A big one. Everyone needs to know you're a cowboy.**
+
+Instead, try changing to the user for the processes you are working on. On most BOSH deployments the convention is to use a user called `vcap`. To change from your random `bosh_xxx` user to `vcap`:
+
+```
+$ sudo su - vcap
+$ whoami
+vcap
+```
+
+Right now we need to be the `root` user to inspect Monit. Generally you should not need to be `root` user.
 
 ## Monit process monitoring
 
@@ -792,3 +801,41 @@ This command will show all running processes in wide screen mode. You will see t
  Perhaps seeing all that will help you debug Zookeeper. Perhaps it will prompt you to change professions.
 
 ## Logs
+
+The previous sections have shown you what instances and processes are running in a system. In order to learn more about what all the software is doing as it is running you will need to be able to view the logs of all the running processes.
+
+The BOSH CLI is very convenient for getting started with logs. You can stream all the logs from all the job templates from all the instances in a deployment with one beautiful command:
+
+```
+bosh logs --follow
+```
+
+The `bosh logs --follow` flag also has the short alias `bosh logs -f`.
+
+FIXME: `bosh logs --follow` did not work as expected on Zookeeper https://github.com/cloudfoundry/bosh-cli/issues/315
+
+Some systems only emit logs if interesting things are happening. These can be pleasant logs to view.
+
+Unfortunately other systems can emit logs with a frequency which might infer they have nothing better to do. Your screen might be continuously populated with new logs such that it is impossible to understand anything.
+
+You have some options to survive log overload.
+
+* Pipe the logs to `grep` to restrict what you see
+
+    For example, if you're looking for log lines that contain `stderr` string:
+
+    ```
+    bosh logs -f | grep stderr
+    ```
+
+* Use `bosh logs` (without the `--follow` or `-f` following flag) and all the current logs will be downloaded to your local machine.
+
+* Use `bosh logs --job name` flag to try scoping down the subset of instances for which you want to see logs.
+
+* Use an external log collector where you may have additional features for searching/filtering logs.
+
+* SSH into each instance and inspect the logs directly
+
+The reason that `bosh logs` can find all the process logs is a convention used amongst all BOSH deployments to place their process logs in the same subfolder `/var/vcap/sys/log`.
+
+Note, this log location is different from many other Linux conventions, such as `/var/log`. We will discuss the alternate filesystem layout of BOSH instances soon.

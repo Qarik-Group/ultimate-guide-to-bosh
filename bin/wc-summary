@@ -11,6 +11,7 @@ wordcount_head=$(git show ${last_commit_yesterday}:README.md | wc -w | awk '{pri
 wordcount_latest=$(cat README.md | wc -w | awk '{print $1}')
 wordcount_diff=`expr $wordcount_latest - $wordcount_head`
 
+echo "${wordcount_latest} words total"
 colour=$NC
 if [[ $wordcount_diff -gt 0 ]]; then
   printf "${GREEN}${wordcount_diff}${NC} words added today\n"

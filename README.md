@@ -43,6 +43,8 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
       * [Persistent volumes](#persistent-volumes)
       * [Filesystem layout](#filesystem-layout)
       * [What is vcap?](#what-is-vcap)
+      * [Packages](#packages)
+      * [Releases, Part 1](#releases-part-1)
 
 NOTE: update TOC using `bin/replace-toc`
 
@@ -984,8 +986,62 @@ lrwxrwxrwx ... /var/vcap/sys -> /var/vcap/data/sys
 
 In the time before VMWare first publicly announced Cloud Foundry in April 2011, and before they announced BOSH in April 2012, these collection of projects were known as "VMWare Cloud Application Platform". Or VCAP for short. Which naturally became `vcap` anywhere the engineers aesthetically preferred all-lowercase labels. Thus, the common root folder for everything installed on a machine became `/var/vcap`.
 
-There have been occasional half-hearted ideas about renaming `/var/vcap` to something else. Anything else.
+There have been occasional half-hearted ideas about renaming `/var/vcap` to something else. Anything else. But the convention that every file in a BOSH instance is nested underneath `/var/vcap` is incredibly pervasive today.
 
 Naming is hard. Renaming is harder.
 
 If you ever want to make a permanent mark in the short-lived, short-attention span world of software and operations, just put your name at the root of a folder system.
+
+## Packages
+
+This is the final stop on our tour of BOSH instances. We arrive at the depot of raw materials of what allows a `zookeeper` BOSH deployment with five BOSH instances to actually behave like a cluster of Apache Zookeeper: the Apache Zookeeper software itself.
+
+If you have had a diverse expose to different operating systems (Windows, OS X, different Linux distributions) then you will have also been exposed to different packaging systems for the distribution and installation of software. This broad exposure will prepare you for BOSH packaging in one special way: you will be lacking the energy and the will to fight against "OMG, why is there another packaging system?!"
+
+BOSH packaging is similar to [Homebrew](https://brew.sh/) packaging for MacOS/OS X in that an installed package is a singular folder. An installed Homebrew package will be located at `/usr/local/Cellar/pkgname`. An installed BOSH package will be locatable at `/var/vcap/packages/pkgname` (and actually stored within the `/var/vcap/data` ephemeral volume as discussed in a previous section).
+
+This model of "a package is a folder" is not compliant with the [Filesystem Hierarchy Standard](https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard). But then again, you didn't know that the FHS existed until I just mentioned it.
+
+There is a comfortable convenience to standard Linux filesystems. Your `PATH` environment variable is already setup for the common locations of executables. For example, on a BOSH instance it is:
+
+```
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+```
+
+That's right, there are two folders included in `PATH` for games. I had to look it up - these are not mentioned in the [FHS wikipedia page](https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard).
+
+But I personally have a dissatisfaction with the standard Linux filesystem hierarchy: the knowledge of which files belong to each package is obscure. At the time that you need to know "how does this process get started and stopped" or "where are the log files for this process", its normally urgent and you're in a bad mood.
+
+This is a big positive for the BOSH filesystem hierarchy: you can find everything in a hurray.
+
+You look inside `/var/vcap/packages/pkgname/` and find every executable, shared library, and includable header file associated with that package.
+
+You look inside `/var/vcap/jobs/jobname` and find the Monit control script, wrapper start/stop script, and every other associated configuration file to run that job template.
+
+You look inside `/var/vcap/sys/log` and find all the logs for the processes that are running now or have run in the past.
+
+One difference between BOSH packaging and every other packaging system (including Homebrew) is that packages are neither first class citizens nor is there any global repositories of shared packages.
+
+Packages do not exist in isolation. Neither do job templates. Instead, they are rolled up into a singular first class entity called the BOSH release.
+
+## Releases, Part 1
+
+A BOSH deployment is a collection of instances (long-running servers and short-lived errands) upon which have been installed job templates and their dependent packages.
+
+In the `zookeeper` deployment, the `zookeeper` job template needs the `zookeeper` and `java` packages installed.
+
+Which `zookeeper` package? You might assume that it is Apache Zookeeper, but which version? Is it the unmodified source code, or a pre-built package? Do we need some additional security or features patched into it?
+
+Which `java` package? Oracle Java or OpenJDK? The JDK or the JRE? Which version?
+
+There is an important assumption built into the very fibre of BOSH that each of these questions is important and the answer potentially critical. Even if the initial person who deployed Zookeeper initially didn't specifically care which version of Apache Zookeeper or which JDK they used; everyone from that day onwards will need to care.
+
+Each version of a BOSH release combines a specific combination of packages and job templates that are written and packaged to work together. Instead of worrying about a matrix of Zookeeper and Java editions and versions that might work together, a BOSH release will explicitly package one of each together as a known good pair.
+
+If a security patch is released for Apache Zookeeper, then a new version of the entire BOSH release needs to be created, tested and deployed.
+
+If you need to switch from Oracle Java to OpenJDK, then a new version of the entire BOSH release needs to be created, tested and deployed.
+
+For this reason I say that packages and job templates are not first class citizens in BOSH. BOSH releases are the primary unit of deployment into BOSH instances.
+
+The method for selecting specific versions of specific BOSH releases to be combined into a BOSH deployment is using the deployment manifest.

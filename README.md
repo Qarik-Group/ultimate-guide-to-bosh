@@ -41,6 +41,8 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
       * [Linux pipe operators](#linux-pipe-operators)
       * [Short-lived infrastructure](#short-lived-infrastructure)
       * [Persistent volumes](#persistent-volumes)
+      * [Filesystem layout](#filesystem-layout)
+      * [What is vcap?](#what-is-vcap)
 
 NOTE: update TOC using `bin/replace-toc`
 
@@ -939,3 +941,51 @@ persistent_disk: 10240
 ```
 
 You will also learn that you can select different volume types and provide other cloud configuration using Persistent Disk Pools. For example, it is possible to configure all the different [Amazon EBS Volume Types](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSVolumeTypes.html) and specific IOPS requirements.
+
+## Filesystem layout
+
+The `df` output of filesystem volumes above begins to indicate why BOSH instances have a non-standard filesystem layout (for example, log files do not go into `/var/log` rather they go into `/var/vcap/sys/run`).
+
+The root volume (`/`) of the instance above is very small:
+
+```
+/dev/sda1       2.8G  1.2G  1.5G  46% /
+```
+
+It only has 1GB of available capacity. We do not want to install software packages or place fast-growing log files on this disk volume. Computer system behaviour is unpredictable when disks fill up. The bad sort of unpredictable.
+
+In addition to the small root volume, each BOSH instance is allocated an additional larger volume `/var/vcap/data`:
+
+```
+/dev/sda3       9.6G  366M  8.7G   4% /var/vcap/data
+```
+
+The size of `/var/vcap/data` is configurable and large, where as the `/` root volume is fixed and small.
+
+**We want to use `/var/vcap/data` for storing everything that is ephemeral, `/var/vcap/store` for everything that is permanent, and avoid the root volume.**
+
+For example we want to use `/var/vcap/data` to install software packages, job templates, and log files. Except I've previously indicated that the filesystem location for these three was `/var/vcap/packages`, `/var/vcap/jobs`, and `/var/vcap/sys/log`.
+
+BOSH instances have convenience symlinks so that files are actually stored within the large ephemeral `/var/vcap/data` volume. Some examples:
+
+```
+$ ls -al /var/vcap/jobs/zookeeper
+lrwxrwxrwx ... /var/vcap/jobs/zookeeper -> /var/vcap/data/jobs/zookeeper/a14a07c550a0...
+
+$ ls -al /var/vcap/packages/*
+lrwxrwxrwx ... /var/vcap/packages/java -> /var/vcap/data/packages/java/050ac5643452f2...
+lrwxrwxrwx ... /var/vcap/packages/zookeeper -> /var/vcap/data/packages/zookeeper/be0f...
+
+$ ls -al /var/vcap/sys
+lrwxrwxrwx ... /var/vcap/sys -> /var/vcap/data/sys
+```
+
+## What is vcap?
+
+In the time before VMWare first publicly announced Cloud Foundry in April 2011, and before they announced BOSH in April 2012, these collection of projects were known as "VMWare Cloud Application Platform". Or VCAP for short. Which naturally became `vcap` anywhere the engineers aesthetically preferred all-lowercase labels. Thus, the common root folder for everything installed on a machine became `/var/vcap`.
+
+There have been occasional half-hearted ideas about renaming `/var/vcap` to something else. Anything else.
+
+Naming is hard. Renaming is harder.
+
+If you ever want to make a permanent mark in the short-lived, short-attention span world of software and operations, just put your name at the root of a folder system.

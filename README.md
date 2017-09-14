@@ -906,3 +906,36 @@ Another routing operation you will perform that causes instances to be stopped, 
 ## Persistent volumes
 
 Fortunately there is a solution to storing data that survives longer than any ephemeral cloud server: persistent volumes.
+
+Each cloud infrastructure provider has its own implementation of long-lived storage volumes. Amazon AWS has [Elastic Block Storage](https://aws.amazon.com/ebs/) (EBS). Google Compute has [Persistent Disks](https://cloud.google.com/compute/docs/disks/#pdspecs).
+
+BOSH CPIs will map each cloud implementation to a homogenous experience for BOSH instances. Any BOSH instance that has persistent storage enabled will have a folder `/var/vcap/store`. Any files or data written within this folder will survive the turbulent life of ephemeral cloud servers.
+
+Within a BOSH instance we can see that `/var/vcap/store` is implemented as a separate Linux volume. The `df` Linux command will display all the mounted volumes:
+
+```
+$ df -h
+Filesystem      Size  Used Avail Use% Mounted on
+udev            3.7G  4.0K  3.7G   1% /dev
+tmpfs           748M  272K  748M   1% /run
+/dev/sda1       2.8G  1.2G  1.5G  46% /
+none            4.0K     0  4.0K   0% /sys/fs/cgroup
+none            5.0M     0  5.0M   0% /run/lock
+none            3.7G     0  3.7G   0% /run/shm
+none            100M     0  100M   0% /run/user
+/dev/sda3       9.6G  366M  8.7G   4% /var/vcap/data
+tmpfs           1.0M  4.0K 1020K   1% /var/vcap/data/sys/run
+/dev/sdb1       9.8G   23M  9.2G   1% /var/vcap/store
+```
+
+At the bottom we can see a volume mounted at `/var/vcap/store`. It is almost 10GB in size, has 23MB already used and 9.2GB remaining. These numbers don't mathematically add up at all. In summary, there is a persistent disk and not much of it has been used yet.
+
+The existence and size of the persistent volume is configured in the deployment manifest. For example, the `manifests/zookeeper.yml` file from our ongoing Zookeeper example. Soon we will begin looking inside this YAML file.
+
+For now, know that it can be very simple to declare a persistent disk. A 10GB persistent volume will be provisioned, attached, and mounted at `/var/vcap/store` with the simple manifest entry:
+
+```
+persistent_disk: 10240
+```
+
+You will also learn that you can select different volume types and provide other cloud configuration using Persistent Disk Pools. For example, it is possible to configure all the different [Amazon EBS Volume Types](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSVolumeTypes.html) and specific IOPS requirements.

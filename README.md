@@ -45,7 +45,9 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
       * [What is vcap?](#what-is-vcap)
       * [Packages](#packages)
       * [Releases, Part 1](#releases-part-1)
-   * [Deployment manifests](#deployment-manifests)
+   * [Deployment manifests, Part 1](#deployment-manifests-part-1)
+      * [Explicit declaration in manifests](#explicit-declaration-in-manifests)
+      * [Immutable manifest attributes](#immutable-manifest-attributes)
 
 NOTE: update TOC using `bin/replace-toc`
 
@@ -1047,7 +1049,7 @@ For this reason I say that packages and job templates are not first class citize
 
 The method for selecting specific versions of specific BOSH releases to be combined into a BOSH deployment is using the deployment manifest.
 
-# Deployment manifests
+# Deployment manifests, Part 1
 
 To provision a new deployment we provide a deployment manifest to the BOSH director. To make modifications to an existing deployment we provide the BOSH director with a modified deployment manifest.
 
@@ -1092,6 +1094,8 @@ In the example manifest above, the top level sections of this YAML file are:
 * `releases` lists the specific BOSH release versions that are to be used, which almost means the specific sets of job templates and packages.
 * `instance_groups` lists the sets of instances that will run the same job templates/packages as each other. Instance groups will be deployed as long running instances by default. The configuration `lifecycle: errand` means they will instead be errands (to be discussed later).
 
+## Explicit declaration in manifests
+
 If we keep this manifest the same we will always get the same deployment of instances, job templates, and packages year after year. This is achieved by our explicit declaration of `releases`.
 
 In the example above, we explicit require `zookeeper/0.0.6` BOSH release. The `0.0.6` version number is only relative to preceding versions of the same BOSH release, not to any upstream packages. At the time of writing, the `zookeeper` BOSH release being used was packaging Apache Zookeeper v3.4.10 ([list of source blobs](https://github.com/cppforlife/zookeeper-release/blob/207c9d79eb12399dffe6df7f89abd854d4888f3e/config/blobs.yml)).
@@ -1126,6 +1130,8 @@ jobs:
 This `jobs` section declares that it will install a job template called `zookeeper` from the release named `zookeeper`. The consistency of naming the deployment, instance group, release, and job templates all `zookeeper` is mentally efficient eventually.
 
 But right now, you might find it confusing.
+
+## Immutable manifest attributes
 
 Let's rename as many attributes in this manifest as we can and discuss which attributes we cannot modify.
 

@@ -151,7 +151,7 @@ In 2012 I was very publicly excited about BOSH on Twitter ([@drnic](https://twit
 
 Many of those early presentations and guides were helpful to the many people who've discovered BOSH and are using it to run production systems at huge scales.
 
-In 2013 the BOSH project was taken over by Pivotal engineering and has been gifted to the Cloud Foundry Foundation to secure its long term success as an open source, open community project. Thanks to Pivotal, IBM and other members of the Cloud Foundry Foundation the BOSH project has received huge consistent investment to this today.
+In 2013 the BOSH project was taken over by Pivotal engineering and has been gifted to the Cloud Foundry Foundation to secure its long term success as an open source, open community project. Thanks to Pivotal, IBM and other members of the Cloud Foundry Foundation the BOSH project has received huge consistent investment to this day.
 
 There are many people in the history of BOSH who have directly made BOSH what it is, actively sponsored its investment, or evangelised it.
 
@@ -951,7 +951,7 @@ You will also learn that you can select different volume types and provide other
 
 ## Filesystem layout
 
-The `df` output of filesystem volumes above begins to indicate why BOSH instances have a non-standard filesystem layout (for example, log files do not go into `/var/log` rather they go into `/var/vcap/sys/run`).
+The `df` output of filesystem volumes above begins to indicate why BOSH instances have a non-standard filesystem layout (for example, log files do not go into `/var/log` rather they go into `/var/vcap/sys/log`).
 
 The root volume (`/`) of the instance above is very small:
 
@@ -1001,7 +1001,7 @@ If you ever want to make a permanent mark in the short-lived, short-attention sp
 
 This is the final stop on our tour of BOSH instances. We arrive at the depot of raw materials of what allows a `zookeeper` BOSH deployment with five BOSH instances to actually behave like a cluster of Apache Zookeeper: the Apache Zookeeper software itself.
 
-If you have had a diverse expose to different operating systems (Windows, OS X, different Linux distributions) then you will have also been exposed to different packaging systems for the distribution and installation of software. This broad exposure will prepare you for BOSH packaging in one special way: you will be lacking the energy and the will to fight against "OMG, why is there another packaging system?!"
+If you have been exposed to a variety of different operating systems (Windows, OS X, different Linux distributions) then you will have also been exposed to different packaging systems for the distribution and installation of software. This broad exposure will prepare you for BOSH packaging in one special way: you will be lacking the energy and the will to fight against "OMG, why is there another packaging system?!"
 
 BOSH packaging is similar to [Homebrew](https://brew.sh/) packaging for MacOS/OS X in that an installed package is a singular folder. An installed Homebrew package will be located at `/usr/local/Cellar/pkgname`. An installed BOSH package will be locatable at `/var/vcap/packages/pkgname` (and actually stored within the `/var/vcap/data` ephemeral volume as discussed in a previous section).
 
@@ -1246,3 +1246,38 @@ They are all different because the nature of BOSH deployments is they can target
 As the `cloud-config` is shared across deployments your organization, and the broader BOSH community, will want to agree on a minimal set of `vm_types` that any basic deployment manifest will work with any basic `cloud-config`. In the three examples above, each `vm_types` list includes a `name: default` item. In production your `cloud-config` might include many other `vm_types` that you'd like to use within your deployments, but it is good practice to include at least one called `default`.
 
 Each `vm_type` also has a `cloud_properties` section whose contents is specific to the target cloud infrastructure and the CPI being used within the BOSH director.
+
+It is likely that you will want to use various `vm_types` across all your deployments. You might want small instance sizes for low CPU/low RAM activities, and large CPU/large RAM instances for other activities. Each will need an entry in your shared `vm_types` list within `bosh cloud-config`.
+
+In our example `zookeeper.yml` we can now add a required `vm_type` attribute into each of the `instance_groups` to reference which instance size we want to use from our `cloud-config`:
+
+```yaml
+---
+name: zookeeper-deployment
+
+instance_groups:
+- name: zookeeper-instances
+  instances: 5
+  vm_type: default
+  jobs:
+  - name: zookeeper
+    release: zookeeper
+  persistent_disk: 10240
+
+- name: smoke-tests-errand
+  instances: 1
+  lifecycle: errand
+  vm_type: default
+  jobs:
+  - name: smoke-tests
+    release: zookeeper
+```
+
+For example, at the time of writing, the community method for deploying Cloud Foundry assumes that your cloud-config contains `vm_types` that are named:
+
+* `minimal`
+* `small`
+* `small-highmem`
+* `sharedcpu`
+
+This comes from https://github.com/cloudfoundry/cf-deployment/blob/master/cf-deployment.yml

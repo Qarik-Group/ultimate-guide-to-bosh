@@ -46,8 +46,10 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
       * [Packages](#packages)
       * [Releases, Part 1](#releases-part-1)
    * [Deployment manifests, Part 1](#deployment-manifests-part-1)
+      * [Sizing a deployment, Part 1](#sizing-a-deployment-part-1)
       * [Explicit declaration in manifests](#explicit-declaration-in-manifests)
       * [Immutable manifest attributes](#immutable-manifest-attributes)
+      * [Cloud Config, Part 1](#cloud-config-part-1)
 
 NOTE: update TOC using `bin/replace-toc`
 
@@ -1094,6 +1096,19 @@ In the example manifest above, the top level sections of this YAML file are:
 * `releases` lists the specific BOSH release versions that are to be used, which almost means the specific sets of job templates and packages.
 * `instance_groups` lists the sets of instances that will run the same job templates/packages as each other. Instance groups will be deployed as long running instances by default. The configuration `lifecycle: errand` means they will instead be errands (to be discussed later).
 
+## Sizing a deployment, Part 1
+
+In our example subset manifest above, there are two attributes we can change to resize the infrastructure used for our deployment:
+
+* `instances: 5` will set or change the number of instances used
+* `persistent_disk: 10240` will set or change the size of the persistent volume attached to each instance
+
+For a brand new deployment, setting these attributes and invoking `bosh deploy` will establish the initial CPI requests to the cloud infrastructure.
+
+For an existing deployment, changing these attributes and invoking `bosh deploy` will perform a transformation of your system from its current cloud infrastructure servers and disks to the new requirements - more or fewer servers, and/or smaller or large persistent disks.
+
+We will review how the BOSH director performs these transformations of existing deployments later. Its pretty fabulous.
+
 ## Explicit declaration in manifests
 
 If we keep this manifest the same we will always get the same deployment of instances, job templates, and packages year after year. This is achieved by our explicit declaration of `releases`.
@@ -1116,7 +1131,10 @@ instance_groups:
   persistent_disk: 10240
 ```
 
+
 This group of instances will be known within the deployment by its name `zookeeper`. This instance group name is coincidentally the same name as the entire deployment. Whilst deployment names are unique across deployments within the same BOSH director, instance group names only need to be unique within a deployment. You can have many different deployments in one BOSH director with an instance group called `zookeeper`, but they would all need different deployment names.
+
+Each instance in the group will have a 10GB persistent disk (the plain number `10240` is in MB).
 
 The software, configuration, and start/stop scripts running on each `zookeeper` instance is described by the `jobs:` section of an instance group.
 
@@ -1176,3 +1194,55 @@ Conversely the following attributes of the manifest were not easily modifiable:
 * the `verion`, `url`, and `sha1` are related to each other to describe which BOSH release to use; if we want to upgrade to a newer release we would change these
 * within `jobs` sections of instance groups the `release` must match one of the names in the top-level `releases` section. At the top-level these are immutable, so they are correspondingly immutable within the `jobs` sections of instance groups.
 * within `jobs` sections of instance groups, the `name` of a job template is derived from the BOSH release itself (more on this soon), and cannot be renamed or aliased within a deployment manifest.
+
+
+## Cloud Config, Part 1
+
+The number of instances and the size of persistent disks are attributes that are not specific to which cloud infrastructure you are using. Conversely, the specific details about the size of the servers is is specific to each cloud infrastructure. On vSphere you will want to specify the explicit allocation of CPUs, RAM and ephemeral disk. Whereas, when using Amazon EC2 you might choose between a list of [Instance Types](https://aws.amazon.com/ec2/instance-types/) such as `m4.large` or `t2.medium`. Similarly, Google Compute [Machine Types](https://cloud.google.com/compute/docs/machine-types) have a list of predefined sizes you can provision, albeit with a different set of names such as `n1-standard-1` and different attributes from Amazon EC2.
+
+This crossover from the deployment manifest to specific cloud infrastructure requirements is not placed in the deployment manifest. Instead we will have provided our BOSH director with "Cloud Config" to educate it about how we wish our deployment manifests to be applied to our cloud infrastructure.
+
+Each BOSH director has a Cloud Config specification. We can download and view a BOSH director's Cloud Config:
+
+```
+bosh cloud-config
+```
+
+There are several areas of configuration but for now let's look at one - `vm_type` - the specification of the size of servers. An example of a `bosh cloud-config` for Google Compute might look like:
+
+```yaml
+vm_types:
+- name: default
+  cloud_properties:
+    machine_type: n1-standard-2
+    root_disk_size_gb: 20
+    root_disk_type: pd-ssd
+```
+
+For Amazon EC2 it might include:
+
+```yaml
+vm_types:
+- name: default
+  cloud_properties:
+    instance_type: m4.large
+    ephemeral_disk:
+      size: 25_000
+```
+
+For vSphere it might include:
+
+```yaml
+vm_types:
+- name: default
+  cloud_properties:
+    cpu: 2
+    ram: 1024
+    disk: 3240
+```
+
+They are all different because the nature of BOSH deployments is they can target any cloud infrastructure. Whereas deployment manifests attempt to be independent of the underlying cloud infrastructure, it is necessary to eventually specify what you will provision and pay for. The `bosh cloud-config` documents this and it is a shared specification across all deployments in the same BOSH director.
+
+As the `cloud-config` is shared across deployments your organization, and the broader BOSH community, will want to agree on a minimal set of `vm_types` that any basic deployment manifest will work with any basic `cloud-config`. In the three examples above, each `vm_types` list includes a `name: default` item. In production your `cloud-config` might include many other `vm_types` that you'd like to use within your deployments, but it is good practice to include at least one called `default`.
+
+Each `vm_type` also has a `cloud_properties` section whose contents is specific to the target cloud infrastructure and the CPI being used within the BOSH director.

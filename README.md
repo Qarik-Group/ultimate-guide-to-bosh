@@ -920,6 +920,8 @@ Each cloud infrastructure provider has its own implementation of long-lived stor
 
 BOSH CPIs will map each cloud implementation to a homogenous experience for BOSH instances. Any BOSH instance that has persistent storage enabled will have a folder `/var/vcap/store`. Any files or data written within this folder will survive the turbulent life of ephemeral cloud servers.
 
+Each BOSH instance has its own independent persistent volume. For example, our `zookeeper` deployment with 5 instances will have 5 persistent volumes. Each volume is associated to its BOSH instance for the life of the deployment. If an instance's underlying cloud server is destroyed and recreated, the same persistent volume will be reattached to the replacement cloud server. We will discuss this process more in later sections.
+
 Within a BOSH instance we can see that `/var/vcap/store` is implemented as a separate Linux volume. The `df` Linux command will display all the mounted volumes:
 
 ```

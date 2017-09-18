@@ -922,6 +922,8 @@ BOSH CPIs will map each cloud implementation to a homogenous experience for BOSH
 
 Each BOSH instance has its own independent persistent volume. For example, our `zookeeper` deployment with 5 instances will have 5 persistent volumes. Each volume is associated to its BOSH instance for the life of the deployment. If an instance's underlying cloud server is destroyed and recreated, the same persistent volume will be reattached to the replacement cloud server. We will discuss this process more in later sections.
 
+There is no concept in BOSH for sharing a volume between instances. If this facility is required, your deployment would include NFS or a similar network filesystem service running atop your BOSH instances and their persistent volumes.
+
 Within a BOSH instance we can see that `/var/vcap/store` is implemented as a separate Linux volume. The `df` Linux command will display all the mounted volumes:
 
 ```

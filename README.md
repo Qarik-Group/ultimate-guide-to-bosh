@@ -31,6 +31,7 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
       * [BOSH Architecture, Part 1](#bosh-architecture-part-1)
       * [CPI - the ultimate Cloud Provider Interface abstraction](#cpi---the-ultimate-cloud-provider-interface-abstraction)
    * [Instances](#instances)
+      * [Instances and Cloud servers](#instances-and-cloud-servers)
       * [SSH](#ssh)
       * [Shell user prompts in examples](#shell-user-prompts-in-examples)
       * [Monit process monitoring](#monit-process-monitoring)
@@ -395,7 +396,7 @@ For sure there are distinctions in deploying any system to any infrastructure th
 
 # Instances
 
-A deployment is made up of instances. Normally instances represent long-running servers on your cloud infrastructure. They can also represent "errands" - one-off tasks that are run inside of temporary servers.
+A deployment is made up of instances. Normally instances represent long-running servers on your cloud infrastructure. They can also represent "errands" - one-off tasks that can  be run inside of temporary servers.
 
 The BOSH CLI makes it easy to see the list of instances for a deployment and their basic health status with the `bosh instances` command:
 
@@ -477,6 +478,19 @@ Each `worker` instance is running three processes: `baggageclaim`, `beacon`, and
 The `haproxy` instance has two IP addresses. The latter `184.98.185.163` is a public IP on the Internet. All the other IPs are private to the vSphere data centre. This `haproxy` instance is an inbound HTTP load balancer and has a statically assigned public IP for the benefit of configuring the external CloudFlare service which sits in front receiving https://ci.starkandwayne.com traffic.
 
 The labels for processes above come directly from inside the running instances. We will now look inside the `worker` instance and match up where this information comes from.
+
+## Instances and Cloud servers
+
+Throughout this Ultimate Guide to BOSH we will refer to Instances and Cloud Servers. They are related but different. BOSH instances are a permanent component of a BOSH deployment. The terminology "Cloud Server" will be a generic reference to the compute infrastructure where processes are running.
+
+In your environments, Cloud Servers are the actual virtual machines, physical machines (some CPIs work with bare machines), or containers (some CPIs provision Linux containers). Throughout the Ultimate Guide to BOSH I will try to use the generic terminology "cloud server" to represent the unit of running infrastructure.  In your day-to-day operations you will normally call them VMs, machines, or containers because you will know what infrastructure you're using.
+
+For example, in most production environments you will be using a CPI that manages virtual machines (Amazon AWS, Google Compute, Microsoft Azure, VMWare vSphere, OpenStack).
+
+During the life of a deployment, one Instance will map to one Cloud Server most of the time. Sometimes the Cloud Server might be accidentally missing or being deliberately replaced.
+
+
+A BOSH deployment with 5 `zookeeper` instances will always display 5 results with the `bosh instances` command.
 
 ## SSH
 

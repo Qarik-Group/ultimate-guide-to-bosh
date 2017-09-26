@@ -1422,9 +1422,9 @@ networks:
 - name: default
   type: manual
   subnets:
-  - range: 10.10.0.0/24
-    gateway: 10.10.0.1
-    static: [10.10.0.5-10.10.0.20]
+  - range: 10.0.0.0/24
+    gateway: 10.0.0.1
+    static: [10.0.0.5-10.0.0.20]
     azs: [z1,z2,z3]
     dns: [8.8.8.8]
     cloud_properties:
@@ -1452,9 +1452,9 @@ networks:
 - name: default
   type: manual
   subnets:
-  - range: 10.10.0.0/24
-    gateway: 10.10.0.1
-    static: [10.10.0.5-10.10.0.20]
+  - range: 10.0.0.0/24
+    gateway: 10.0.0.1
+    static: [10.0.0.220-10.0.0.254]
     dns: [8.8.8.8]
     cloud_properties:
       network_name: mynetwork
@@ -1481,10 +1481,10 @@ networks:
 - name: default
   type: manual
   subnets:
-  - range: 10.10.0.0/24
-    gateway: 10.10.0.1
-    static: [10.10.0.5-10.10.0.20]
-    reserved: [10.10.0.0/30]
+  - range: 10.0.0.0/24
+    gateway: 10.0.0.1
+    static: [10.0.0.220-10.0.0.254]
+    reserved: [10.0.0.0/30]
     dns: [8.8.8.8]
     cloud_properties:
       subnet: subnet-123456
@@ -1512,9 +1512,9 @@ networks:
 - name: some-name-used-by-deployment-manifests
   type: manual
   subnets:
-  - range: 10.10.0.0/24
-    gateway: 10.10.0.1
-    static: [10.10.0.5-10.10.0.20]
+  - range: 10.0.0.0/24
+    gateway: 10.0.0.1
+    static: [10.0.0.220-10.0.0.254]
     dns: [8.8.8.8]
     cloud_properties: {...}
 
@@ -1531,7 +1531,7 @@ I promise that everything you've seen in these example `cloud-config` will make 
 
 ### Networking configuration in a deployment manifest
 
-Consider this abbreviated `zookeeper.yml` deployment manifest.
+Consider this abbreviated `zookeeper.yml` deployment manifest:
 
 ```yaml
 instance_groups:
@@ -1545,8 +1545,18 @@ instance_groups:
 
 When the abbreviated `manifests/zookeeper.yml` was first introduced in (Deployment manifests, part 1)[#deployment-manifests-part-1] above, the `azs` and `networks` attributes were omitted.
 
-Each item of the `instance_groups` array must include an `azs` and `networks` attribute.
+Each `instance_groups` item must include an `azs` and `networks` attribute. At a glance you can see that the `azs` values correspond to the `azs` from the sample `cloud-config` above, and the `networks` name `default` corresponds to one of the `cloud-config` `networks` items.
 
-The minimal configuration is to assign the instance group to a network from `bosh cloud-config` above.
+This deployment manifest is inferring that each of the 5 instances will be allocated a different IP address from the `default` network. It isn't important what exact IP address will be assigned, as the job templates running on each instance will be provided the IP addresses for all the instances in the instance group.
+
+It is useful to understand that from the sample `cloud-config` we can see that these IP addresses might be in the range of `10.0.0.2` to `10.10.0.219`. Let's investigate IP ranges and how BOSH allocates IP address.
+
+## BOSH IP allocation vs DHCP
+
+If you've seen any networking before - such as trying to get your computer and devices onto your home router - you'll have blissfully ignored how an IP address is allocated to your computer or device. This facility is thanks to Dynamic TODO (DHCP).
+
+You might have seen that mysterious IP `169.TODO` that indicates that DHCP has failed and your device has allocated itself a dummy IP address.
+
+The dynamic allocation of IP addresses to BOSH instances is not performed with DHCP. Instead the BOSH director/CPI statically assign IP addresses to each instance. From our perspective the net result is the same: IP addresses are dynamically assigned.
 
 # Disks

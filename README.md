@@ -1087,15 +1087,16 @@ name: zookeeper
 
 releases:
 - name: zookeeper
-  version: 0.0.6
-  url: https://bosh.io/d/github.com/cppforlife/zookeeper-release?v=0.0.6
-  sha1: eea677d086161ada53dc7f6a056e94023384bba0
+  version: 0.0.7
+  url: git+https://github.com/cppforlife/zookeeper-release
 
 instance_groups:
 - name: zookeeper
   instances: 5
   jobs:
   - name: zookeeper
+    release: zookeeper
+  - name: status
     release: zookeeper
   persistent_disk: 10240
 
@@ -1133,9 +1134,9 @@ We will review how the BOSH director performs these transformations of existing 
 
 If we keep this manifest the same we will always get the same deployment of instances, job templates, and packages year after year. This is achieved by our explicit declaration of `releases`.
 
-In the example above, we explicit require `zookeeper/0.0.6` BOSH release. The `0.0.6` version number is only relative to preceding versions of the same BOSH release, not to any upstream packages. At the time of writing, the `zookeeper` BOSH release being used was packaging Apache Zookeeper v3.4.10 ([list of source blobs](https://github.com/cppforlife/zookeeper-release/blob/207c9d79eb12399dffe6df7f89abd854d4888f3e/config/blobs.yml)).
+In the example above, we explicit require `zookeeper/0.0.7` BOSH release. The `0.0.7` version number is only relative to preceding versions of the same BOSH release, not to any upstream packages. At the time of writing, the `zookeeper` BOSH release being used was packaging Apache Zookeeper v3.4.10 ([list of source blobs](https://github.com/cppforlife/zookeeper-release/blob/207c9d79eb12399dffe6df7f89abd854d4888f3e/config/blobs.yml)).
 
-If you deployed `zookeeper/0.0.6` every day for a year you would always be deploying Apache Zookeeper v3.4.10 as it is packaged inside the BOSH release. It would always use the same Monit control script, the same Monit start/stop wrapper script, and the same configuration templates.
+If you deployed `zookeeper/0.0.7` every day for a year you would always be deploying Apache Zookeeper v3.4.10 as it is packaged inside the BOSH release. It would always use the same Monit control script, the same Monit start/stop wrapper script, and the same configuration templates.
 
 In the deployment manifest we decide which instances install which job templates/packages within the `instance_groups` section.
 
@@ -1179,15 +1180,16 @@ name: zookeeper-deployment
 
 releases:
 - name: zookeeper
-  version: 0.0.6
-  url: https://bosh.io/d/github.com/cppforlife/zookeeper-release?v=0.0.6
-  sha1: eea677d086161ada53dc7f6a056e94023384bba0
+  version: 0.0.7
+  url: git+https://github.com/cppforlife/zookeeper-release
 
 instance_groups:
 - name: zookeeper-instances
   instances: 3
   jobs:
   - name: zookeeper
+    release: zookeeper
+  - name: status
     release: zookeeper
   persistent_disk: 20480
 
@@ -1211,7 +1213,7 @@ These were the only attributes in our manifest subset that were easily modifiabl
 Conversely the following attributes of the manifest were not easily modifiable:
 
 * the `name` of each item in the `releases` section comes from the BOSH release we use; we cannot rename or alias them within the manifest
-* the `verion`, `url`, and `sha1` are related to each other to describe which BOSH release to use; if we want to upgrade to a newer release we would change these
+* the `verion` and `url` are related to each other to describe which BOSH release to use; if we want to upgrade to a newer release we would change these
 * within `jobs` sections of instance groups the `release` must match one of the names in the top-level `releases` section. At the top-level these are immutable, so they are correspondingly immutable within the `jobs` sections of instance groups.
 * within `jobs` sections of instance groups, the `name` of a job template is derived from the BOSH release itself (more on this soon), and cannot be renamed or aliased within a deployment manifest.
 

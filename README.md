@@ -1379,4 +1379,174 @@ Networking is more complicated and anti-human than it needs to be. Consider a si
 
 As a consumer of computers, networking and addressing of computers talking to each other is hidden. `google.com` in a browser just works. For there you go to other URLs and their pages appear in your browser. It all just works. But you're no longer a consumer of computers. You are a purveyor of fine software systems.
 
+## Why learn networking?
+
+One of the reasons that I want to share information on networking is that a common cause of most "why doesn't this work for me" requests on the `#bosh` community [Slack channel](https://cloudfoundry.slack.com) is networking.
+
+Networking is difficult in part due to two opposing requirements:
+
+**Distributed systems** - where different processes want to talk to each other on different servers - requires that the processes can discover each other and can connect to each other.
+
+**Security** - ensuring a system is only doing what it is supposed to do and is not corrupted or misused by bad actors - requires that we restrict as much access to servers and processes as possible. But not too much so as to stop a distributed system from working.
+
+When processes within a distributed system cannot discover or communicate with its peers, it probably will not work. But the way in each distributed system "probably doesn't work" will be different.
+
+### Discovering that a distributed system is failing is nontrivial
+
+A process might refuse to start successfully because it cannot connect to a dependent subsystem. Monit will then restart that process over and over infinitely. Another process might start running even if it cannot access its dependencies, but when users interact with that process it might when return errors. Or it might provide a subset of normal behaviour, rather than explicitly error. Some erroneous behaviour might be intermittent.
+
+### Debugging a distributed system is nontrivial
+
+It is hard enough for software developers to write software that works at all and provides the features that end users want. The ways in which networking errors can propogate into each application process are more numerous than the "happy path" for the application when then are no networking errors. It will be likely that many distributed systems you work with do not provide a lot of assistance in debugging what networking errors have appeared.
+
+More commonly, inside the error logs of one or more processes will be a variation of a "connection timeout" error or more subtle/invisible indications that a networking issue has appeared.
+
+So hopefully, by learning networking and "owning responsibility" for the networking of your distributed systems, you will limit the scope for accidental networking issues and improve your ability to debug and resolve networking issues.
+
+## Example networking in cloud-config
+
+To help frame the mini guide to networking, I'll first introduce where networking configuration appears within `bosh cloud-config` and deployment manifests.
+
+### Networking configuration in cloud-config
+
+Remember that `bosh cloud-config` is where the bulk of cloud infrastructure specific configuration. Earlier we reviewed `vm_types` and mapped each one to a CPI specific instance type/machine type/VM configuration depending on the CPI.
+
+Networking configuration is also specific to the target infrastructure, but fortunately there is a common set of attributes across all CPIs.
+
+Look for the subtle differences in each example.
+
+Here is an example of describing networking for a vSphere environment:
+
+```yaml
+networks:
+- name: default
+  type: manual
+  subnets:
+  - range: 10.10.0.0/24
+    gateway: 10.10.0.1
+    static: [10.10.0.5-10.10.0.20]
+    azs: [z1,z2,z3]
+    dns: [8.8.8.8]
+    cloud_properties:
+      name: mynetwork
+
+azs:
+- name: z1
+  cloud_properties:
+    datacenters:
+    - clusters: [mycluster: {}]
+- name: z2
+  cloud_properties:
+    datacenters:
+    - clusters: [mycluster: {}]
+- name: z3
+  cloud_properties:
+    datacenters:
+    - clusters: [mycluster: {}]
+```
+
+Here is an example of describing networking for a Google Compute environment:
+
+```yaml
+networks:
+- name: default
+  type: manual
+  subnets:
+  - range: 10.10.0.0/24
+    gateway: 10.10.0.1
+    static: [10.10.0.5-10.10.0.20]
+    dns: [8.8.8.8]
+    cloud_properties:
+      network_name: mynetwork
+      subnetwork_name: mysubnetwork
+      ephemeral_external_ip: true
+      tags: [tag1, tag2]
+
+azs:
+- name: z1
+  cloud_properties:
+    zone: TODO
+- name: z2
+  cloud_properties:
+    zone: TODO
+- name: z3
+  cloud_properties:
+    zone: TODO
+```
+
+Here is an example of describing networking for an Amazon AWS VPC environment:
+
+```yaml
+networks:
+- name: default
+  type: manual
+  subnets:
+  - range: 10.10.0.0/24
+    gateway: 10.10.0.1
+    static: [10.10.0.5-10.10.0.20]
+    reserved: [10.10.0.0/30]
+    dns: [8.8.8.8]
+    cloud_properties:
+      subnet: subnet-123456
+- name: vip
+  type: vip
+
+azs:
+- name: z1
+  cloud_properties:
+    availability_zone: TODO
+- name: z2
+  cloud_properties:
+    availability_zone: TODO
+- name: z3
+  cloud_properties:
+    availability_zone: TODO
+```
+
+There is a lot going on at first glance. Look at the three examples a few times and you'll start to see some patterns.
+
+The common structure looks like:
+
+```yaml
+networks:
+- name: some-name-used-by-deployment-manifests
+  type: manual
+  subnets:
+  - range: 10.10.0.0/24
+    gateway: 10.10.0.1
+    static: [10.10.0.5-10.10.0.20]
+    dns: [8.8.8.8]
+    cloud_properties: {...}
+
+azs:
+- name: z1
+  cloud_properties: {...}
+- name: z2
+  cloud_properties: {...}
+- name: z3
+  cloud_properties: {...}
+```
+
+I promise that everything you've seen in these example `cloud-config` will make sense. This is all learnable and understandable.
+
+### Networking configuration in a deployment manifest
+
+Consider this abbreviated `zookeeper.yml` deployment manifest.
+
+```yaml
+instance_groups:
+- name: zookeeper
+  azs: [z1, z2, z3]
+  instances: 5
+  vm_type: default
+  networks:
+  - name: default
+```
+
+When the abbreviated `manifests/zookeeper.yml` was first introduced in (Deployment manifests, part 1)[#deployment-manifests-part-1] above, the `azs` and `networks` attributes were omitted.
+
+Each item of the `instance_groups` array must include an `azs` and `networks` attribute.
+
+The minimal configuration is to assign the instance group to a network from `bosh cloud-config` above.
+
 # Disks

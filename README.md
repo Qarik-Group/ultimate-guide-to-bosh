@@ -1303,3 +1303,80 @@ As a counter example, the community method for deploying Cloud Foundry assumes t
 * `sharedcpu`
 
 These are more descriptive than `default` but you would still need to investigate your `bosh cloud-config` to see the specific details.
+
+## Instace groups form clusters
+
+Without knowing how Apache Zookeeer works it is fair to assume that the zookeeper processes running on each of the 5 instances in our example deployment are communicating with each other. Yet in our example deployment manifests we have not explicitly described any relationships between them.
+
+This is not by omission. BOSH deployment manifests allow you to ignore explicit networking configuration as much as possible. Instead, the mapping of your Cloud Infrastructure networking to BOSH is configured in the `bosh cloud-config`.
+
+In the subsequent section [Networking](#networking) I will introduce computer networking and reduce it to the parts you will need to know to help BOSH to help you deploy, scale, upgrade your distributed systems.
+
+But first, let's look at how each zookeeper process is configured to know where its cluster peers are located.
+
+In the section [Job Templates](#job-templates) we discussed that all files for running and configuring processes are inside the `/var/vcap/jobs` subfolders. Each subfolder is a job template provided by a BOSH release.
+
+Another look within the `zookeeper` job template on a `zookeeper` deployment instance:
+
+```
+> bosh ssh zookeeper/0
+$ cd /var/vcap/jobs/zookeeper
+$ tree
+.
+├── bin
+│   ├── ctl
+│   └── pre-start
+├── config
+│   ├── configuration.xsl
+│   ├── log4j.properties
+│   ├── myid
+│   └── zoo.cfg
+├── monit
+└── packages
+    ├── java
+    └── zookeeper
+```
+
+To recap, `/var/vcap/jobs/zookeeper/monit` describes how to start/stop `zookeeper` and what process ID (PID) to watch to ensure that zookeeper is still running. Monit will invoke `/var/vcap/jobs/zookeeper/bin/ctl start` to start or restart the local `zookeeper` process.
+
+An abridged version of `/var/vcap/jobs/zookeeper/bin/ctl` to start zookeeper looks like:
+
+```bash
+export ZOOCFGDIR=/var/vcap/jobs/zookeeper/config
+exec chpst -u vcap:vcap \
+  /var/vcap/packages/zookeeper/bin/zkServer.sh start-foreground
+```
+
+The `$ZOOCFGDIR` environment variable is special to the `/var/vcap/packages/zookeeper/bin/zkServer.sh` script. This script will look for `zoo.cfg` in the `$ZOOCFGDIR` folder. Notice that `$ZOOCFGDIR` is a folder within the job template above: `config/zoo.cfg`.
+
+The contents of `/var/vcap/jobs/zookeeper/config/zoo.cfg` include the following configuration that allows the `zookeeper/0` instance to discover the other 4 instances:
+
+```
+server.0=10.0.0.5:2888:3888
+server.1=10.0.0.6:2888:3888
+server.2=10.0.0.7:2888:3888
+server.3=10.0.0.8:2888:3888
+server.4=10.0.0.9:2888:3888
+
+clientPort=2181
+```
+
+At a glance, Apache Zookeeper will expect to communicate with its peer nodes on ports `2888` and `3888`, and the 5 cloud servers running the zookeeper processes have IP addresses `10.0.0.5` thru `10.0.0.9`. Client applications that want to use our Apache Zookeeper system will communicate via port `2181`.
+
+This `config/zoo.cfg` configuration is meaningful to Apache Zookeeper and the `zkServer.sh` start script. The contents of the configuration file are not meaningful to BOSH, but the file was created by BOSH.
+
+The deployment manifest `zookeeper.yml` did not need to explicitly allocate the 5 IP addresses above (also found by running `bosh instances`), nor did the manifest need to explicitly document them for the `zookeeper` job template. Instead, all the IP addresses for all members of the `zookeeper` instance group were automatically provided to the `zookeeper` job template before `monit` attempted to start any processes. We will look at how to write your own job templates in your own BOSH releases in later sections.
+
+The more urgent piece of information you will want to know why were these 5 `zookeeper` instances allocated those 5 IP addresses, why are the 5 underlying cloud servers allowed to talk to each other, is anything special required for them to communicate over ports `2888` and `3888` but prevent other systems from accessing these ports, and how are client applications allowed to access these 5 cloud servers over port `2181`.
+
+And if you're confused at all by that last paragraph, then you are ready for the next section.
+
+# Networking
+
+If your professional relationship with computers to date has been running processes, maybe using containers, but you've never had to setup servers and their networking before, then allow me to be the first to congratulate you on a career path well trodden, and to apologise that your joyride is over.
+
+Networking is more complicated and anti-human than it needs to be. Consider a simple example. You will have seen an IP address before. Four small numbers with three dots. For example, `10.11.12.13`. This address is actually called IPv4. The total number of public Internet IPv4 addresses is relatively small compared to our growing use for them, so networking people invented IPv6. Your innocent soul would be wrong to think that IPv6 addresses look like: `10.11.12.13.14.15`. Instead to sociopaths involved in computer networking made them look like: `TODO`. I will try hard to never discuss IPv6 again.
+
+As a consumer of computers, networking and addressing of computers talking to each other is hidden. `google.com` in a browser just works. For there you go to other URLs and their pages appear in your browser. It all just works. But you're no longer a consumer of computers. You are a purveyor of fine software systems.
+
+# Disks

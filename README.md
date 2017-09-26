@@ -487,6 +487,8 @@ In your environments, Cloud Servers are the actual virtual machines, physical ma
 
 For example, in most production environments you will be using a CPI that manages virtual machines (Amazon AWS, Google Compute, Microsoft Azure, VMWare vSphere, OpenStack).
 
+There is popular version of a BOSH director where its CPI provisions Linux containers.
+
 During the life of a deployment, one Instance will map to one Cloud Server most of the time. Sometimes the Cloud Server might be accidentally missing or being deliberately replaced.
 
 
@@ -1243,9 +1245,9 @@ For Amazon EC2 it might include:
 vm_types:
 - name: default
   cloud_properties:
-    instance_type: m4.large
+    instance_type: t2.medium
     ephemeral_disk:
-      size: 25_000
+      size: 20_000
 ```
 
 For vSphere it might include:
@@ -1255,17 +1257,15 @@ vm_types:
 - name: default
   cloud_properties:
     cpu: 2
-    ram: 1024
-    disk: 3240
+    ram: 4096
+    disk: 20_000
 ```
 
-They are all different because the nature of BOSH deployments is they can target any cloud infrastructure. Whereas deployment manifests attempt to be independent of the underlying cloud infrastructure, it is necessary to eventually specify what you will provision and pay for. The `bosh cloud-config` documents this and it is a shared specification across all deployments in the same BOSH director.
+Cloud Config is where BOSH becomes specific to each different cloud infrastructure. Each `vm_type` above includes configuration that is only meaningful to its CPI. Their configurations are similar (2 CPUs) but different (Google `n1-standard-2` has 7.5GB RAM, AWS `t2.medium` has 4GB RAM).
 
-As the `cloud-config` is shared across deployments your organization, and the broader BOSH community, will want to agree on a minimal set of `vm_types` that any basic deployment manifest will work with any basic `cloud-config`. In the three examples above, each `vm_types` list includes a `name: default` item. In production your `cloud-config` might include many other `vm_types` that you'd like to use within your deployments, but it is good practice to include at least one called `default`.
+The CPI-specific customisations are placed in the `cloud_properties` section of each `vm_type`.
 
-Each `vm_type` also has a `cloud_properties` section whose contents is specific to the target cloud infrastructure and the CPI being used within the BOSH director.
-
-It is likely that you will want to use various `vm_types` across all your deployments. You might want small instance sizes for low CPU/low RAM activities, and large CPU/large RAM instances for other activities. Each will need an entry in your shared `vm_types` list within `bosh cloud-config`.
+It is likely that you will want to use various `vm_types` for your deployments. You might want small instance sizes for low CPU/low RAM activities, and large CPU/large RAM instances for other activities. Each will need an entry in your shared `vm_types` list within `bosh cloud-config`.
 
 In our example `zookeeper.yml` we can now add a required `vm_type` attribute into each of the `instance_groups` to reference which instance size we want to use from our `cloud-config`:
 
@@ -1291,11 +1291,13 @@ instance_groups:
     release: zookeeper
 ```
 
-For example, at the time of writing, the community method for deploying Cloud Foundry assumes that your cloud-config contains `vm_types` that are named:
+The name `default` is not particularly meaningful. If the deployment manifest above there is no indication of the amount of resources each `zookeeper` cloud server will be allocated on the target cloud infrastructure. 1GB RAM or 16GB? How many CPUs?
+
+As a counter example, the community method for deploying Cloud Foundry assumes that your `cloud-config` contains multiple `vm_types` that are named ([see `cf-deployment.yml`](https://github.com/cloudfoundry/cf-deployment/blob/master/cf-deployment.yml)):
 
 * `minimal`
 * `small`
 * `small-highmem`
 * `sharedcpu`
 
-This comes from https://github.com/cloudfoundry/cf-deployment/blob/master/cf-deployment.yml
+These are more descriptive than `default` but you would still need to investigate your `bosh cloud-config` to see the specific details.

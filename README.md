@@ -1375,7 +1375,15 @@ And if you're confused at all by that last paragraph, then you are ready for the
 
 If your professional relationship with computers to date has been running processes, maybe using containers, but you've never had to setup servers and their networking before, then allow me to be the first to congratulate you on a career path well trodden, and to apologise that your joyride is over.
 
-Networking is more complicated and anti-human than it needs to be. Consider a simple example. You will have seen an IP address before. Four small numbers with three dots. For example, `10.11.12.13`. This address is actually called IPv4. The total number of public Internet IPv4 addresses is relatively small compared to our growing use for them, so networking people invented IPv6. Your innocent soul would be wrong to think that IPv6 addresses look like: `10.11.12.13.14.15`. Instead to sociopaths involved in computer networking made them look like: `TODO`. I will try hard to never discuss IPv6 again.
+Networking is more complicated and anti-human than it needs to be. Consider a simple example. You will have seen an IP address before. Four small numbers with three dots. For example, `10.11.12.13`. This address is actually called IPv4. The total number of public Internet IPv4 addresses is relatively small compared to our growing use for them, so networking people invented IPv6. Your innocent soul would be wrong to think that IPv6 addresses look like: `10.11.12.13.14.15`.
+
+Instead the sociopaths involved in computer networking made them look like:
+
+```
+2001:0db8:85a3:0000:0000:8a2e:0370:7334
+```
+
+I will try hard to never discuss [IPv6](https://en.wikipedia.org/wiki/IPv6_address) again.
 
 As a consumer of computers, networking and addressing of computers talking to each other is hidden. `google.com` in a browser just works. For there you go to other URLs and their pages appear in your browser. It all just works. But you're no longer a consumer of computers. You are a purveyor of fine software systems.
 
@@ -1428,7 +1436,7 @@ networks:
     azs: [z1,z2,z3]
     dns: [8.8.8.8]
     cloud_properties:
-      name: mynetwork
+      name: net-10-0-0-0
 
 azs:
 - name: z1
@@ -1465,13 +1473,13 @@ networks:
 azs:
 - name: z1
   cloud_properties:
-    zone: TODO
+    zone: europe-west1-b
 - name: z2
   cloud_properties:
-    zone: TODO
+    zone: europe-west1-c
 - name: z3
   cloud_properties:
-    zone: TODO
+    zone: europe-west1-d
 ```
 
 Here is an example of describing networking for an Amazon AWS VPC environment:
@@ -1494,13 +1502,13 @@ networks:
 azs:
 - name: z1
   cloud_properties:
-    availability_zone: TODO
+    availability_zone: eu-west-2a
 - name: z2
   cloud_properties:
-    availability_zone: TODO
+    availability_zone: eu-west-2b
 - name: z3
   cloud_properties:
-    availability_zone: TODO
+    availability_zone: eu-west-2c
 ```
 
 There is a lot going on at first glance. Look at the three examples a few times and you'll start to see some patterns.
@@ -1553,9 +1561,9 @@ It is useful to understand that from the sample `cloud-config` we can see that t
 
 ## BOSH IP allocation vs DHCP
 
-If you've seen any networking before - such as trying to get your computer and devices onto your home router - you'll have blissfully ignored how an IP address is allocated to your computer or device. This facility is thanks to Dynamic TODO (DHCP).
+If you've seen any networking before - such as trying to get your computer and devices onto your home router - you'll have blissfully ignored how an IP address is allocated to your computer or device. This facility is thanks to Dynamic Host Configuration Protocol (DHCP).
 
-You might have seen that mysterious IP `169.TODO` that indicates that DHCP has failed and your device has allocated itself a dummy IP address.
+You might have seen that mysterious IP `169.254.X.Y` that indicates that DHCP has failed and your device has [allocated itself](http://packetlife.net/blog/2008/sep/24/169-254-0-0-addresses-explained/) an IP address.
 
 The dynamic allocation of IP addresses to BOSH instances is not performed with DHCP. Instead the BOSH director/CPI statically assign IP addresses to each instance. From our perspective the net result is the same: IP addresses are dynamically assigned.
 

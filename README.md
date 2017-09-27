@@ -1565,6 +1565,75 @@ If you've seen any networking before - such as trying to get your computer and d
 
 You might have seen that mysterious IP `169.254.X.Y` that indicates that DHCP has failed and your device has [allocated itself](http://packetlife.net/blog/2008/sep/24/169-254-0-0-addresses-explained/) an IP address.
 
-The dynamic allocation of IP addresses to BOSH instances is not performed with DHCP. Instead the BOSH director/CPI statically assign IP addresses to each instance. From our perspective the net result is the same: IP addresses are dynamically assigned.
+The allocation of IP addresses to BOSH instances is not performed with DHCP. Instead the BOSH director/CPI statically assign IP addresses to each instance. From our perspective the net result is the same: IP address allocation is not manually managed by you (by default).
+
+Instead you will give guidance to the BOSH director and CPI as to where each instance will be placed within your networking, and an IP will be chosen.
+
+Consider an example network in a `cloud-config`:
+
+```yaml
+networks:
+- name: default
+  type: manual
+  subnets:
+  - range: 10.0.0.0/24
+    gateway: 10.0.0.1
+    static: [10.0.0.220-10.0.0.254]
+    reserved: [10.0.0.0/30]
+    dns: [8.8.8.8]
+    cloud_properties:
+      subnet: subnet-123456
+```
+
+The name `default` will be used in each deployment manifest to describe "where" its instances will be placed. In this AWS example, the AWS CPI will use `subnet: subnet-123456` to place the instance within that specific subnet ID.
+
+The IP address will be selected from the available IPs within the `range` range, but not including the `static` ranges, nor `reserved` ranges.
+
+BOSH allows three formats for describing a range of IPs:
+
+* single IP address - `10.0.0.220`
+* range of IP addresses - `10.0.0.220-10.0.0.254`
+* CIDR notation - `10.0.0.0/30`
+
+## CIDR notation
+
+BOSH will select an available IP address from the range `10.0.0.0/24`. This notation for a range of IP addresses is called [Classless Inter-Domain Routing](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing) (CIDR). It is short hand for "all IPs between 10.0.0.0 and 10.0.0.255".
+
+[CIDR calculators](http://www.ipaddressguide.com/cidr) can be your friend to learn and experiment with CIDR notations.
+
+Some examples:
+
+* `10.0.0.0/30` - 4 IPs, from `10.0.0.0` to `10.0.0.3`
+* `10.0.0.0/29` - 8 IPs, from `10.0.0.0` to `10.0.0.7`
+* `10.0.0.0/28` - 16 IPs, from `10.0.0.0` to `10.0.0.15`
+* `10.0.0.0/24` - 255 IPs, from `10.0.0.0` to `10.0.0.255`
+* `10.0.0.0/16` - 65536 IPs, from `10.0.0.0` to `10.0.255.255`
+
+A useful nuance of CIDR notation is that we round down the base IP address, so the following examples are equivalent:
+
+* `10.0.0.0/30` - 4 IPs, from `10.0.0.0` to `10.0.0.3`
+* `10.0.0.1/30` - 4 IPs, from `10.0.0.0` to `10.0.0.3`
+* `10.0.0.2/30` - 4 IPs, from `10.0.0.0` to `10.0.0.3`
+* `10.0.0.3/30` - 4 IPs, from `10.0.0.0` to `10.0.0.3`
+
+In some BOSH files you might see this nuance used within operator files such as this sample [AWS cloud-config template](https://github.com/cloudfoundry/bosh-deployment/blob/096b55060b77d438af385c010841cf8608c63dfb/aws/cloud-config.yml#L31-L36):
+
+```yaml
+networks:
+- name: default
+  type: manual
+  subnets:
+  - range: ((internal_cidr))
+    gateway: ((internal_gw))
+    reserved: [((internal_gw))/30]
+```
+
+The `((internal_gw))` variable is used to describe a range of reserved IP addresses. If `((internal_gw))` is `10.0.0.1`, then the `reserved: [((internal_gw))/30]` effectively evaluates to `reserved: [10.0.0.0-10.0.0.3]`. We will properly introduce BOSH operator files and `((variables))` soon.
+
+## Explicit static IP address
+
+There are occasions where you may want to explicitly declare an IP address.
 
 # Disks
+
+# Operator files

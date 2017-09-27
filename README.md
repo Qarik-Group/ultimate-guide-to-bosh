@@ -1630,6 +1630,12 @@ networks:
 
 The `((internal_gw))` variable is used to describe a range of reserved IP addresses. If `((internal_gw))` is `10.0.0.1`, then the `reserved: [((internal_gw))/30]` effectively evaluates to `reserved: [10.0.0.0-10.0.0.3]`. We will properly introduce BOSH operator files and `((variables))` soon.
 
+## Gateway
+
+The gateway is the IP address that your BOSH instances will use to communicate with the Internet or beyond its network it will send it to the gateway IP address. Data arriving from outside the network will arrive via this gateway IP address.
+
+Typically the gateway IP is the base IP address of the `range` plus 1. A network range of `10.11.0.0/16` will typically have a gateway of `10.11.0.1`.
+
 ## Explicit static IP address
 
 There are occasions where you may want to explicitly declare an IP address.

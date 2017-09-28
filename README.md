@@ -1565,6 +1565,12 @@ This deployment manifest is inferring that each of the 5 instances will be alloc
 
 It is useful to understand that from the sample `cloud-config` we can see that these IP addresses might be in the range of `10.0.0.2` to `10.10.0.219`. Let's investigate IP ranges and how BOSH allocates IP address.
 
+### Mapping to external network
+
+As stated earlier, BOSH does not provision or manipulate the cloud infrastructure networking. Instead, the `networking` section in `cloud-config` describes the available networking space that BOSH can use for its cloud servers.
+
+The examples above are each stating that there already exists a network `10.0.0.0/24` that the BOSH director and CPI has access to on their respective infrastructure. Your `cloud-config` will need to specifically describe your own network availability.
+
 ## BOSH IP allocation vs DHCP
 
 If you've seen any networking before - such as trying to get your computer and devices onto your home router - you'll have blissfully ignored how an IP address is allocated to your computer or device. This facility is thanks to Dynamic Host Configuration Protocol (DHCP).
@@ -1642,9 +1648,75 @@ The gateway is the IP address that your BOSH instances will use to communicate w
 
 Typically the gateway IP is the base IP address of the `range` plus 1. A network range of `10.11.0.0/16` will typically have a gateway of `10.11.0.1`.
 
+## Reserved ranges
+
+When BOSH is dynamically allocating IPs for instances it needs to know any IP addresses that it cannot use. In the `cloud-config` this is an attribute called `reserved`. It is an optional array of IP ranges.
+
+Some cloud infrastructures reserve IP addresses for every network. Amazon AWS reserves the first four IP addresses for itself. Therefore an Amazon AWS `cloud-config` will always have at least one `reserved` range.
+
+Sometimes it might be that there is one common infrastructure network that must be split into multiple virtual BOSH networks, perhaps within a single `cloud-config` or perhaps across multiple BOSH directors (you might have a BOSH director for staging deployments and another for production deployments but yet only have one common network for all deployments to share). You will use `reserved` ranges to manually split the underlying network into virtual networks.
+
 ## Explicit static IP address
 
-There are occasions where you may want to explicitly declare an IP address.
+For the most part, you should not feel you need to declare IP addresses in advance. Job templates have a mechanism for discovering the IP addresses for each other, called Links, which will be introduced soon.
+
+There are occasions where you may want to share the IP addresses of instances in an instance group with external clients. One method will be to statically declare specific IP addresses in the deployment manifest that BOSH will promise to assign to the instances.
+
+There are two systems of pre-defined IP addresses that you can consider.
+
+### Manual static addresses
+
+Rather than delegate the selection of IP addresses to BOSH, your deployment manifest can explicitly request specific IP addresses for each instance in an instance group. We add the attribute `statip_ips` to our instance group's `networks` section.
+
+The abridged manifest for an instance group with static IPs might be:
+
+```yaml
+instance_groups:
+- name: zookeeper-instances
+  instances: 5
+  networks:
+  - name: default
+    static_ips:
+    - 10.0.0.220
+    - 10.0.0.221
+    - 10.0.0.222
+    - 10.0.0.223
+    - 10.0.0.224
+```
+
+Since `instances` is `5`, therefore the `static_ips` list must include five IP addresses.
+
+The `static_ips` IP addresses must also be declared within the `cloud-config`. In the examples included earlier and below, they each had a `static: [10.0.0.220-10.0.0.254]` attribute. These IP addresses - between `10.0.0.220` and `10.0.0.254` - will not be dynamically assigned to other instances; they can only be used by deployment manifests declaring `static_ips`.
+
+When we introduce Links, you will see that there are relatively few reasons for requiring static IPs; and your life is a lot simpler without having to manually select IP addresses for the benefit of external systems.
+
+### Virtual IP addresses
+
+Some cloud infrastructures have a concept of virtual IP addresses. In OpenStack they are called floating IPs, and in Amazon AWS they are called elastic IPs. TODO more introduction for their purpose/benefit.
+
+Like networks in general, BOSH cannot provision or destroy virtual IP addresses. Instead it can help you manage the assignment of them to instances.
+
+For example, you might provision 5 elastic IPs on Amazon AWS and be told that their values are `54.1.2.3`, `56.2.3.4`, `58.4.5.6`, `123.1.2.3`, and `124.2.3.4`. We can then ask BOSH to assign them to each of our 5 `zookeeper` instances:
+
+```yaml
+instance_groups:
+- name: zookeeper-instances
+  instances: 5
+  networks:
+  - name: default
+    default: [dns, gateway]
+  - name: vip
+    static_ips:
+    - 10.0.0.220
+    - 10.0.0.221
+    - 10.0.0.222
+    - 10.0.0.223
+    - 10.0.0.224
+```
+
+## Further reading
+
+The BOSH documentation has some additional information about [networking and configuration options](https://bosh.io/docs/networks.html) that is well worth reading now and again later for reference.
 
 # Disks
 

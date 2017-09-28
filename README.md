@@ -1411,6 +1411,12 @@ More commonly, inside the error logs of one or more processes will be a variatio
 
 So hopefully, by learning networking and "owning responsibility" for the networking of your distributed systems, you will limit the scope for accidental networking issues and improve your ability to debug and resolve networking issues.
 
+## BOSH does not configure networks
+
+Whilst BOSH can provision cloud servers and persistent disks, it cannot provision/change networking. Either your networking will have been setup at the time your cloud infrastructure was setup, such as a vSphere environment; or you will use additional tools to provision and manage networking in cloud infrastructures such as Amazon AWS, Google Compute, or Microsoft Azure.
+
+When we discuss using BOSH in different infrastructures we will look at some specific aspects of setting up networking before using BOSH.
+
 ## Example networking in cloud-config
 
 To help frame the mini guide to networking, I'll first introduce where networking configuration appears within `bosh cloud-config` and deployment manifests.

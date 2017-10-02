@@ -77,6 +77,7 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
    * [Disks](#disks)
       * [Persistent Disks and CPIs](#persistent-disks-and-cpis)
       * [Persistent disks and volume mounts](#persistent-disks-and-volume-mounts)
+         * [Pitfalls of forgetting persistent disks](#pitfalls-of-forgetting-persistent-disks)
       * [Simple Persistent Disk](#simple-persistent-disk)
       * [Initially Provisioning Persistent Disks](#initially-provisioning-persistent-disks)
       * [Resizing Persistent Disks](#resizing-persistent-disks)
@@ -85,6 +86,9 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
          * [Reattach orphaned disks](#reattach-orphaned-disks)
          * [Delete orphaned disks](#delete-orphaned-disks)
       * [Multiple Persistent Disks](#multiple-persistent-disks)
+   * [Stemcells](#stemcells)
+      * [Agent](#agent)
+   * [Deployment updates](#deployment-updates)
    * [Operator files](#operator-files)
 
 NOTE: update TOC using `bin/replace-toc`
@@ -1893,6 +1897,22 @@ A BOSH persistent disk exists for the life of the instance group, not only durin
 
 If an instance has a single persistent disk then the BOSH director will organise for the disk to be formatted and mounted.
 
+Each persistent disk is formatted with filesystem type `ext4` by default. [Alternate filesystem types](https://bosh.io/docs/persistent-disk-fs.html) are available.
+
+Each persistent disk is mounted at `/var/vcap/store`.
+
+### Pitfalls of forgetting persistent disks
+
+At the time of writing, BOSH job templates do not have a way to communicate with the BOSH director that they **require** a persistent disk. With or without an external `/var/vcap/store` mount, these job templates will attempt to write data within this folder structure. Potentially large amounts of data. This scenario will result in system failures without a persistent disk mounted.
+
+Consider a job template that writes data to `/var/vcap/store/zookeeper/mydb.dat`.
+
+If there is a persistent disk mounted at `/var/vcap/store` then the file `/var/vcap/store/zookeeper/mydb.dat` will be safely stored upon this persistent disk. If the disk starts to fill up then it is a simple matter to resize the persistent disk (see the opening demonstration in [Disks](#disks)).
+
+If there is no persistent disk mounted at `/var/vcap/store`, then the file `/var/vcap/store/zookeeper/mydb.dat` will be be stored upon the root volume `/`. The root volume is typically small (large enough only for the system's packages), ephemeral (changes to the root volume will be lost when the cloud server is recreated), and fixed in size (root volumes are typically not resized during the life of a deployment). Eventually the root volume will fill up and the instance's processes and perhaps system processes will begin to fail.
+
+If your instances are ever experiencing failure, run `df -h` to check that your disks have not filled up. If the root volume `/` is at 100% then you have probably forgotten to include a persistent disk; or a job template has an mistake in it and is writing files outside of `/var/vcap/store` or `/var/vcap/data` volumes.
+
 ## Simple Persistent Disk
 
 The simplest technique for allocating a persistent disk in a deployment manifest is the `persistent_disk` attribute of an `instance_group`. Consider this abbreviated deployment manifest:
@@ -1930,14 +1950,15 @@ The get a list of all orphaned disks:
 bosh disks --orphaned
 ```
 
-The output might look like:
+After deleting our `zookeeper` deployment, or resizing all its disks, the output might look like:
 
 ```
-Disk CID          Size     Deployment      Instance                    AZ  Orphaned At
-disk-3b40021c...  9.8 GiB  dcos-testflight  bootstrap/68f4c602-...     z1  ...
-disk-123df2f1...  9.8 GiB  dcos-testflight  mesos-agent/60aa8486-...   z1  ...
-disk-97956ada...  9.8 GiB  dcos-testflight  mesos-master/7a9d417c-...  z1  ...
-...
+Disk CID          Size    Deployment  Instance               AZ  Orphaned At
+disk-5d968d18...  10 GiB  zookeeper   zookeeper/0d382e23...  z1  ...
+disk-bc5945ca...  10 GiB  zookeeper   zookeeper/0acaf2d8...  z2  ...
+disk-bac28797...  10 GiB  zookeeper   zookeeper/a94bb2b7...  z1  ...
+disk-bd67097c...  10 GiB  zookeeper   zookeeper/97c88778...  z2  ...
+disk-f7e5d3cf...  10 GiB  zookeeper   zookeeper/e4d84929...  z3  ...
 ```
 
 ### Reattach orphaned disks
@@ -1973,5 +1994,21 @@ bosh disks --orphaned | grep disk- | awk '{print $1}' | xargs -L1 bosh delete-di
 ## Multiple Persistent Disks
 
 BOSH deployment manifests can request multiple persistent disks, apply any disk formatting, and mount them to any path. This topic is discussed in a great blog post by Chris Weibel [Mounting Multiple Persistent Disks with BOSH](https://www.starkandwayne.com/blog/bosh-multiple-disks/).
+
+# Stemcells
+
+## Agent
+
+One of the primary reasons for BOSH stemcells, rather than allowing you to bring your own base machine images, is that they have the BOSH agent preinstalled.
+
+# Deployment updates
+
+```yaml
+update:
+  canaries: 2
+  max_in_flight: 1
+  canary_watch_time: 5000-60000
+  update_watch_time: 5000-60000
+```
 
 # Operator files

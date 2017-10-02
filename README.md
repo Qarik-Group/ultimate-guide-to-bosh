@@ -1851,7 +1851,27 @@ The BOSH documentation has some additional information about [networking and con
 
 # Disks
 
-Some of the job templates used in your deployments will need to store persistent data. BOSH director's ability to fully manage the provisioning, mounting, and resizing of persistent disks is one of its greatest features compared to other tools that also manage cloud infrastructure or perform configuration management. BOSH director can coordinate **both** the cloud infrastructure (to provision and deprovision disks) and the instance itself (to format, mount, and perform resizing operatings).
+One of the first demonstrations of BOSH I ever saw in April 2012 was "let's resize a disk". It is an incredibly powerful demonstration of BOSH. Managing disk sizes can be non-trivial on most cloud infrastructures; with BOSH it is a fully managed service:
+
+As a user, it is just two steps:
+
+1. change the persisent disk size or selected a different persisent disk type in the deployment manifest
+1. run `bosh deploy` to request the BOSH director orchestrate the changes
+
+The BOSH director will now orchestrate the following sequence for you:
+
+1. provision a second, larger persistent disk
+1. attach it to the instance
+1. format and mount the disk as an additional temporary mounted volume
+1. stop all the processes
+1. copy all the data from the older volume to the new volume (this can be time consuming for large amounts of data)
+1. unmount the older volume
+1. remount the new volume to `/var/vcap/store`
+1. restart all the processes
+1. detach the older persistent disk
+1. delete the older, orphaned persistent disk in 5 days
+
+Growing your infrastructure has never been easier.
 
 We first looked at disks in the section [Persistent Volumes](#persistent-volumes).
 

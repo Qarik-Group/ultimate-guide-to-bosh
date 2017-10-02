@@ -75,6 +75,10 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
          * [Manual networks with vSphere](#manual-networks-with-vsphere)
       * [Further reading on BOSH networks](#further-reading-on-bosh-networks)
    * [Disks](#disks)
+      * [Simple Persistent Disk](#simple-persistent-disk)
+      * [Persistent Disk Types](#persistent-disk-types)
+      * [Orphaned Disks](#orphaned-disks)
+      * [Multiple Persistent Disks](#multiple-persistent-disks)
    * [Operator files](#operator-files)
 
 NOTE: update TOC using `bin/replace-toc`
@@ -1840,5 +1844,49 @@ TODO
 The BOSH documentation has some additional information about [networking and configuration options](https://bosh.io/docs/networks.html) that is well worth reading now and again later for reference.
 
 # Disks
+
+Some of the job templates used in your deployments will need to store persistent data.
+
+## Simple Persistent Disk
+
+## Persistent Disk Types
+
+## Orphaned Disks
+
+The BOSH director does not immediately delete disks that are no longer needed. These disks are marked as orphaned and will be garbage collected after 5 days.
+
+To save money or to reclaim disk space on the host system you can manually delete them.
+
+The get a list of all orphaned disks:
+
+```
+bosh disks --orphaned
+```
+
+The output might look like:
+
+```
+Disk CID          Size     Deployment      Instance                    AZ  Orphaned At
+disk-3b40021c...  9.8 GiB  dcos-testflight  bootstrap/68f4c602-...     z1  ...
+disk-123df2f1...  9.8 GiB  dcos-testflight  mesos-agent/60aa8486-...   z1  ...
+disk-97956ada...  9.8 GiB  dcos-testflight  mesos-master/7a9d417c-...  z1  ...
+...
+```
+
+You can delete individual disks using their "Disk CID":
+
+```
+bosh delete-disk disk-3b40021c...
+```
+
+If you want to delete every orphaned disk, then this little snippet might come in handy:
+
+```
+bosh disks --orphaned | grep disk- | awk '{print $1}' | xargs -L1 bosh delete-disk -n
+```
+
+## Multiple Persistent Disks
+
+See https://www.starkandwayne.com/blog/bosh-multiple-disks/
 
 # Operator files

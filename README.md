@@ -68,7 +68,11 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
       * [Explicit static IP address](#explicit-static-ip-address)
          * [Manual static addresses](#manual-static-addresses)
          * [Virtual IP addresses](#virtual-ip-addresses)
-      * [Further reading](#further-reading)
+      * [Network types](#network-types)
+         * [Manual networks with Amazon AWS VPC](#manual-networks-with-amazon-aws-vpc)
+         * [Manual networks with Google Compute VPC](#manual-networks-with-google-compute-vpc)
+         * [Manual networks with OpenStack Neutron](#manual-networks-with-openstack-neutron)
+      * [Further reading on BOSH networks](#further-reading-on-bosh-networks)
    * [Disks](#disks)
    * [Operator files](#operator-files)
 
@@ -1522,7 +1526,7 @@ networks:
     dns: [8.8.8.8]
     cloud_properties:
       subnet: subnet-123456
-- name: vip
+- name: elastic
   type: vip
 
 azs:
@@ -1725,7 +1729,7 @@ instance_groups:
   networks:
   - name: default
     default: [dns, gateway]
-  - name: vip
+  - name: elastic
     static_ips:
     - 10.0.0.220
     - 10.0.0.221
@@ -1734,7 +1738,99 @@ instance_groups:
     - 10.0.0.224
 ```
 
-## Further reading
+This deployment manifest example for Amazon AWS uses two `networks`, which map to the two `networks` from the AWS `cloud-config` example earlier by their names `default` and `elastic`:
+
+```yaml
+networks:
+- name: default
+  type: manual
+  subnets:
+  - range: 10.0.0.0/24
+    ...
+- name: elastic
+  type: vip
+```
+
+BOSH supports three different network types, discussed in the next section.
+
+## Network types
+
+You've now seen enough examples of deployment manifests and `cloud-config` to be introduced to BOSH networks from the [official documentation](https://bosh.io/docs/networks.html).
+
+> A BOSH network is an IaaS-agnostic representation of the networking layer. The Director is responsible for configuring each deployment job’s networks with the help of the BOSH Agent and the IaaS. Networking configuration is usually assigned at the boot of the VM and/or when network configuration changes in the deployment manifest for already-running deployment jobs.
+>
+> There are three types of networks that BOSH supports:
+>
+> * **manual**: The Director decides how to assign IPs to each job instance based on the specified network subnets in the deployment manifest
+> * **vip**: The Director allows one-off IP assignments to specific jobs to enable flexible IP routing (e.g. elastic IP)
+> * **dynamic**: The Director defers IP selection to the IaaS
+
+We've seen `type: manual` and `type: vip` in preceding sections.
+
+The third `type: dynamic` is used with Amazon AWS original networking, and legacy OpenStack Nova networking. I personally liked these simpler "flat" networking systems. You requested a BOSH instance, and the underlying networking allocated you the IP. You didn't need to create networks and other networking infrastructure, nor did your BOSH manifests/`cloud-config` need to specify CIDR network ranges, reserved + static ranges. Simpler times.
+
+In production environments you will wish for the security features and control from more complex networking. Or someone in your organisation will do this wishing for you.
+
+If you are using Amazon AWS today you will instead VPC networking, and with OpenStack you will use Neutron networking. These are both represented in BOSH `cloud-config` as `type: manual` networking.
+
+### Manual networks with Amazon AWS VPC
+
+TODO
+
+### Manual networks with Google Compute VPC
+
+Consider a Google Compute VPC with a single subnet:
+
+![gcp-vpc-networks-bosh](/images/gcp/gcp-vpc-networks-bosh.png)
+
+The basic `cloud-config` configuration would be:
+
+```yaml
+azs:
+- name: z1
+  cloud_properties: {zone: us-east1-d}
+- name: z2
+  cloud_properties: {zone: us-east1-d}
+- name: z3
+  cloud_properties: {zone: us-east1-d}
+
+networks:
+- name: default
+  type: manual
+  subnets:
+  - range: 10.0.0.0/24
+    gateway: 10.0.0.1
+    reserved: [10.0.0.1/30]
+    static: [10.0.0.10-10.0.0.19]
+    dns: [8.8.8.8]
+    azs: [z1, z2, z3]
+    cloud_properties:
+      ephemeral_external_ip: true
+      network_name: bosh
+      subnetwork_name: bosh-us-east1
+      tags: [internal, no-ip, windows-rdp]
+- name: external
+  type: vip
+```
+
+The `dns: [8.8.8.8]` configures all VMs to use [Google's public DNS servers](https://developers.google.com/speed/public-dns/docs/intro). These public DNS servers are popular outside of Google Compute as well as for your BOSH deployments within Google Compute.
+
+The `tags` are a selection of the available firewall rules and network routes. If the tag matches a firewall rule, then that firewall rule is applied to each instance in that network. For example, the `windows-rdp` tag above matches the firewall rule with the same name below that was preconfigured:
+
+![gcp-vpc-networks-firewall-rules](/images/gcp/gcp-vpc-networks-firewall-rules.png)
+
+Other tags are used to identify which networking routes to apply to each instance in the network. The `no-ip` tag in the example above corresponds to the following predefined route in my Google Compute environment. The "next hop" of the route is to the "nat-instance-primary" server which will provide my instances with outbound, public Internet access:
+
+![gcp-vpc-networks-route-details](/images/gcp/gcp-vpc-networks-route-details.png)
+
+In Google Compute, the `type: vip` IP addresses are called "External IP addresses". For this reason, I've named the network `external`. It is also common for the `type: vip` network to be generically named `vip`.
+
+### Manual networks with OpenStack Neutron
+
+TODO
+
+
+## Further reading on BOSH networks
 
 The BOSH documentation has some additional information about [networking and configuration options](https://bosh.io/docs/networks.html) that is well worth reading now and again later for reference.
 

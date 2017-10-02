@@ -72,6 +72,7 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
          * [Manual networks with Amazon AWS VPC](#manual-networks-with-amazon-aws-vpc)
          * [Manual networks with Google Compute VPC](#manual-networks-with-google-compute-vpc)
          * [Manual networks with OpenStack Neutron](#manual-networks-with-openstack-neutron)
+         * [Manual networks with vSphere](#manual-networks-with-vsphere)
       * [Further reading on BOSH networks](#further-reading-on-bosh-networks)
    * [Disks](#disks)
    * [Operator files](#operator-files)
@@ -1826,6 +1827,10 @@ Other tags are used to identify which networking routes to apply to each instanc
 In Google Compute, the `type: vip` IP addresses are called "External IP addresses". For this reason, I've named the network `external`. It is also common for the `type: vip` network to be generically named `vip`.
 
 ### Manual networks with OpenStack Neutron
+
+TODO
+
+### Manual networks with vSphere
 
 TODO
 

@@ -75,9 +75,15 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
          * [Manual networks with vSphere](#manual-networks-with-vsphere)
       * [Further reading on BOSH networks](#further-reading-on-bosh-networks)
    * [Disks](#disks)
+      * [Persistent Disks and CPIs](#persistent-disks-and-cpis)
+      * [Persistent disks and volume mounts](#persistent-disks-and-volume-mounts)
       * [Simple Persistent Disk](#simple-persistent-disk)
+      * [Initially Provisioning Persistent Disks](#initially-provisioning-persistent-disks)
+      * [Resizing Persistent Disks](#resizing-persistent-disks)
       * [Persistent Disk Types](#persistent-disk-types)
       * [Orphaned Disks](#orphaned-disks)
+         * [Reattach orphaned disks](#reattach-orphaned-disks)
+         * [Delete orphaned disks](#delete-orphaned-disks)
       * [Multiple Persistent Disks](#multiple-persistent-disks)
    * [Operator files](#operator-files)
 
@@ -1845,11 +1851,52 @@ The BOSH documentation has some additional information about [networking and con
 
 # Disks
 
-Some of the job templates used in your deployments will need to store persistent data.
+Some of the job templates used in your deployments will need to store persistent data. BOSH director's ability to fully manage the provisioning, mounting, and resizing of persistent disks is one of its greatest features compared to other tools that also manage cloud infrastructure or perform configuration management. BOSH director can coordinate **both** the cloud infrastructure (to provision and deprovision disks) and the instance itself (to format, mount, and perform resizing operatings).
+
+We first looked at disks in the section [Persistent Volumes](#persistent-volumes).
+
+Each instance of an instance group can have a fully managed persistent disk (see [Multiple Persistent Disks](#multiple-persistent-disks) to move to multiple disks). It will be mounted at `/var/vcap/store` and is shared across all job templates collocated on the same instance.
+
+This section will discuss persistent disk types, the provisioning and mounting sequence, and how the BOSH director fully manages the resizing of persistent disks between deployments.
+
+## Persistent Disks and CPIs
+
+Each cloud infrastructure and the BOSH Cloud Provider Interface (CPI) will have its own implementation of persistent disks.
+
+The important implementation requirement of the CPI and the cloud infrastructure is that the persistent disk can be detached from one cloud server and reattached to another cloud server. These disk volumes are not necessarily located on the same host machine as the cloud server to which they are attached, rather will be located somewhere else on the network. Hence we can term them "network disk volumes".
+
+For example, the AWS CPI will provision AWS Elastic Block Storage (AWS EBS). The vSphere CPI has more work to do to implement persistent disks as vSphere does not have a native network disk volume concept. The Docker CPI and Garden CPI, which manage local Linux containers rather than virtual machines, will implement persistent disks upon the host machine.
+
+A BOSH persistent disk exists for the life of the instance group, not only during the lifespan of individual cloud servers. This is similar to the relationship between BOSH instances and the underlying cloud servers provided by the cloud infrastructure. The BOSH instance and BOSH persistent disk are concepts that exist for the lifetime of the deployment, but underneath they are implemented by cloud servers and network disk volumes that might be provisioned and destroyed to support resizing or upgrades.
+
+## Persistent disks and volume mounts
+
+If an instance has a single persistent disk then the BOSH director will organise for the disk to be formatted and mounted.
 
 ## Simple Persistent Disk
 
+The simplest technique for allocating a persistent disk in a deployment manifest is the `persistent_disk` attribute of an `instance_group`. Consider this abbreviated deployment manifest:
+
+```yaml
+instance_groups:
+- name: zookeeper
+  instances: 5
+  persistent_disk: 10240
+```
+
+BOSH will manage five different persistent disks and their association with the five `zookeeper` instances in this deployment. BOSH will use its CPI to request a `10240` Mb persistent disk from the cloud infrastructure. That is, on AWS it will provision five 10GB AWS EBS volumes and request that AWS attach each one to the five different AWS EC2 servers.
+
+## Initially Provisioning Persistent Disks
+
+TODO
+
+## Resizing Persistent Disks
+
+TODO
+
 ## Persistent Disk Types
+
+TODO
 
 ## Orphaned Disks
 
@@ -1873,6 +1920,24 @@ disk-97956ada...  9.8 GiB  dcos-testflight  mesos-master/7a9d417c-...  z1  ...
 ...
 ```
 
+### Reattach orphaned disks
+
+The primary purpose of orphaning disks is to allow you to recover from the error of accidentally deleting your deployments or from erroneous deployment changes.
+
+If we made an error with our `zookeeper` deployment, then we would need to reattach five different disks.
+
+To reattach an orphaned disk to a running instance:
+
+* run `bosh stop name/id` command to stop instance (or multiple instances) for repair
+* run `bosh attach-disk name/id disk-cid` command to attach disk to given instance
+* run `bosh start name/id` command to resume running instance workload
+
+The `bosh attach-disk` command will replace any currently attached disk, thus orphaning it.
+
+The `attach-disk` command can also attach available disks found in the cloud infrastructure. They don’t have to be listed in the `bosh disks --orphaned` list.
+
+### Delete orphaned disks
+
 You can delete individual disks using their "Disk CID":
 
 ```
@@ -1887,6 +1952,6 @@ bosh disks --orphaned | grep disk- | awk '{print $1}' | xargs -L1 bosh delete-di
 
 ## Multiple Persistent Disks
 
-See https://www.starkandwayne.com/blog/bosh-multiple-disks/
+BOSH deployment manifests can request multiple persistent disks, apply any disk formatting, and mount them to any path. This topic is discussed in a great blog post by Chris Weibel [Mounting Multiple Persistent Disks with BOSH](https://www.starkandwayne.com/blog/bosh-multiple-disks/).
 
 # Operator files

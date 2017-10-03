@@ -85,13 +85,18 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
          * [Reattach orphaned disks](#reattach-orphaned-disks)
          * [Delete orphaned disks](#delete-orphaned-disks)
       * [Multiple Persistent Disks](#multiple-persistent-disks)
+   * [Cloud Config Updates](#cloud-config-updates)
+      * [Redeploy without a manifest](#redeploy-without-a-manifest)
    * [Stemcells](#stemcells)
       * [Agent](#agent)
    * [Deployment Updates](#deployment-updates)
       * [Update Sequence](#update-sequence)
-   * [Cloud Config Updates](#cloud-config-updates)
       * [Renaming An Instance Group](#renaming-an-instance-group)
+   * [Targeting BOSH directors and deployments](#targeting-bosh-directors-and-deployments)
+      * [Expected non-empty deployment name](#expected-non-empty-deployment-name)
    * [Operator Files](#operator-files)
+   * [Availability Zones](#availability-zones)
+   * [Director authentication and authorisation](#director-authentication-and-authorisation)
 
 NOTE: update TOC using `bin/replace-toc`
 
@@ -1962,7 +1967,13 @@ disk_types:
   cloud_properties: {}
 ```
 
+The `name` attribute is the reference label used by `persistent_disk_type` in deployment manifests. The `disk_size` is in megabytes.
+
 The default `cloud_properties` for each item in `disk_types` is the same as for the `persistent_disk` section above. The linked URLs to documentation describe the cloud infrastructure options.
+
+In our modified `zookeeper` deployment manifest above, our `persistent_disk_type: large` currently maps to a 50,000 MB disk with default `cloud_properties` for the cloud infrastructure.
+
+If the `name: large` attributes are subsequently modified in `bosh cloud-config` then our deployment will not be immediately affected. Our deployment will pick up the changes when we next run `bosh deploy`.
 
 ### Available Disk Types
 
@@ -2050,6 +2061,90 @@ bosh disks --orphaned | grep disk- | awk '{print $1}' | xargs -L1 bosh delete-di
 
 BOSH deployment manifests can request multiple persistent disks, apply any disk formatting, and mount them to any path. This topic is discussed in a great blog post by Chris Weibel [Mounting Multiple Persistent Disks with BOSH](https://www.starkandwayne.com/blog/bosh-multiple-disks/).
 
+# Cloud Config Updates
+
+The `bosh` CLI includes a `bosh update-cloud-config path/to/new-cloud-config.yml` command.
+
+One approach to curating the `cloud-config` is to:
+
+* download and save it to a file
+
+    ```
+    bosh cloud-config > cloud.yml
+    ```
+
+* edit it
+
+    ```
+    vi cloud.yml
+    ```
+
+* upload the changes
+
+    ```
+    bosh update-cloud-config cloud.yml
+    ```
+
+    This will show you the changes and you press `y` to continue:
+
+    ```
+    disk_types:
+    - name: default
+    -   disk_size: 3000
+    +   disk_size: 5000
+    ```
+
+Once cloud config is updated, all existing deployments will be considered outdated, as indicated by `bosh deployments` command.
+
+```
+bosh deployments
+```
+
+The output would show that all deployments now have an outdated `cloud-config`:
+
+```
+Name       Release(s)       Stemcell(s)                          Team(s)  Cloud Config
+zookeeper  zookeeper/0.0.7  bosh-...-ubuntu-trusty-go_agent/...  -        outdated
+```
+
+When you next deploy the `zookeeper` deployment it will show that the deployment's `disk_types` (merged in from the `cloud-config`) will be changing:
+
+```
+$ bosh deploy manifests/zookeeper.yml
+
+  disk_types:
+  - name: default
+-   disk_size: 3000
++   disk_size: 5000
+
+Continue? [yN]:
+```
+
+After a deployment has been re-deployed, the `bosh deployments` output will show it has the latest `cloud-config`:
+
+```
+$ bosh deployments
+
+Name       Release(s)       Stemcell(s)                          Team(s)  Cloud Config
+zookeeper  zookeeper/0.0.7  bosh-...-ubuntu-trusty-go_agent/...  -        latest
+```
+
+## Redeploy without a manifest
+
+To re-deploy a deployment you will require the deployment manifest in a local file:
+
+```
+bosh deploy path/to/manifest.yml
+```
+
+But when the only changes to a deployment are in the shared `cloud-config`, we can try using the previously successfully deployed manifest that is stored within the BOSH director:
+
+```
+bosh deploy <(bosh manifest)
+```
+
+I'm not suggesting this is a "good idea". But its definitely "an idea". Remember to double check the proposed changes to the deployment.
+
 # Stemcells
 
 TODO
@@ -2060,6 +2155,7 @@ One of the primary reasons for BOSH stemcells, rather than allowing you to bring
 # Deployment Updates
 
 TODO
+
 ## Update Sequence
 
 TODO
@@ -2070,10 +2166,6 @@ update:
   canary_watch_time: 5000-60000
   update_watch_time: 5000-60000
 ```
-
-# Cloud Config Updates
-
-TODO
 
 ## Renaming An Instance Group
 
@@ -2092,6 +2184,29 @@ instance_groups:
 
 When we next run `bosh deploy`, the BOSH director will harmlessly rename any `zookeeper` or `zookeeper-instances` instances to their new name `zk`. On subsequent `bosh deploy` operations, with the instance group now called `zk`, the `migrated_from` attribute will be ignored.
 
+# Targeting BOSH directors and deployments
+
+Throughout the Ultimate Guide to BOSH I have never explicitly referenced which BOSH director or which BOSH deployment name I am referring. I do this because adding `-d zookeeper` is repetitive, ugly, and repetitive.
+
+## Expected non-empty deployment name
+
+```
+$ bosh deploy manifests/zookeeper.yml
+Using environment '10.0.0.4' as client 'admin'
+
+Expected non-empty deployment name
+
+Exit code 1
+```
+
 # Operator Files
+
+TODO
+
+# Availability Zones
+
+TODO
+
+# Director authentication and authorisation
 
 TODO

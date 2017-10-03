@@ -80,6 +80,7 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
          * [Pitfalls of forgetting persistent disks](#pitfalls-of-forgetting-persistent-disks)
       * [Simple Persistent Disk](#simple-persistent-disk)
       * [Persistent Disk Types](#persistent-disk-types)
+         * [Available Disk Types](#available-disk-types)
       * [Orphaned Disks](#orphaned-disks)
          * [Reattach orphaned disks](#reattach-orphaned-disks)
          * [Delete orphaned disks](#delete-orphaned-disks)
@@ -88,6 +89,7 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
       * [Agent](#agent)
    * [Deployment Updates](#deployment-updates)
       * [Update Sequence](#update-sequence)
+   * [Cloud Config Updates](#cloud-config-updates)
       * [Renaming An Instance Group](#renaming-an-instance-group)
    * [Operator Files](#operator-files)
 
@@ -1962,6 +1964,35 @@ disk_types:
 
 The default `cloud_properties` for each item in `disk_types` is the same as for the `persistent_disk` section above. The linked URLs to documentation describe the cloud infrastructure options.
 
+### Available Disk Types
+
+You can use the `bosh` CLI to discover the `disk_types` and their labels on your BOSH director:
+
+```
+bosh int <(bosh cloud-config) --path /disk_types
+```
+
+The example output might be similar to:
+
+```yaml
+- disk_size: 3000
+  name: default
+- disk_size: 50000
+  name: large
+- disk_size: 1024
+  name: 1GB
+- disk_size: 5120
+  name: 5GB
+- disk_size: 10240
+  name: 10GB
+- disk_size: 100240
+  name: 100GB
+```
+
+In this example, the optional `cloud_properties` attribute was not included.
+
+To curate the lists of `disk_types` shared amongst your deployments you will need to update your `cloud-config`. We will discuss this later in the section [Cloud Config Updates](#cloud-config-updates).
+
 ## Orphaned Disks
 
 The BOSH director does not immediately delete disks that are no longer needed. These disks are marked as orphaned and will be garbage collected after 5 days.
@@ -2039,6 +2070,10 @@ update:
   canary_watch_time: 5000-60000
   update_watch_time: 5000-60000
 ```
+
+# Cloud Config Updates
+
+TODO
 
 ## Renaming An Instance Group
 

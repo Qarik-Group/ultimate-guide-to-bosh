@@ -1937,7 +1937,30 @@ Continuing with the AWS EBS example, the AWS CPI has to choose an [EBS Volume Ty
 
 ## Persistent Disk Types
 
-TODO
+The benefits of `persistent_disk` attribute are that it is simple (just a number of megabytes) and cloud infrastructure agnostic.
+
+The downside is the inability to customise the cloud infrastructure attributes of the disk. For this we switch from `persistent_disk` to the `persistent_disk_type` attribute.
+
+```yaml
+instance_groups:
+- name: zookeeper
+  instances: 5
+  persistent_disk_type: large
+```
+
+In the updated example above, we are now using a text label `large` to reference a new item `disk_types` from your `bosh cloud-config`:
+
+```yaml
+disk_types:
+- name: default
+  disk_size: 3000
+  cloud_properties: {}
+- name: large
+  disk_size: 50_000
+  cloud_properties: {}
+```
+
+The default `cloud_properties` for each item in `disk_types` is the same as for the `persistent_disk` section above. The linked URLs to documentation describe the cloud infrastructure options.
 
 ## Orphaned Disks
 

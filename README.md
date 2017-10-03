@@ -79,8 +79,6 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
       * [Persistent disks and volume mounts](#persistent-disks-and-volume-mounts)
          * [Pitfalls of forgetting persistent disks](#pitfalls-of-forgetting-persistent-disks)
       * [Simple Persistent Disk](#simple-persistent-disk)
-      * [Initially Provisioning Persistent Disks](#initially-provisioning-persistent-disks)
-      * [Resizing Persistent Disks](#resizing-persistent-disks)
       * [Persistent Disk Types](#persistent-disk-types)
       * [Orphaned Disks](#orphaned-disks)
          * [Reattach orphaned disks](#reattach-orphaned-disks)
@@ -88,8 +86,10 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
       * [Multiple Persistent Disks](#multiple-persistent-disks)
    * [Stemcells](#stemcells)
       * [Agent](#agent)
-   * [Deployment updates](#deployment-updates)
-   * [Operator files](#operator-files)
+   * [Deployment Updates](#deployment-updates)
+      * [Update Sequence](#update-sequence)
+      * [Renaming An Instance Group](#renaming-an-instance-group)
+   * [Operator Files](#operator-files)
 
 NOTE: update TOC using `bin/replace-toc`
 
@@ -1541,6 +1541,7 @@ networks:
     dns: [8.8.8.8]
     cloud_properties:
       subnet: subnet-123456
+      security_groups: [bosh]
 - name: elastic
   type: vip
 
@@ -1634,6 +1635,7 @@ networks:
     dns: [8.8.8.8]
     cloud_properties:
       subnet: subnet-123456
+      security_groups: [bosh]
 ```
 
 The name `default` will be used in each deployment manifest to describe "where" its instances will be placed. In this AWS example, the AWS CPI will use `subnet: subnet-123456` to place the instance within that specific subnet ID.
@@ -1926,13 +1928,12 @@ instance_groups:
 
 BOSH will manage five different persistent disks and their association with the five `zookeeper` instances in this deployment. BOSH will use its CPI to request a `10240` Mb persistent disk from the cloud infrastructure. That is, on AWS it will provision five 10GB AWS EBS volumes and request that AWS attach each one to the five different AWS EC2 servers.
 
-## Initially Provisioning Persistent Disks
+Continuing with the AWS EBS example, the AWS CPI has to choose an [EBS Volume Type](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSVolumeTypes.html). At the time of writing, the AWS CPI defaults all disks to General Purpose SSD (`gp2`). Other CPIs will have their own defaults:
 
-TODO
-
-## Resizing Persistent Disks
-
-TODO
+* Google CPI defaults to `pd-standard` https://bosh.io/docs/google-cpi.html#disk-types
+* AWS CPI defaults to `gp2` https://bosh.io/docs/aws-cpi.html#disk-pools
+* vSphere CPI defaults to `preallocated` https://bosh.io/docs/vsphere-cpi.html#disk-pools
+* OpenStack CPI defaults to `SSD` https://bosh.io/docs/openstack-cpi.html#disk-pools
 
 ## Persistent Disk Types
 
@@ -1997,12 +1998,17 @@ BOSH deployment manifests can request multiple persistent disks, apply any disk 
 
 # Stemcells
 
+TODO
 ## Agent
 
 One of the primary reasons for BOSH stemcells, rather than allowing you to bring your own base machine images, is that they have the BOSH agent preinstalled.
 
-# Deployment updates
+# Deployment Updates
 
+TODO
+## Update Sequence
+
+TODO
 ```yaml
 update:
   canaries: 2
@@ -2011,4 +2017,23 @@ update:
   update_watch_time: 5000-60000
 ```
 
-# Operator files
+## Renaming An Instance Group
+
+Over the lifetime of a deployment you might merge or split out job templates between instance groups. You might then want to rename the instance groups. This can be done using the deployment manifest.
+
+**But**, if you simple change the name of the instance group the BOSH director will not know you wanted to rename an existing instance group. It will destroy the previous instance group, orphan its persistent disks, and then provision a new instance group with new persistent disks.
+
+To **rename** the `zookeeper` instance group in our `zookeeper` deployment manifest, we add the `migrated_from` attribute to our deployment manifest.
+
+```yaml
+instance_groups:
+- name: zk
+  migrated_from: [zookeeper, zookeeper-instances]
+  ...
+```
+
+When we next run `bosh deploy`, the BOSH director will harmlessly rename any `zookeeper` or `zookeeper-instances` instances to their new name `zk`. On subsequent `bosh deploy` operations, with the instance group now called `zk`, the `migrated_from` attribute will be ignored.
+
+# Operator Files
+
+TODO

@@ -93,6 +93,8 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
    * [Targeting BOSH directors and deployments](#targeting-bosh-directors-and-deployments)
       * [Expected non-empty deployment name](#expected-non-empty-deployment-name)
    * [Stemcells](#stemcells)
+      * [Stemcells in Deployment Manifests](#stemcells-in-deployment-manifests)
+      * [Updating Stemcells](#updating-stemcells)
       * [Finding Stemcells](#finding-stemcells)
       * [Light Stemcells](#light-stemcells)
       * [On-Premise Stemcells](#on-premise-stemcells)
@@ -2202,6 +2204,88 @@ Cloud infrastructures require a pre-existing virtual filesystem, also called a m
 The BOSH director expects that the cloud servers it provisions will behave in a certain way when it wants to interact with them. For example, the BOSH director expects that each cloud server will have a BOSH Agent installed and running. We will introduce the BOSH Agent below.
 
 Towards this dual requirement - a preexisting machine image, which is pre-populated with the BOSH Agent and other software and configuration - that we now introduce BOSH Stemcells.
+
+## Stemcells in Deployment Manifests
+
+My continuing objective with the Ultimate Guide to BOSH is that you feel good as you are reading each section in sequence. Towards this goal, the abridged deployment manifests and `cloud-config` examples have omitted sections that are actually required by the BOSH director. We now introduce the top-level `stemcells` attribute to our deployment manifests, and the `stemcell` attribute for each instance group.
+
+```yaml
+name: zookeeper
+
+releases:
+- name: zookeeper
+  version: 0.0.7
+  url: git+https://github.com/cppforlife/zookeeper-release
+
+stemcells:
+- alias: ubuntu
+  os: ubuntu-trusty
+  version: latest
+
+instance_groups:
+- name: zookeeper
+  instances: 5
+  stemcell: ubuntu
+
+- name: smoke-tests
+  lifecycle: errand
+  instances: 1
+  stemcell: ubuntu
+```
+
+Let's look at the `stemcells` section:
+
+```yaml
+stemcells:
+- alias: ubuntu
+  os: ubuntu-trusty
+  version: latest
+```
+
+Although each BOSH release will have an implicit preference for a stemcell (most BOSH releases are developed/tested/deployed against Ubuntu stemcells), there is no metadata or contract within a BOSH release to help `bosh deploy` fail fast or fail with helpful error messages if you use the wrong stemcell.
+
+In the case of the `zookeeper` deployment manifest, the selection of an `os: ubuntu-trusty` stemcell can discovered from the project's own [sample deployment manifest](https://github.com/cppforlife/zookeeper-release/blob/6f073fdbbf411babbde11085abb7f43cced8b8d3/manifests/zookeeper.yml#L9-L12). Good BOSH releases or deployment projects will provide sample BOSH deployment manifests.
+
+The selection of `os: ubuntu-trusty` means that the BOSH director must already have an `ubuntu-trusty` stemcell preloaded before running `bosh deploy`. At the time of writing there is no facilities in the BOSH CLI nor BOSH director to automatically discover, download, and install the required stemcell for a deployment manifest.
+
+The `version: latest` means that the deployment will use the latest available stemcell that has been uploaded to the BOSH director.
+
+To discover the available stemcells in your BOSH director:
+
+```
+bosh stemcells
+```
+
+An example output for a BOSH director with the Google CPI might be:
+
+```
+Name                                    Version           OS             CPI  CID
+bosh-google-kvm-ubuntu-trusty-go_agent  3445.11           ubuntu-trusty  -    stemcell-04231868...
+~                                       3421.11           ubuntu-trusty  -    stemcell-61295c90...
+bosh-google-kvm-windows2012R2-go_agent  1200.5.0-build.1  windows2012R2  -    ...packer-1499974558
+```
+
+In this example we can see two `ubuntu-trusty` stemcells with the latest version `3445.11` available for deployments. We can also see a `windows2012R2` stemcell has been uploaded and is available for deployments that include BOSH releases targeting Windows.
+
+The `alias: ubuntu` attribute gives the `os` and `version` combination a name that we can now use within `instance_groups`. From our example manifest above, we added `stemcell: ubuntu` to each instance group:
+
+```yaml
+instance_groups:
+- name: zookeeper
+  instances: 5
+  stemcell: ubuntu
+
+- name: smoke-tests
+  lifecycle: errand
+  instances: 1
+  stemcell: ubuntu
+```
+
+## Updating Stemcells
+
+Anytime that `bosh deploy` is run, `version: latest` will be adjusted to any newer stemcells that have been uploaded to the BOSH director. The BOSH director will display this proposed update before commencing the deployment.
+
+TODO
 
 ## Finding Stemcells
 

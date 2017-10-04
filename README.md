@@ -2202,6 +2202,10 @@ The BOSH director expects that the cloud servers it provisions will behave in a 
 
 Towards this dual requirement - a preexisting machine image, which is pre-populated with the BOSH Agent and other software and configuration - that we now introduce BOSH Stemcells.
 
+## Finding Stemcells
+
+You can discover stemcells at http://bosh.io/stemcells
+
 ## Light Stemcells
 
 On public cloud infrastructures - AWS, GCP, Azure - the BOSH Core Team publish shared machine images that are referenced by the stemcell file.
@@ -2246,6 +2250,10 @@ cloud_properties:
     us-west-2: ami-c03ec3b8
     cn-north-1: ami-296cbc44
 ```
+
+We can confirm each AMI is a pre-created public AMI. For the `us-east-1` AMI:
+
+[![aws-public-ami](/images/aws/aws-public-ami.png)](https://console.aws.amazon.com/ec2/v2/home?region=us-east-1#Images:visibility=public-images;search=ami-9a43afe0;sort=name)
 
 For AWS alone, the BOSH Core Team are creating 16 different AMIs in 16 different AWS regions for each AWS light stemcell.
 

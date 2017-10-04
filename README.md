@@ -87,13 +87,15 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
       * [Multiple Persistent Disks](#multiple-persistent-disks)
    * [Cloud Config Updates](#cloud-config-updates)
       * [Redeploy without a manifest](#redeploy-without-a-manifest)
-   * [Stemcells](#stemcells)
-      * [Agent](#agent)
    * [Deployment Updates](#deployment-updates)
       * [Update Sequence](#update-sequence)
       * [Renaming An Instance Group](#renaming-an-instance-group)
    * [Targeting BOSH directors and deployments](#targeting-bosh-directors-and-deployments)
       * [Expected non-empty deployment name](#expected-non-empty-deployment-name)
+   * [Stemcells](#stemcells)
+      * [Light Stemcells](#light-stemcells)
+      * [On-Premise Stemcells](#on-premise-stemcells)
+      * [Agent](#agent)
    * [Operator Files](#operator-files)
    * [Availability Zones](#availability-zones)
    * [Director authentication and authorisation](#director-authentication-and-authorisation)
@@ -2145,13 +2147,6 @@ bosh deploy <(bosh manifest)
 
 I'm not suggesting this is a "good idea". But its definitely "an idea". Remember to double check the proposed changes to the deployment.
 
-# Stemcells
-
-TODO
-## Agent
-
-One of the primary reasons for BOSH stemcells, rather than allowing you to bring your own base machine images, is that they have the BOSH agent preinstalled.
-
 # Deployment Updates
 
 TODO
@@ -2198,6 +2193,80 @@ Expected non-empty deployment name
 
 Exit code 1
 ```
+
+# Stemcells
+
+Cloud infrastructures require a pre-existing virtual filesystem, also called a machine image, to provision new cloud servers. For example, to provision an AWS EC2 server you will need an AWS AMI.
+
+The BOSH director expects that the cloud servers it provisions will behave in a certain way when it wants to interact with them. For example, the BOSH director expects that each cloud server will have a BOSH Agent installed and running. We will introduce the BOSH Agent below.
+
+Towards this dual requirement - a preexisting machine image, which is pre-populated with the BOSH Agent and other software and configuration - that we now introduce BOSH Stemcells.
+
+## Light Stemcells
+
+On public cloud infrastructures - AWS, GCP, Azure - the BOSH Core Team publish shared machine images that are referenced by the stemcell file.
+
+To quickly confirm what I mean, let's download a stemcell for AWS and look inside it.
+
+```
+curl -o stemcell-aws.tgz https://s3.amazonaws.com/bosh-aws-light-stemcells/light-bosh-stemcell-3445.11-aws-xen-hvm-ubuntu-trusty-go_agent.tgz
+```
+
+The `stemcell.MF` file within the archive is a YAML file referencing each Amazon Machine Image (AMI) for each region:
+
+```
+tar -axf stemcell-aws.tgz stemcell.MF -O
+```
+
+The output will look like:
+
+```yaml
+---
+name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
+version: '3445.11'
+bosh_protocol: '1'
+sha1: da39a3ee5e6b4b0d3255bfef95601890afd80709
+operating_system: ubuntu-trusty
+cloud_properties:
+  ami:
+    us-gov-west-1: ami-4a0d8e2b
+    ap-northeast-1: ami-17d61871
+    ap-northeast-2: ami-8f409be1
+    ap-south-1: ami-7076301f
+    ap-southeast-1: ami-5bd9ae38
+    ap-southeast-2: ami-eff81e8d
+    ca-central-1: ami-31a41d55
+    eu-central-1: ami-de19afb1
+    eu-west-1: ami-c0cf03b9
+    eu-west-2: ami-eddbc889
+    sa-east-1: ami-f89ce194
+    us-east-1: ami-9a43afe0
+    us-east-2: ami-ffab899a
+    us-west-1: ami-5493a534
+    us-west-2: ami-c03ec3b8
+    cn-north-1: ami-296cbc44
+```
+
+For AWS alone, the BOSH Core Team are creating 16 different AMIs in 16 different AWS regions for each AWS light stemcell.
+
+As a BOSH user, you do not need to correctly select the right `ami-1234567` image. The BOSH director knows which region you are using and will use the appropriate public machine image from the list above.
+
+## On-Premise Stemcells
+
+If you are using an on-premise cloud infrastructure such as vSphere or OpenStack then your stemcells cannot reference pre-built machine images. Instead, the BOSH director will have the task of creating machine images within your cloud infrastructure that it can use for provisioning cloud servers.
+
+These stemcells will be substantially larger than "light" stemcells as they contain the entire machine image. On-premise stemcells will be 300+ MB in size, whereas "light" stemcells are tiny 20KB files (discussed in preceding section).
+
+[![bosh-io-stemcell-sizes](/images/bosh-io-stemcell-sizes.png)](http://bosh.io/stemcells)
+
+Your cloud infrastructure BOSH CPI has the responsibility of converting a stemcell into a machine image.
+
+For example, the OpenStack CPI will [interact with OpenStack Glance](https://github.com/cloudfoundry-incubator/bosh-openstack-cpi-release/blob/master/docs/openstack-api-calls.md#all-calls-for-api-endpoint-image-glance) to convert a stemcell into an OpenStack Machine Image.
+
+## Agent
+
+One of the primary reasons for BOSH stemcells, rather than allowing you to bring your own base machine images, is that they have the BOSH agent preinstalled.
+
 
 # Operator Files
 

@@ -93,6 +93,7 @@ It will place you in the middle of daily life with BOSH and gradually guide you 
    * [Targeting BOSH directors and deployments](#targeting-bosh-directors-and-deployments)
       * [Expected non-empty deployment name](#expected-non-empty-deployment-name)
    * [Stemcells](#stemcells)
+      * [Finding Stemcells](#finding-stemcells)
       * [Light Stemcells](#light-stemcells)
       * [On-Premise Stemcells](#on-premise-stemcells)
       * [Agent](#agent)
@@ -2204,7 +2205,15 @@ Towards this dual requirement - a preexisting machine image, which is pre-popula
 
 ## Finding Stemcells
 
-You can discover stemcells at http://bosh.io/stemcells
+You can discover stemcells for your CPI at http://bosh.io/stemcells. At the time of writing, there are stemcells published for the following major operating system distributions:
+
+* Ubuntu Linux
+* CentOS Linux
+* Windows
+
+The Ubuntu stemcells are the most commonly used base images, are the most battle tested in production systems around the world, and seem to the author to have the most security updates pushed out. I would recommend you always use an Ubuntu stemcell unless you have a strong requirement to choose an alternate.
+
+The BOSH release you are deployment will have a specific requirement for either a Linux or Windows stemcell. If the BOSH release specifically requires CentOS Linux, then it will indicate this in its documentation and sample deployment manifests.
 
 ## Light Stemcells
 

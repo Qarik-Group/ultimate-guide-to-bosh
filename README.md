@@ -478,7 +478,7 @@ We can see that all the `zookeeper` instances are `running`. There is a sixth in
 
 For now, we will focus on the long-running instances, and return to errands later.
 
-Each instance has at least one assigned IP address. The `zookeeper.yml` manifest did not need to allocate these IP addresses, rather if left this assignment to the BOSH director, the CPI, and the cloud infrastructure. It is possible to statically assign IP addresses in a deployment manifest, but ideally there are few reasons to do so. It is not a fun part of a human's day to keep track of IP allocations.
+Each instance has at least one assigned IP address. The `zookeeper.yml` manifest did not need to allocate these IP addresses, rather it left this assignment to the BOSH director, the CPI, and the cloud infrastructure. It is possible to statically assign IP addresses in a deployment manifest, but ideally there are few reasons to do so. It is not a fun part of a human's day to keep track of IP allocations.
 
 With the BOSH CLI we can also start to introspect what is running on each instance with `bosh instances --ps`:
 
@@ -977,7 +977,7 @@ Routinely you will want to upgrade all the base operating systems for all the in
 
 Fortunately, upgrading all your deployments to new BOSH stemcells is a very easy operation and we will definitely we returning to this topic soon. For now, you need to know that this process will result in your application processes being stopped (via Monit), the original servers being deleted (via the CPI) and new servers being created to replace them (via the CPI). Any files written arbitrarily to the filesystem will be lost.
 
-Another routing operation you will perform that causes instances to be stopped, and the servers deleted and replaced, is resizing or scaling up your instances. BOSH CPIs assume that cloud providers do not know how to resizing a running server, so they will emulate "resizing" by deleting the original small server and replacing it with a new larger server. Any files written arbitrarily to the filesystem will be lost.
+Another routine operation you will perform that causes instances to be stopped, and the servers deleted and replaced, is resizing or scaling up your instances. BOSH CPIs assume that cloud providers do not know how to resizing a running server, so they will emulate "resizing" by deleting the original small server and replacing it with a new larger server. Any files written arbitrarily to the filesystem will be lost.
 
 ## Persistent Volumes
 
@@ -1177,7 +1177,7 @@ In our example subset manifest above, there are two attributes we can change to 
 
 For a brand new deployment, setting these attributes and invoking `bosh deploy` will establish the initial CPI requests to the cloud infrastructure.
 
-For an existing deployment, changing these attributes and invoking `bosh deploy` will perform a transformation of your system from its current cloud infrastructure servers and disks to the new requirements - more or fewer servers, and/or smaller or large persistent disks.
+For an existing deployment, changing these attributes and invoking `bosh deploy` will perform a transformation of your system from its current cloud infrastructure servers and disks to the new requirements - more or fewer servers, and/or smaller or larger persistent disks.
 
 We will review how the BOSH director performs these transformations of existing deployments later. It's pretty fabulous.
 

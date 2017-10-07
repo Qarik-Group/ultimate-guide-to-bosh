@@ -143,6 +143,8 @@ In addition to this Ultimate Guide to BOSH, there are some other sources of fact
 
 [BOSH documentation website](https://bosh.io/docs/) is very thorough and new features of BOSH now regularly appear simultaneously in this documentation site.
 
+Maria Shaldibina's [A Guide to Using BOSH](https://mariash.github.io/learn-bosh/) is a short step-by-step tutorial that includes provisioning BOSH within a local VirtualBox machine and the common commands for deploying systems.
+
 Duncan Winn's [Cloud Foundry: The Definitive Guide](http://shop.oreilly.com/product/0636920042501.do) includes an entire chapter, "BOSH All the Things," guided toward helping you deploy and operate Cloud Foundry.
 
 Stark & Wayne's own blog (["bosh" tag](https://www.starkandwayne.com/blog/tag/bosh/)) has over fifty articles, tutorials, and tiny tips on BOSH.

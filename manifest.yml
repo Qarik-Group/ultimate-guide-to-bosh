@@ -1,0 +1,11 @@
+applications:
+- name: ultimate-guide-to-bosh
+  buildpack: staticfile_buildpack
+  disk_quota: 1G
+  instances: 1
+  memory: 64M
+  routes:
+  - route: ultimate-guide-to-bosh.cfapps.io
+  - route: ultimateguidetobosh.com
+  - route: www.ultimateguidetobosh.com
+  stack: cflinuxfs2

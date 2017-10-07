@@ -23,5 +23,9 @@ extra:
     text: 'Bitter' # https://fonts.google.com/specimen/Bitter
     code: 'Ubuntu Mono'
 
+markdown_extensions:
+  - admonition
+  - toc(permalink=true)
+
 repo_name: 'help fix the book'
 repo_url: 'https://github.com/starkandwayne/ultimate-guide-to-bosh'

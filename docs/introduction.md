@@ -8,8 +8,6 @@ I recently started writing this. If you're reading this guide now, please let me
 
 This Ultimate Guide to BOSH is to be read linearly. Each section will build upon the preceding sections.
 
-This guide will be a single [README.md](README.md) until that just doesn't make sense anymore.
-
 The guide use sample commands and videos to show you real systems instead of expecting that you can deploy systems yourself on day 1.
 
 Later in the guide you will deploy your own BOSH and use it to deploy systems. At that point, you will install the `bosh` command-line tool, and you will need to decide which target cloud infrastructure you will use.

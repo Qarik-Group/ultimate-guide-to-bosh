@@ -10,8 +10,8 @@ last_commit_yesterday=$(git log --since=yesterday.midnight --before today.midnig
 if [[ -z $last_commit_yesterday ]]; then
   last_commit_yesterday=$(git log --since "1 days ago" --oneline | tail -n1 | awk '{print $1}')
 fi
-wordcount_head=$(git show ${last_commit_yesterday}:README.md | wc -w | awk '{print $1}')
-wordcount_latest=$(cat README.md | wc -w | awk '{print $1}')
+wordcount_head=$(ls docs/*.md | xargs -L1 -I {} echo "${last_commit_yesterday}:{}" | paste -sd " " - | xargs git show | wc -w | awk '{print $1}')
+wordcount_latest=$(cat docs/*.md | wc -w | awk '{print $1}')
 wordcount_diff=`expr $wordcount_latest - $wordcount_head`
 
 echo "${wordcount_latest} words total"

@@ -231,7 +231,7 @@ As a counter example, the community method for deploying Cloud Foundry assumes t
 
 These are more descriptive than `default` but you would still need to investigate your `bosh cloud-config` to see the specific details.
 
-## Instace Groups Form Clusters
+## Instance Groups Form Clusters
 
 Without knowing how Apache ZooKeeer works, it is fair to assume that the zookeeper processes running on each of the five instances in our example deployment are communicating with each other. Yet, in our example deployment manifests, we have not explicitly described any relationships between them.
 

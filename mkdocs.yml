@@ -31,3 +31,4 @@ markdown_extensions:
 
 repo_name: 'help fix the book'
 repo_url: 'https://github.com/starkandwayne/ultimate-guide-to-bosh'
+edit_uri: edit/master/docs/

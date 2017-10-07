@@ -14,6 +14,8 @@ pages:
     - Stemcells: stemcells.md
 
 theme: 'material'
+theme_dir: 'theme-overrides'
+
 extra:
   palette:
     primary: 'orange'

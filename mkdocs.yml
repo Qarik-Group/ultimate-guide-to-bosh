@@ -27,9 +27,10 @@ extra:
 
 markdown_extensions:
   - admonition
-  - toc(permalink=true)
+  - codehilite
   - pymdownx.magiclink
   - pymdownx.superfences
+  - toc(permalink=true)
 
 repo_name: 'help fix the book'
 repo_url: 'https://github.com/starkandwayne/ultimate-guide-to-bosh'

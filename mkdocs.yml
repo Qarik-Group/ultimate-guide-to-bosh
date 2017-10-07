@@ -1,0 +1,27 @@
+site_name: Ultimate Guide to BOSH
+pages:
+    - Home: index.md
+    - Introduction: introduction.md
+    - Why BOSH?: why-bosh.md
+    - Deployments: deployments.md
+    - Instances: instances.md
+    - Deployment Manifests: deployment-manifests-part-1.md
+    - Networking: networking.md
+    - Disks: disks.md
+    - Cloud Config Updates: cloud-config-updates.md
+    - Deployment Updates: deployment-updates.md
+    - Targeting BOSH environments: targeting-bosh-envs.md
+    - Stemcells: stemcells.md
+
+theme: 'material'
+extra:
+  palette:
+    primary: 'orange'
+    accent: 'amber'
+
+  font:
+    text: 'Bitter' # https://fonts.google.com/specimen/Bitter
+    code: 'Ubuntu Mono'
+
+repo_name: 'help fix the book'
+repo_url: 'https://github.com/starkandwayne/ultimate-guide-to-bosh'

@@ -1,7 +1,7 @@
 site_name: Ultimate Guide to BOSH
 pages:
   - Guide:
-    - Home: index.md
+    - Welcome: index.md
     - Introduction: introduction.md
     - Why BOSH?: why-bosh.md
     - Deployments: deployments.md
@@ -23,6 +23,8 @@ extra:
   palette:
     primary: 'orange'
     accent: 'amber'
+  feature:
+    tabs: true
 
   font:
     text: 'Bitter' # https://fonts.google.com/specimen/Bitter

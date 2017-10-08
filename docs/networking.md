@@ -28,7 +28,7 @@ When processes within a distributed system cannot discover or communicate with i
 
 ### Discovering That a Distributed System is Failing is Nontrivial
 
-A process might refuse to start successfully because it cannot connect to a dependent subsystem. Monit will then restart that process over and over infinitely. Another process might start running even if it cannot access its dependencies, but when users interact with that process it might then return errors. Or it might provide a subset of normal behaviour, rather than explicit errors. Some erroneous behaviour might be intermittent.
+A process might refuse to start successfully because it cannot connect to a dependent subsystem. Monit will then restart that process over and over infinitely. Another process might start running even if it cannot access its dependencies, but when users interact with that process it might when return errors. Or it might provide a subset of normal behaviour, rather than explicitly error. Some erroneous behaviour might be intermittent.
 
 ### Debugging a Distributed System is Nontrivial
 
@@ -50,7 +50,7 @@ To help frame the mini guide to networking, I'll first introduce where networkin
 
 ### Networking Configuration in Cloud-Config
 
-Remember that `bosh cloud-config` is where the bulk of cloud infrastructure specific configuration. Earlier we reviewed `vm_types` and mapped each one to a CPI specific instance type/machine type/VM configuration depending on the CPI.
+Remember that `bosh cloud-config` is where the bulk of cloud infrastructure specific configuration resides. Earlier we reviewed `vm_types` and mapped each one to a CPI specific instance type/machine type/VM configuration depending on the CPI.
 
 Networking configuration is also specific to the target infrastructure, but fortunately there is a common set of attributes across all CPIs.
 
@@ -191,7 +191,7 @@ Each `instance_groups` item must include an `azs` and `networks` attribute. At a
 
 This deployment manifest is inferring that each of the 5 instances will be allocated a different IP address from the `default` network. It isn't important what exact IP address will be assigned, as the job templates running on each instance will be provided the IP addresses for all the instances in the instance group.
 
-It is useful to understand that from the sample `cloud-config` we can see that these IP addresses might be in the range of `10.0.0.2` to `10.10.0.219`. Let's investigate IP ranges and how BOSH allocates IP address.
+It is useful to understand that from the sample `cloud-config` we can see that these IP addresses might be in the range of `10.0.0.2` to `10.10.0.219`. Let's investigate IP ranges and how BOSH allocates IP address(es).
 
 ### Mapping to External Network
 
@@ -201,13 +201,13 @@ The examples above are each stating that there already exists a network `10.0.0.
 
 ## BOSH IP Allocation vs DHCP
 
-If you've seen any networking before - such as trying to get your computer and devices onto your home router - you'll have blissfully ignored how an IP address is allocated to your computer or device. This facility is thanks to Dynamic Host Configuration Protocol (DHCP).
+If you've played with networking before - such as trying to get your computer and devices onto your home router - you'll have blissfully ignored how an IP address is allocated to your computer or device. This facility is thanks to Dynamic Host Configuration Protocol (DHCP).
 
 You might have seen that mysterious IP `169.254.X.Y` that indicates that DHCP has failed and your device has [allocated itself](http://packetlife.net/blog/2008/sep/24/169-254-0-0-addresses-explained/) an IP address.
 
 The allocation of IP addresses to BOSH instances is not performed with DHCP. Instead, the BOSH director/CPI statically assign IP addresses to each instance. From our perspective, the net result is the same: IP address allocation is not manually managed by you (by default).
 
-Instead, you will give guidance to the BOSH director and CPI as to where each instance will be placed within your networking, and an IP will be chosen.
+Instead, you will give guidance to the BOSH director and CPI as to where each instance will be placed within your networking range, and an IP will be chosen.
 
 Consider an example network in a `cloud-config`:
 
@@ -321,7 +321,8 @@ When we introduce Links, you will see that there are relatively few reasons for 
 
 ### Virtual IP Addresses
 
-Some cloud infrastructures have a concept of virtual IP addresses. In OpenStack, they are called floating IPs, and in AWS they are called elastic IPs. TODO more introduction for their purpose/benefit.
+Some cloud infrastructures have a concept of virtual IP addresses. In OpenStack, they are called floating IPs, and in AWS they are called elastic IPs. Elastic IP addresses in the AWS world are public IP addresses that you lease from AWS. Amongst other things, they are useful for providing some predictability in the network reachability of AWS instances - because for one thing you don't lose them as instances - stop, restart or outright fail. In other words Elastic addresses are not ephemeral in nature.
+TODO more introduction for their purpose/benefit.
 
 Like networks in general, BOSH cannot provision or destroy virtual IP addresses. Instead, it can help you manage the assignment of them to instances.
 

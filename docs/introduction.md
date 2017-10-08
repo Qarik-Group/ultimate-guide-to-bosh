@@ -99,7 +99,8 @@ In 2013, the BOSH project was taken over by Pivotal engineering and has been gif
 There are many people in the history of BOSH who have directly made BOSH what it is, actively sponsored its investment, or evangelised it.
 
 * James Watters, SVP Product at Pivotal, has been the loudest cheerleader of BOSH on the planet
-* Ferran Rodenas, Consultant at Stark & Wayne, has been my BOSH friend since 2012
+* Ferran Rodenas, has been my BOSH friend since 2012 and who created some of the greatest BOSH community contributions, including [docker-boshrelease](https://github.com/cloudfoundry-community/docker-boshrelease)
+* James Bayer, VP Project Management at Pivotal, was the creator of the Clam logo for BOSH. I love the clam.
 * Dmitriy Kalinin, Product Manager for BOSH, has been driving his incredible vision for BOSH
 * Original BOSH team at VMware - Mark Lucovsky, Vadim Spivak, Oleg Shaldybin, Martin Englund - who had the original vision and execution to create the ultimate tool for release engineering, deployment, lifecycle management, and monitoring of distributed systems.
 

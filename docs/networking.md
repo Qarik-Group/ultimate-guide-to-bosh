@@ -28,7 +28,7 @@ When processes within a distributed system cannot discover or communicate with i
 
 ### Discovering That a Distributed System is Failing is Nontrivial
 
-A process might refuse to start successfully because it cannot connect to a dependent subsystem. Monit will then restart that process over and over infinitely. Another process might start running even if it cannot access its dependencies, but when users interact with that process it might when return errors. Or it might provide a subset of normal behaviour, rather than explicitly error. Some erroneous behaviour might be intermittent.
+A process might refuse to start successfully because it cannot connect to a dependent subsystem. Monit will then restart that process over and over infinitely. Another process might start running even if it cannot access its dependencies, but when users interact with that process it might then return errors. Or it might provide a subset of normal behaviour, rather than explicit errors. Some erroneous behaviour might be intermittent.
 
 ### Debugging a Distributed System is Nontrivial
 

@@ -4,7 +4,9 @@
 
 It's incredible. Huge companies are using it. Tiny companies are using it. You too could be using it.
 
-This is the [Ultimate Guide to BOSH](https://ultimate-guide-to-bosh.cfapps.io/).
+This is the [Ultimate Guide to BOSH](https://ultimateguidetobosh.com).
+
+![book-cover-being-read](/images/bookcover/book-cover-being-read.png)
 
 It will place you in the middle of daily life with BOSH and gradually guide you toward understanding, and then deploying your own systems, and then through to deep understanding. You'll become a raving fan.
 

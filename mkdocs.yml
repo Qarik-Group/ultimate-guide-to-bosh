@@ -13,6 +13,8 @@ pages:
     - Deployment Updates: deployment-updates.md
     - Targeting BOSH environments: targeting-bosh-envs.md
     - Stemcells: stemcells.md
+  - Spread the Word:
+    - Meetups: spread-the-word/meetups.md
   - Ask For Help:
     - Suggestions: ask-for-help/suggestions.md
 

@@ -84,9 +84,23 @@ Tear down your ZooKeeper cluster:
 bosh delete-deployment
 ```
 
+## About the author
+
+I did not invent BOSH. A group of engineers from the Cloud Foundry project at VMWare conceived of BOSH and built the first iteration of BOSH. BOSH is architecturally still very similar to its original public incarnation in 2012.
+
+Nor have I ever worked on BOSH as a full-time job. The BOSH project is sponsored heavily by full-time employees from Pivotal, as well as IBM, and other Cloud Foundry Foundation members. Your joy and happiness from BOSH is in huge thanks to VMWare, Pivotal, IBM, Stark & Wayne and the vast community of contributors who have contributed in large and small to make it fantastic.
+
+My initial role in the history of BOSH was small - I was one of the first people outside VMWare to be publicly excited about BOSH. My relationship with BOSH and its community has snowballed ever since.
+
+In the years before BOSH, I was the VP of Technology at Engine Yard. Engine Yard was a "devops as a service" or "platform as a service" company. Or more crassly, it was a web hosting company.
+
+Several years earlier, the Engine Yard platform had been hastily prototyped on the new AWS platform using an also-new configuration management tool called Chef. The Engine Yard platform worked and many customers' entire business ran successfully upon it to this day. The internal cost for allowing customers to continually run their applications - even if they didn't want to upgrade and maintain their code bases - was tremendous. Upgrading the Engine Yard platform was difficult. The surface area of the implicit contract we made with customers - the base operating system, available packages, the version of Chef - was vast. Every change we wanted to make needed to be considered from the perspective of 2000 different web applications, run by 2000 different development teams, running 2000 different business.
+
+Some of our internal systems were not as automated as others. We did not have a nice way to publish new AMIs to AWS. Since we didn't publish new AMIs, we also didn't initially have a way to share them with customers. We had spent a year preparing, curating, and releasing the second-ever edition of our base AMI, when I saw BOSH for the first time. The demonstration I was shown was incredible - a small change was made to a YAML file, they run `bosh deploy`, and in the vCenter window it could be seen that all the VMs were being progressively destroyed and replaced by new ones built upon a new base machine image, with newly compiled packages for that machine image. It was also replacing VMs with bigger ones. And it was resizing the persistent disks for the databases. BOSH was incredible.
+
 ## Brief History of BOSH
 
-I was fortunate to be invited to the VMWare campus in Palo Alto, CA, on April 11, 2012, for the unveiling of "The Outer Shell" that deploys Cloud Foundry. The Outer Shell was called BOSH. This is an acronym for "BOSH Outer Shell." Engineers know one thing: recursion is funny.
+I was fortunate to see that demo. I had been invited to the VMWare campus in Palo Alto, CA, on April 11, 2012, for the unveiling of "The Outer Shell" that VMWare internally had been using to deploy Cloud Foundry. The Outer Shell was called BOSH. This is an acronym for "BOSH Outer Shell." All engineers know that recursion is funny.
 
 I invited myself to the VMware campus for two days to meet the developers of BOSH and Cloud Foundry and came away fascinated by the vast scope of problems that the BOSH team was trying to solve. The BOSH team were kind enough to either answer a question or fix BOSH so the question was void.
 
@@ -103,6 +117,7 @@ There are many people in the history of BOSH who have directly made BOSH what it
 * James Bayer, VP Project Management at Pivotal, was the creator of the Clam logo for BOSH. I love the clam.
 * Dmitriy Kalinin, Product Manager for BOSH, has been driving his incredible vision for BOSH
 * Original BOSH team at VMware - Mark Lucovsky, Vadim Spivak, Oleg Shaldybin, Martin Englund - who had the original vision and execution to create the ultimate tool for release engineering, deployment, lifecycle management, and monitoring of distributed systems.
+* Stark & Wayne staff - I've been ever so lucky to have started an organisation that has attracted so many wonderful team members around the world, who've gone on to continuously expand the BOSH ecosystem with releases, tools, and 200+ blog posts.
 
 ## BOSH in Production
 

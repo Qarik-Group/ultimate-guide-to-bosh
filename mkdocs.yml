@@ -1,5 +1,6 @@
 site_name: Ultimate Guide to BOSH
 pages:
+  - Guide:
     - Home: index.md
     - Introduction: introduction.md
     - Why BOSH?: why-bosh.md
@@ -12,6 +13,8 @@ pages:
     - Deployment Updates: deployment-updates.md
     - Targeting BOSH environments: targeting-bosh-envs.md
     - Stemcells: stemcells.md
+  - Ask For Help:
+    - Home: ask-for-help/index.md
 
 theme: 'material'
 theme_dir: 'theme-overrides'

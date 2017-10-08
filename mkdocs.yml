@@ -14,7 +14,7 @@ pages:
     - Targeting BOSH environments: targeting-bosh-envs.md
     - Stemcells: stemcells.md
   - Ask For Help:
-    - Home: ask-for-help/index.md
+    - Suggestions: ask-for-help/suggestions.md
 
 theme: 'material'
 theme_dir: 'theme-overrides'

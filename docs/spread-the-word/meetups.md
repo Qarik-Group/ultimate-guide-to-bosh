@@ -5,3 +5,8 @@ All local meetups would love to have an introduction to BOSH. Programming langua
 ![book-cover-library](/images/bookcover/book-cover-library.png)
 
 If you have put your slide or a recording of your talk online, please update this page with a link.
+
+---
+
+[Michael Richardson](https://twitter.com/m_richo) - [Persistence in the Cloud with BOSH](https://www.slideshare.net/m_richardson/persistence-in-the-cloud-with-bosh)<br/>
+([Sydney DevOps Meetup](https://www.meetup.com/devops-sydney/events/235494979/) - 16 Feb 2017)

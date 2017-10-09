@@ -8,7 +8,7 @@ I recently started writing this. If you're reading this guide now, please let me
 
 This Ultimate Guide to BOSH is to be read linearly. Each section will build upon the preceding sections.
 
-The guide use sample commands and videos to show you real systems instead of expecting that you can deploy systems yourself on day 1.
+The guide uses sample commands and videos to show you real systems instead of expecting that you can deploy systems yourself on day 1.
 
 Later in the guide you will deploy your own BOSH and use it to deploy systems. At that point, you will install the `bosh` command-line tool, and you will need to decide which target cloud infrastructure you will use.
 
@@ -54,7 +54,7 @@ bosh upload-stemcell https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-
 bosh deploy zookeeper-release/manifests/zookeeper.yml
 ```
 
-If AWS deletes one of your VMs, heal your cluster by receating a new VM, reattach the persistent disk, remount it, and restart all the processes to join the ZooKeeper node into the cluster:
+If AWS deletes one of your VMs, heal your cluster by recreating a new VM, reattach the persistent disk, remount it, and restart all the processes to join the ZooKeeper node into the cluster:
 
 ```
 # do nothing, this resurrection will happen automatically

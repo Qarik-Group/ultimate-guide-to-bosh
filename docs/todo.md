@@ -1,7 +1,3 @@
-# Operator Files
-
-TODO
-
 # Availability Zones
 
 TODO

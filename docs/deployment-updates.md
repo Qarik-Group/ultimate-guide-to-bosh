@@ -219,17 +219,105 @@ The latter example will isolate and replace the specific `networks` item with th
 
 Since the original example YAML file only had one `networks` array item all three examples result in the same modification.
 
+## Update Job Template Properties
+
+Most job templates have optional or required properties. So far in our `zookeeper` deployment examples we have not explicitly overridden any properties, rather have enjoyed the mystery of the unknown default properties.
+
+We can provide a property within an instance group with the optional `properties` attribute. For example, the `zookeeper` job template has a property `max_client_connections` with a default value `60`. To explicitly declare this property with a value of `120`, we can either modify the deployment manifest directly:
+
+```yaml
+name: zookeeper
+
+instance_groups:
+- name: zookeeper
+  instances: 5
+  jobs:
+  - name: zookeeper
+    release: zookeeper
+    properties:
+      max_client_connections: 120
+```
+
+Or we can use an Operator file to add the missing `properties.max_client_connections` attribute:
+
+```
+- type: replace
+  path: /instance_groups/name=zookeeper/jobs/name=zookeeper/properties?/max_client_connections
+  value: 120
+```
+
+Note the special use of `?` question mark in `/properties?/max_client_connections`. This means, "if `/properties` attribute is missing, then please create it first". Operator files are nothing if not courteous. They will not insert new attributes into a YAML file without permission from the `?` postfix operator.
+
+## Deployment manifest variables
+
+In addition to `-o` Operator files, the `bosh deploy` command also allows you to pass in variables with the `-v` flag. Variables are a simpler way to specify values than the relatively complex Operator file syntax. But you can only provide variables if the deployment manifest wants them.
+
+A deployment manifest will request variables with the double parentheses syntax `((var-name))`.
+
+Consider an abridged variation of our `zookeeper-release/manifests/zookeeper.yml` file where the `properties.max_client_connections` attribute is declared, but the value is a variable:
+
+```yaml
+name: zookeeper
+
+instance_groups:
+- name: zookeeper
+  instances: 5
+  jobs:
+  - name: zookeeper
+    release: zookeeper
+    properties:
+      max_client_connections: ((zk-max-client-connections))
+```
+
+Your `bosh deploy` command will now require that you provide the value for this variable:
+
+```
+> bosh deploy zookeeper-release/manifests/zookeeper.yml \
+  -v zk-max-client-connections=120
+```
+
+If you forget to provide a required variable, the BOSH director may error with output similar to:
+
+```
+> bosh deploy zookeeper-release/manifests/zookeeper.yml
+...
+Task 4 | 04:17:27 | Preparing deployment: Preparing deployment (00:00:01)
+  L Error: Failed to fetch variable '/.../zookeeper/zk-max-client-connections'
+  from config server: Director is not configured with a config server
+```
+
+TODO example error on a credhub BOSH
+
+The benefit of variables is they are easier to use than creating new Operator files. The downside of variables occurs if a deployment manifests uses variables, but a default value would have been fine. It can be tedious providing explicit variables for a new deployment at a time when you just don't know or care what good values might be.
+
+Good defaults are better than variables. Operators can always modify or set values later with Operator files. The file are even named after us!
+
 ## Update Sequence
+
+TODO
 
 ## Update Batches
 
-TODO
+The final top-level section of a deployment manifest is `update` and it specifies the batches of instances to update, and how long should the BOSH director wait before timing out and declaring that a `bosh deploy` has failed.
+
 ```yaml
 update:
-  canaries: 2
-  max_in_flight: 1
+  canaries: 1
+  max_in_flight: 2
+  serial: true
   canary_watch_time: 5000-60000
   update_watch_time: 5000-60000
+```
+
+The `bosh deploy` command also has options that will override the `update` manifest attribute:
+
+```
+> bosh deploy -h
+...
+[deploy command options]
+...
+    --canaries=         Override manifest values for canaries
+    --max-in-flight=    Override manifest values for max_in_flight
 ```
 
 ## Renaming An Instance Group

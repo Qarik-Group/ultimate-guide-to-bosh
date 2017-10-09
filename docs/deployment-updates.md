@@ -91,12 +91,133 @@ Finally, to change the `vm_type`:
 If these three YAML snippets were in a file `zookeeper-scale.yml`, then to apply the operators to our deployment manifest:
 
 ```
-bosh deploy zookeeper-release/manifests/zookeeper.yml -o zookeeper-scale.yml
+> bosh deploy zookeeper-release/manifests/zookeeper.yml -o zookeeper-scale.yml
 ```
 
-## More Examples of Operator Files
+### Operator paths
+
+There are two `type` options in each Operator: `replace`, and `remove`. The former will update or insert an item in the final YAML file. The latter will remove a item from the final YAML file. The item to be modified is determined by the `path` expression.
+
+The `path` expression describes a walk up a YAML tree, so to speak. Consider the example YAML file ("tree"):
+
+```yaml
+name: zookeeper
+
+instance_groups:
+- name: zk
+  instances: 5
+  networks:
+  - name: default
+```
+
+The following `path` expressions and their corresponding items from the YAML file:
+
+* `path: /name`
+    ```
+    zookeeper
+    ```
+* `path: /instance_groups`
+    ```
+    - name: zk
+      instances: 5
+      networks:
+      - name: default
+    ```
+* `path: /instance_groups/0` - index 0 in the `/instance_groups` array
+    ```
+    name: zk
+    instances: 5
+    networks:
+    - name: default
+    ```
+* `path: /instance_groups/name=zk` - the item of the `/instance_groups` array with `name: zk`
+    ```
+    name: zk
+    instances: 5
+    networks:
+    - name: default
+    ```
+* `path: /instance_groups/name=zk/instances` - the value of `instances` from the preceding item
+    ```
+    5
+    ```
+* `path: /instance_groups/name=zk/networks` - the value of `networks` is an array of one item:
+    ```
+    - name: default
+    ```
+* `path: /instance_groups/name=zk/networks/name=default` - specifically selects the `networks` item with `name: default`:
+    ```
+    name: default
+    ```
+
+### Why not use XPath or CSS selectors?
+
+Walking a structured document such as a YAML/JSON/XML file to select an item has other syntaxes that you might have seen before. Your rounded knowledge of computers will do you well in life. But I'm sorry to say, `bosh deploy` doesn't use those syntaxes.
+
+The Operator `path` syntax comes from the JSONPath spec. TODO link.
+
+### More Examples of Operator Files
 
 Support for Operator files is provided by a library https://github.com/cppforlife/go-patch. See TODO for an extensive list of examples.
+
+
+## Assign Cloud Config Options to Deployment Manifest
+
+Another use of Operator files is to assign the available options within your `bosh cloud-config` to the deployment manifest. A base deployment manifest will not know in advance the available `vm_types` or `networks` within your Cloud Config.
+
+In the previous section we modified the `vm_type: large` where `large` was known to us in advance as an available option from our `vm_types`.
+
+To see the list of available `vm_types`:
+
+```
+> bosh int <(bosh cloud-config) --path /vm_types
+```
+
+Similarly, to see the list of available `networks`:
+
+```
+> bosh int <(bosh cloud-config) --path /networks
+```
+
+You would then create an Operator file to assign your chosen option to each instance group. For our `zookeeper` deployment with its two instance groups `zookeeper` and `smoke-tests`:
+
+```yaml
+- type: replace
+  path: /instance_groups/name=zookeeper/vm_type
+  value: large
+
+- type: replace
+  path: /instance_groups/name=zookeeper/networks/name=default/name
+  value: private
+
+- type: replace
+  path: /instance_groups/name=smoke-tests/vm_type
+  value: tiny
+
+- type: replace
+  path: /instance_groups/name=smoke-tests/networks/name=default/name
+  value: private
+```
+
+Note, for completeness of your Operator file education, the two `networks` operator expressions could also be implemented as either of the follow examples:
+
+```yaml
+- type: replace
+  path: /instance_groups/name=zookeeper/networks
+  value:
+  - name: private
+
+- type: replace
+  path: /instance_groups/name=smoke-tests/networks/name=default
+  value:
+    name: private
+```
+
+The former example will replace the entire `/instance_groups/name=zookeeper/networks` with an explicit declaration of the `networks` for that instance group.
+
+The latter example will isolate and replace the specific `networks` item with the `name: default`.
+
+Since the original example YAML file only had one `networks` array item all three examples result in the same modification.
 
 ## Update Sequence
 

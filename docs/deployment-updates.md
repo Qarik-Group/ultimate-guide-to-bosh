@@ -292,9 +292,9 @@ The benefit of variables is they are easier to use than creating new Operator fi
 
 Good defaults are better than variables. Operators can always modify or set values later with Operator files. The file are even named after us!
 
-## Update Sequence
+## Updates Are Not Atomic
 
-TODO
+When you run `bosh deploy`, the changes you've requested will not just atomically and magically be performed. They will take some amount of time and be performed in some specific order. There will be times during `bosh deploy` where some job templates may have been stopped and have not yet been restarted.
 
 ## Update Batches
 

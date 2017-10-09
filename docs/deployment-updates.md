@@ -300,14 +300,27 @@ When you run `bosh deploy`, the changes you've requested will not just atomicall
 
 The final top-level section of a deployment manifest is `update` and it specifies the batches of instances to update, and how long should the BOSH director wait before timing out and declaring that a `bosh deploy` has failed.
 
+The `update` section for our `zookeeper-release/manifests/zookeeper.yml` manifest is:
+
 ```yaml
 update:
-  canaries: 1
-  max_in_flight: 2
-  serial: true
+  canaries: 2
+  max_in_flight: 1
   canary_watch_time: 5000-60000
   update_watch_time: 5000-60000
 ```
+
+Remember that we are deploying or updating five `zookeeper` instances. The `update.canaries` and `update.max_in_flight` values determine the batch sizes. Do we deploy/update one instance at a time, all of the instances at the same time, or in small batches?
+
+In the `zookeeper` example, we will start any `bosh deploy` by updating the first two instances together. The remaining three instances will continue running as were previously happily doing. The first two instances being updated might fail. They are like a canary in a coal mine. If we update two instances and they fail, we will still have three instances running in our cluster.
+
+If the canaries fail to update, the deployment will cease. As the Operator, you will commence the professional tradecraft of debugging.
+
+If the canaries successfully update, then the instance group will be temporarily comprised of two updated instances and three older instances. It is important that the job templates running on these five instances are capable of running in this temporary configuration. The developers of the `zookeeper` BOSH release and job templates would have tested this, since they were the ones who suggested the `canaries: 2` update attribute.
+
+The next batch of instances to be updated will be of size 1, the `max_in_flight` value. Then another batch of 1, and then the final `max_in_flight` batch of 1 instance. If any batch of instances fails to update the `bosh deploy` activity will cease.
+
+Your deployment manifest can also have an `update` section in any instance group, which will override the top-level global `update`.
 
 The `bosh deploy` command also has options that will override the `update` manifest attribute:
 

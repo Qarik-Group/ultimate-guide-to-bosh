@@ -185,7 +185,7 @@ instance_groups:
   - name: default
 ```
 
-When the abbreviated `manifests/zookeeper.yml` was first introduced in (Deployment manifests, part 1)[#deployment-manifests-part-1] above, the `azs` and `networks` attributes were omitted.
+When the abbreviated `zookeeper-release/manifests/zookeeper.yml` was first introduced in (Deployment manifests, part 1)[#deployment-manifests-part-1] above, the `azs` and `networks` attributes were omitted.
 
 Each `instance_groups` item must include an `azs` and `networks` attribute. At a glance you can see that the `azs` values correspond to the `azs` from the sample `cloud-config` above, and the `networks` name `default` corresponds to one of the `cloud-config` `networks` items.
 

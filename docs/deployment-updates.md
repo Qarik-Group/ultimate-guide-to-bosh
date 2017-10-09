@@ -94,6 +94,10 @@ If these three YAML snippets were in a file `zookeeper-scale.yml`, then to apply
 bosh deploy zookeeper-release/manifests/zookeeper.yml -o zookeeper-scale.yml
 ```
 
+## More Examples of Operator Files
+
+Support for Operator files is provided by a library https://github.com/cppforlife/go-patch. See TODO for an extensive list of examples.
+
 ## Update Sequence
 
 ## Update Batches

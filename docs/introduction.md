@@ -30,7 +30,7 @@ git clone https://github.com/cppforlife/zookeeper-release
 cd zookeeper-release
 export BOSH_ENVIRONMENT=aws
 export BOSH_DEPLOYMENT=zookeeper
-bosh deploy manifests/zookeeper.yml
+bosh deploy zookeeper-release/manifests/zookeeper.yml
 ```
 
 
@@ -44,14 +44,14 @@ Upgrade to new version of ZooKeeper:
 
 ```
 git pull
-bosh deploy manifests/zookeeper.yml
+bosh deploy zookeeper-release/manifests/zookeeper.yml
 ```
 
 Upgrade the base operating system to push out critical security patches:
 
 ```
 bosh upload-stemcell https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent
-bosh deploy manifests/zookeeper.yml
+bosh deploy zookeeper-release/manifests/zookeeper.yml
 ```
 
 If AWS deletes one of your VMs, heal your cluster by receating a new VM, reattach the persistent disk, remount it, and restart all the processes to join the ZooKeeper node into the cluster:

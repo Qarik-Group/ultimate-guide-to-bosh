@@ -5,7 +5,7 @@ Throughout the Ultimate Guide to BOSH I have never explicitly referenced which B
 ## Expected non-empty deployment name
 
 ```
-$ bosh deploy manifests/zookeeper.yml
+$ bosh deploy zookeeper-release/manifests/zookeeper.yml
 Using environment '10.0.0.4' as client 'admin'
 
 Expected non-empty deployment name

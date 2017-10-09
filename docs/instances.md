@@ -563,7 +563,7 @@ tmpfs           1.0M  4.0K 1020K   1% /var/vcap/data/sys/run
 
 At the bottom we can see a volume mounted at `/var/vcap/store`. It is almost 10GB in size, has 23MB already used, and 9.2GB remaining. These numbers don't mathematically add up at all. In summary, there is a persistent disk and not much of it has been used yet.
 
-The existence and size of the persistent volume is configured in the deployment manifest. For example, the `manifests/zookeeper.yml` file from our ongoing ZooKeeper example. Soon, we will begin looking inside this YAML file.
+The existence and size of the persistent volume is configured in the deployment manifest. For example, the `zookeeper-release/manifests/zookeeper.yml` file from our ongoing ZooKeeper example. Soon, we will begin looking inside this YAML file.
 
 For now, know that it can be very simple to declare a persistent disk. A 10GB persistent volume will be provisioned, attached, and mounted at `/var/vcap/store` with the simple manifest entry:
 

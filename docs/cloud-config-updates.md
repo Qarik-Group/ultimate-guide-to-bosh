@@ -47,7 +47,7 @@ zookeeper  zookeeper/0.0.7  bosh-...-ubuntu-trusty-go_agent/...  -        outdat
 When you next deploy the `zookeeper` deployment it will show that the deployment's `disk_types` (merged in from the `cloud-config`) will be changing:
 
 ```
-$ bosh deploy manifests/zookeeper.yml
+$ bosh deploy zookeeper-release/manifests/zookeeper.yml
 
   disk_types:
   - name: default

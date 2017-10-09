@@ -8,7 +8,7 @@ In [Joyful operations](#joyful-operations) we began by creating a deployment:
 
 ```
 > export BOSH_DEPLOYMENT=zookeeper
-> bosh deploy manifests/zookeeper.yml
+> bosh deploy zookeeper-release/manifests/zookeeper.yml
 ```
 
 And we finished the lifecycle of that system by deleting the BOSH deployment:
@@ -42,7 +42,7 @@ Let's revisit each of these actions for the specific case of our 5-instance depl
 
 ```
 > export BOSH_DEPLOYMENT=zookeeper
-> bosh deploy manifests/zookeeper.yml
+> bosh deploy zookeeper-release/manifests/zookeeper.yml
 ```
 
 Inside `zookeeper.yml` is the description of an group of five instances, each with a 10GB persistent disk volume (we will review the contents of this file soon).
@@ -78,7 +78,7 @@ The CLI, the director, and a CPI are the basic components that bring a deploymen
 For our ZooKeeper example, we began with:
 
 ```
-> bosh deploy manifests/zookeeper.yml
+> bosh deploy zookeeper-release/manifests/zookeeper.yml
 ```
 
 The BOSH CLI loads the `zookeeper.yml` file from your local machine (which originally came from a [Github repository](https://github.com/cppforlife/zookeeper-release/blob/master/manifests/zookeeper.yml) in the [Joyful operations](#joyful-operations) section above).
@@ -98,7 +98,7 @@ And you will mostly never need to know about them.
 Here is the command for deploying five Amazon EC2 servers running ZooKeeper, backed by Amazon EBS volumes, running inside Amazon VPC networking:
 
 ```
-> bosh deploy manifests/zookeeper.yml
+> bosh deploy zookeeper-release/manifests/zookeeper.yml
 ```
 
 In the AWS console, your list of EC2 servers (including the BOSH director VM) might look like:
@@ -108,7 +108,7 @@ In the AWS console, your list of EC2 servers (including the BOSH director VM) mi
 Here is the command for deploying five Google Compute VM Instances, backed by Google Compute Disks, running inside GCP networking, installed and configured to be a ZooKeeper cluster:
 
 ```
-> bosh deploy manifests/zookeeper.yml
+> bosh deploy zookeeper-release/manifests/zookeeper.yml
 ```
 
 In the Google Cloud Platform console, your list of VM instances (including a NAT VM, bastion VM, and BOSH director VM) might look like:
@@ -118,7 +118,7 @@ In the Google Cloud Platform console, your list of VM instances (including a NAT
 Never used VMWare vSphere before? Here is the command for deploying a five ESXi virtual machines using a concept of persistent disks, on any cluster of physical servers in the world. And they will be ZooKeeper:
 
 ```
-> bosh deploy manifests/zookeeper.yml
+> bosh deploy zookeeper-release/manifests/zookeeper.yml
 ```
 
 In VMWare vCenter, your deployment will not specifically look like anything. vSphere is a crazy mess to me.

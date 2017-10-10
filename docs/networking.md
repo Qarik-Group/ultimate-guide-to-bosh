@@ -269,7 +269,7 @@ networks:
     reserved: [((internal_gw))/30]
 ```
 
-The `((internal_gw))` variable is used to describe a range of reserved IP addresses. If `((internal_gw))` is `10.0.0.1`, then the `reserved: [((internal_gw))/30]` effectively evaluates to `reserved: [10.0.0.0-10.0.0.3]`. We will properly introduce BOSH operator files and `((variables))` soon.
+The `((internal_gw))` variable is used to describe the gateway to the subnet range. If `((internal_gw))` is `10.0.0.1`, then the `reserved: [((internal_gw))/30]` effectively evaluates to `reserved: [10.0.0.0-10.0.0.3]`. We will properly introduce BOSH [Operator files][Operator files](/deployment-updates/#operator-files) and [Variables](/deployment-updates/#deployment-manifest-variables) soon.
 
 ## Gateway
 

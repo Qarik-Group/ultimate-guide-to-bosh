@@ -26,7 +26,7 @@ Growing your infrastructure has never been easier.
 
 We first looked at disks in the section [Persistent Volumes](/instances#persistent-volumes).
 
-Each instance of an instance group can have a fully managed persistent disk (see [Multiple Persistent Disks](#multiple-persistent-disks) to move to multiple disks). It will be mounted at `/var/vcap/store` and is shared across all job templates collocated on the same instance.
+Each instance of an instance group can have a fully managed persistent disk (see [Multiple Persistent Disks](/disks#multiple-persistent-disks) to move to multiple disks). It will be mounted at `/var/vcap/store` and is shared across all job templates collocated on the same instance.
 
 This section will discuss persistent disk types, the provisioning and mounting sequence, and how the BOSH director fully manages the resizing of persistent disks between deployments.
 
@@ -54,7 +54,7 @@ At the time of writing, BOSH job templates do not have a way to communicate with
 
 Consider a job template that writes data to `/var/vcap/store/zookeeper/mydb.dat`.
 
-If there is a persistent disk mounted at `/var/vcap/store` then the file `/var/vcap/store/zookeeper/mydb.dat` will be safely stored upon this persistent disk. If the disk starts to fill up then it is a simple matter to resize the persistent disk (see the opening demonstration in [Disks](#disks)).
+If there is a persistent disk mounted at `/var/vcap/store` then the file `/var/vcap/store/zookeeper/mydb.dat` will be safely stored upon this persistent disk. If the disk starts to fill up then it is a simple matter to resize the persistent disk (see the opening demonstration in [Disks](/disks)).
 
 If there is no persistent disk mounted at `/var/vcap/store`, then the file `/var/vcap/store/zookeeper/mydb.dat` will be be stored upon the root volume `/`. The root volume is typically small (large enough only for the system's packages), ephemeral (changes to the root volume will be lost when the cloud server is recreated), and fixed in size (root volumes are typically not resized during the life of a deployment). Eventually the root volume will fill up and the instance's processes and perhaps system processes will begin to fail.
 
@@ -140,7 +140,7 @@ The example output might be similar to:
 
 In this example, the optional `cloud_properties` attribute was not included.
 
-To curate the lists of `disk_types` shared amongst your deployments you will need to update your `cloud-config`. We will discuss this later in the section [Cloud Config Updates](#cloud-config-updates).
+To curate the lists of `disk_types` shared amongst your deployments you will need to update your `cloud-config`. We will discuss this later in the section [Cloud Config Updates](/cloud-config-updates).
 
 ## Orphaned Disks
 

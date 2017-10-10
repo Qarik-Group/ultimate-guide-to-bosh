@@ -4,7 +4,7 @@ Let's begin!
 
 The highest level concept of BOSH is the "deployment" of a system. The purpose of BOSH is to continuously run one or more deployments. For example, a cluster of servers that form a ZooKeeper cluster is a deployment of the ZooKeeper system.
 
-In [Joyful operations](#joyful-operations) we began by creating a deployment:
+In [Joyful operations](/introduction#joyful-operations) we began by creating a deployment:
 
 ```
 > export BOSH_DEPLOYMENT=zookeeper
@@ -81,7 +81,7 @@ For our ZooKeeper example, we began with:
 > bosh deploy zookeeper-release/manifests/zookeeper.yml
 ```
 
-The BOSH CLI loads the `zookeeper.yml` file from your local machine (which originally came from a [Github repository](https://github.com/cppforlife/zookeeper-release/blob/master/manifests/zookeeper.yml) in the [Joyful operations](#joyful-operations) section above).
+The BOSH CLI loads the `zookeeper.yml` file from your local machine (which originally came from a [Github repository](https://github.com/cppforlife/zookeeper-release/blob/master/manifests/zookeeper.yml) in the [Joyful operations](/introduction#joyful-operations) section above).
 
 The BOSH CLI forwards this file on to the BOSH director.
 

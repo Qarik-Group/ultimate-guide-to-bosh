@@ -217,7 +217,7 @@ In daily life, you will run `monit summary` or `bosh instances --ps` as part of 
 
 ## Job Templates Describe Processes
 
-Earlier in [New deployments](#new-deployments) I introduced the terminology of a "job template":
+Earlier in [New Deployments](/deployments#new-deployments) I introduced the terminology of a "job template":
 
 > BOSH will construct configuration files for the packages and commence running the software (called "job templates")
 

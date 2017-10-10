@@ -237,11 +237,11 @@ Without knowing how Apache ZooKeeer works, it is fair to assume that the zookeep
 
 This is not by omission. BOSH deployment manifests allow you to ignore explicit networking configuration as much as possible. Instead, the mapping of your Cloud Infrastructure networking to BOSH is configured in the `bosh cloud-config`.
 
-In the subsequent section [Networking](#networking), I will introduce computer networking and reduce it to the parts you will need to know to help BOSH to help you deploy, scale, upgrade your distributed systems.
+In the subsequent section [Networking](/networking), I will introduce computer networking and reduce it to the parts you will need to know to help BOSH to help you deploy, scale, upgrade your distributed systems.
 
 But first, let's look at how each zookeeper process is configured to know where its cluster peers are located.
 
-In the section [Job Templates](#job-templates), we discussed that all files for running and configuring processes are inside the `/var/vcap/jobs` subfolders. Each subfolder is a job template provided by a BOSH release.
+In the section [Job Templates](/instances#job-templates), we discussed that all files for running and configuring processes are inside the `/var/vcap/jobs` subfolders. Each subfolder is a job template provided by a BOSH release.
 
 Another look within the `zookeeper` job template on a `zookeeper` deployment instance:
 

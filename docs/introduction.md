@@ -108,7 +108,7 @@ In 2012, I was very publicly excited about BOSH on Twitter ([@drnic](https://twi
 
 Many of those early presentations and guides were helpful to the many people who've discovered BOSH and are using it to run production systems at huge scales.
 
-In 2013, the BOSH project was taken over by Pivotal engineering and has been gifted to the Cloud Foundry Foundation to secure its long term success as an open source, open community project. Thanks to Pivotal, IBM and other members of the Cloud Foundry Foundation, the BOSH project has received huge consistent investment to this day.
+In 2013, the BOSH project was taken over by Pivotal engineering and has been gifted to the Cloud Foundry Foundation to secure its long term success as an open source, open community project. Thanks to Pivotal, IBM, and other members of the Cloud Foundry Foundation, the BOSH project has received huge consistent investment to this day.
 
 There are many people in the history of BOSH who have directly made BOSH what it is, actively sponsored its investment, or evangelised it.
 

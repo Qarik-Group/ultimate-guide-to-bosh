@@ -84,7 +84,7 @@ Tear down your ZooKeeper cluster:
 bosh delete-deployment
 ```
 
-## About the author
+## About the Author
 
 I did not invent BOSH. A group of engineers from the Cloud Foundry project at VMWare conceived of BOSH and built the first iteration of BOSH. BOSH is architecturally still very similar to its original public incarnation in 2012.
 

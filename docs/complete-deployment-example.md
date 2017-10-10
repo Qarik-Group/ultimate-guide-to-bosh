@@ -51,13 +51,29 @@ Visit the VirtualBox application to confirm a new VM has been created:
 
 ![vbox-running-bosh-env](/images/virtualbox/vbox-running-bosh-env.png)
 
-TODO:
+TODO write nice text
 
-* `bosh alias-env`
-* `bosh login`
-* `export BOSH_ENVIRONMENT=vbox`
-* `bosh update-cloud-config bosh-deployment/warden/cloud-config.yml`
-* `bosh upload-stemcell bosh-stemcell-*-warden-boshlite-ubuntu-trusty-go_agent.tgz` (download stemcell first)
+```
+bosh -e 192.168.50.6 alias-env vbox --ca-cert <(bosh int vbox/creds.yml --path /director_ssl/ca)
+```
+
+```
+bosh int vbox/creds.yml --path /admin_password
+```
+
+```
+bosh login
+```
+
+```
+export BOSH_ENVIRONMENT=vbox
+bosh update-cloud-config bosh-deployment/warden/cloud-config.yml
+```
+
+```
+wget --content-disposition https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent
+bosh upload-stemcell bosh-stemcell-*-warden-boshlite-ubuntu-trusty-go_agent.tgz
+```
 
 ## Deploy ZooKeeper
 

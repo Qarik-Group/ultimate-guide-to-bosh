@@ -4,7 +4,7 @@ To provision a new deployment, we provide a deployment manifest to the BOSH dire
 
 A deployment manifest is the explicit declaration of what software needs to run, with specific configuration properties, on each different instance.
 
-**The same deployment manifest deployed today should produce the same running system if you deployed it again in 5 years time.**
+**The same deployment manifest deployed today should produce the same running system if you deployed it again in five years time.**
 
 Our first example deployment manifest will be `zookeeper.yml`, which I've been referring to throughout the Ultimate Guide to BOSH so far (the [original file](https://github.com/cppforlife/zookeeper-release/blob/207c9d79eb12399dffe6df7f89abd854d4888f3e/manifests/zookeeper.yml) at time of writing). Below is a subset of the manifest that references the concepts covered so far:
 
@@ -233,13 +233,13 @@ These are more descriptive than `default` but you would still need to investigat
 
 ## Instance Groups Form Clusters
 
-Without knowing how Apache ZooKeeer works, it is fair to assume that the zookeeper processes running on each of the five instances in our example deployment are communicating with each other. Yet, in our example deployment manifests, we have not explicitly described any relationships between them.
+Without knowing how Apache ZooKeeer works, it is fair to assume that the ZooKeeper processes running on each of the five instances in our example deployment are communicating with each other. Yet, in our example deployment manifests, we have not explicitly described any relationships between them.
 
 This is not by omission. BOSH deployment manifests allow you to ignore explicit networking configuration as much as possible. Instead, the mapping of your Cloud Infrastructure networking to BOSH is configured in the `bosh cloud-config`.
 
 In the subsequent section [Networking](/networking), I will introduce computer networking and reduce it to the parts you will need to know to help BOSH to help you deploy, scale, upgrade your distributed systems.
 
-But first, let's look at how each zookeeper process is configured to know where its cluster peers are located.
+But first, let's look at how each ZooKeeper process is configured to know where its cluster peers are located.
 
 In the section [Job Templates](/instances/#job-templates), we discussed that all files for running and configuring processes are inside the `/var/vcap/jobs` subfolders. Each subfolder is a job template provided by a BOSH release.
 
@@ -264,7 +264,7 @@ $ tree
     └── zookeeper
 ```
 
-To recap, `/var/vcap/jobs/zookeeper/monit` describes how to start/stop `zookeeper` and what process ID (PID) to watch to ensure that zookeeper is still running. Monit will invoke `/var/vcap/jobs/zookeeper/bin/ctl start` to start or restart the local `zookeeper` process.
+To recap, `/var/vcap/jobs/zookeeper/monit` describes how to start/stop `zookeeper` and what process ID (PID) to watch to ensure that ZooKeeper is still running. Monit will invoke `/var/vcap/jobs/zookeeper/bin/ctl start` to start or restart the local `zookeeper` process.
 
 An abridged version of `/var/vcap/jobs/zookeeper/bin/ctl` to start ZooKeeper looks like:
 
@@ -276,7 +276,7 @@ exec chpst -u vcap:vcap \
 
 The `$ZOOCFGDIR` environment variable is special to the `/var/vcap/packages/zookeeper/bin/zkServer.sh` script. This script will look for `zoo.cfg` in the `$ZOOCFGDIR` folder. Notice that `$ZOOCFGDIR` is a folder within the job template above: `config/zoo.cfg`.
 
-The contents of `/var/vcap/jobs/zookeeper/config/zoo.cfg` include the following configuration that allows the `zookeeper/0` instance to discover the other 4 instances:
+The contents of `/var/vcap/jobs/zookeeper/config/zoo.cfg` include the following configuration that allows the `zookeeper/0` instance to discover the other four instances:
 
 ```
 server.0=10.0.0.5:2888:3888
@@ -290,10 +290,10 @@ clientPort=2181
 
 At a glance, Apache ZooKeeper will expect to communicate with its peer nodes on ports `2888` and `3888`, and the five cloud servers running the zookeeper processes have IP addresses `10.0.0.5` thru `10.0.0.9`. Client applications that want to use our Apache ZooKeeper system will communicate via port `2181`.
 
-This `config/zoo.cfg` configuration is meaningful to Apache Zookeeper and the `zkServer.sh` start script. The contents of the configuration file are not meaningful to BOSH, but the file was created by BOSH.
+This `config/zoo.cfg` configuration is meaningful to Apache ZooKeeper and the `zkServer.sh` start script. The contents of the configuration file are not meaningful to BOSH, but the file was created by BOSH.
 
 The deployment manifest `zookeeper.yml` did not need to explicitly allocate the five IP addresses above (also found by running `bosh instances`), nor did the manifest need to explicitly document them for the `zookeeper` job template. Instead, all the IP addresses for all members of the `zookeeper` instance group were automatically provided to the `zookeeper` job template before `monit` attempted to start any processes. We will look at how to write your own job templates in your own BOSH releases in later sections.
 
-The more urgent piece of information you will want to know why were these five `zookeeper` instances allocated those five IP addresses, why are the five underlying cloud servers allowed to talk to each other, is anything special required for them to communicate over ports `2888` and `3888` but prevent other systems from accessing these ports, and how are client applications allowed to access these 5 cloud servers over port `2181`.
+The more urgent piece of information you will want to know why were these five `zookeeper` instances allocated those five IP addresses, why are the five underlying cloud servers allowed to talk to each other, is anything special required for them to communicate over ports `2888` and `3888` but prevent other systems from accessing these ports, and how are client applications allowed to access these five cloud servers over port `2181`.
 
 And if you're confused at all by that last paragraph, then you are ready for the next section.

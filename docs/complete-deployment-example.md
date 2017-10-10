@@ -47,6 +47,10 @@ bosh create-env bosh-deployment/bosh.yml \
   -v outbound_network_name=NatNetwork
 ```
 
+Visit the VirtualBox application to confirm a new VM has been created:
+
+![vbox-running-bosh-env](/images/virtualbox/vbox-running-bosh-env.png)
+
 TODO:
 
 * `bosh alias-env`
@@ -357,3 +361,88 @@ Stderr     ZooKeeper JMX enabled by default
            Using config: /var/vcap/jobs/zookeeper/config/zoo.cfg
 ...
 ```
+
+
+## Delete deployment
+
+The `bosh delete-deployment` command will destroy all running instances, and will [orphan its persistent disks](/disks/#orphaned-disks).
+
+```
+bosh delete-deployment
+```
+
+The orphaned disks are retained in case you notice the cowboy hat on your head and realise you've accidentally deleted your organisation's production cluster of ZooKeeper accidentally.
+
+```
+bosh disks --orphaned
+```
+
+## Clean up
+
+But today we are intent on cleaning up and shutting down our BOSH environment.
+
+The `bosh clean-up` command will perform a decent job of removing any very old releases, and stemcells.
+
+Today we will use `bosh clean-up --all` to destroy every BOSH release, stemcell, and orphaned disk that is not being used by a deployment. Since we have no deployments running anymore, this clean up command will purge everything.
+
+```
+> bosh clean-up --all
+```
+
+The output for this section will show release packages, release jobs, stemcells, and orphaned disks being deleted:
+
+```
+Task 9 | 09:33:53 | Deleting releases: zookeeper/0.0.7
+Task 9 | 09:33:53 | Deleting packages: golang-1.8-linux/3eac55db0483de642b1be389966327e931db3e3f (00:00:00)
+Task 9 | 09:33:53 | Deleting packages: java/c524e46e61b37894935ae28016973e0e8644fcde (00:00:01)
+Task 9 | 09:33:54 | Deleting packages: smoke-tests/ec91e258c41471227a759c2749e7295cb65eff5a (00:00:00)
+Task 9 | 09:33:54 | Deleting packages: zookeeper/43ee655b89f8a05cc472ca997e8c8186457241c1 (00:00:00)
+Task 9 | 09:33:54 | Deleting jobs: smoke-tests/840b14bc609483bb03cf87a938bc69e76a6e2d88 (00:00:00)
+Task 9 | 09:33:54 | Deleting jobs: status/1a6e60e211521487e4d03c8f7dc652b27a9ee368 (00:00:00)
+Task 9 | 09:33:54 | Deleting jobs: zookeeper/17fe24515b0740d72b3ecdfe002bfaa6ae1771ca (00:00:00)
+Task 9 | 09:33:54 | Deleting releases: zookeeper/0.0.7 (00:00:01)
+Task 9 | 09:33:54 | Deleting stemcells: bosh-warden-boshlite-ubuntu-trusty-go_agent/3468 (00:00:03)
+Task 9 | 09:33:57 | Deleting orphaned disks: 3f41e9a9-fa8b-43b8-5d52-2e59fa2dc7f4
+Task 9 | 09:33:57 | Deleting orphaned disks: a7b695fe-032e-476b-4d88-ebbf9982ad38
+Task 9 | 09:33:57 | Deleting orphaned disks: 1f73c1ea-0798-4c03-6569-ec12772f1922
+Task 9 | 09:33:57 | Deleting orphaned disks: 01a49f13-0c88-4169-623c-31ddfa561b8c
+Task 9 | 09:33:57 | Deleting orphaned disks: a9d0382a-ef40-4da9-5883-268934afd827
+Task 9 | 09:33:57 | Deleting orphaned disks: a7b695fe-032e-476b-4d88-ebbf9982ad38 (00:00:00)
+Task 9 | 09:33:57 | Deleting orphaned disks: 1f73c1ea-0798-4c03-6569-ec12772f1922 (00:00:00)
+Task 9 | 09:33:57 | Deleting orphaned disks: 3f41e9a9-fa8b-43b8-5d52-2e59fa2dc7f4 (00:00:00)
+Task 9 | 09:33:57 | Deleting orphaned disks: a9d0382a-ef40-4da9-5883-268934afd827 (00:00:00)
+Task 9 | 09:33:57 | Deleting orphaned disks: 01a49f13-0c88-4169-623c-31ddfa561b8c (00:00:00)
+Task 9 | 09:33:57 | Deleting dns blobs: DNS blobs (00:00:00)
+```
+
+## Delete BOSH environment
+
+Now that we have cleaned up our BOSH environment we can delete our BOSH environment. For this VirtualBox tutorial this will mean deleting the VirtualBox VM.
+
+First, return to our `bosh-env-vbox` workspace directory:
+
+```
+cd ~/workspace/bosh-env-vbox
+```
+
+We need to run the same `bosh create-env` command as above, but using the `delete-env` subcommand instead. That is, the `bosh delete-env` command needs the same arguments used for the original `bosh create-env`.
+
+```
+bosh delete-env bosh-deployment/bosh.yml \
+  --state vbox/state.json \
+  -o bosh-deployment/virtualbox/cpi.yml \
+  -o bosh-deployment/virtualbox/outbound-network.yml \
+  -o bosh-deployment/bosh-lite.yml \
+  -o bosh-deployment/bosh-lite-runc.yml \
+  -o bosh-deployment/jumpbox-user.yml \
+  --vars-store vbox/creds.yml \
+  -v director_name="Bosh Lite Director" \
+  -v internal_ip=192.168.50.6 \
+  -v internal_gw=192.168.50.1 \
+  -v internal_cidr=192.168.50.0/24 \
+  -v outbound_network_name=NatNetwork
+```
+
+Visit the VirtualBox application to confirm the VM has been deleted:
+
+![vbox-no-envs](/images/virtualbox/vbox-no-envs.png)

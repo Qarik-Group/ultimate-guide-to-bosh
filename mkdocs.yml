@@ -11,6 +11,7 @@ pages:
     - Disks: disks.md
     - Cloud Config Updates: cloud-config-updates.md
     - Deployment Updates: deployment-updates.md
+    - Complete Deployment Manifest: complete-deployment-manifest.md
     - Targeting BOSH environments: targeting-bosh-envs.md
     - Stemcells: stemcells.md
   - Spread the Word:

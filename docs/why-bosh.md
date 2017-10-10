@@ -16,7 +16,7 @@ Your application will require local dependencies to be already installed - its i
 
 Your application and its dependencies all require an operating system. And formatted disks. And networking to be configured.
 
-All this runs in a virtual server/virtual machines (VMs) either in someone else's data centre called "the cloud" (AWS, GCP, Microsoft Azure) or someone else's data center called, "on premise" (but its really normally not in your building, is it?) running virtualisation software (vSphere, OpenStack).
+All this runs in a virtual server/virtual machines (VMs) either in someone else's data centre called "the cloud" (AWS, GCP, Microsoft Azure) or someone else's data center called, "on premise" (but it's really normally not in your building, is it?) running virtualisation software (vSphere, OpenStack).
 
 Your applications and databases running on virtual machines will require disks: local or ephemeral disks that might not survive VM downtime or replacement; and persistent networked disks that are independent of each VM and will be available again if you need (or are forced) to replace your VMs.
 
@@ -39,15 +39,15 @@ You might define "deploying my system" at a different level to other people:
 * racking bare metal servers or putting Raspberry Pis into the field
 
 From the perspective of your organization and their goals of efficiently using your time and energy,
-hopefully you can start as high up this stack as possible. For example, there is simply nothing faster, more time efficient, and UI consistent as `cf push`-ing an application to any Cloud Foundry. Every system you deploy should have to first justify why it cannot be deployed to Cloud Foundry or Heroku or Google App Engine.
+hopefully you can start as high up this stack as possible. For example, there is simply nothing faster, more time efficient, and UI consistent as `cf push`-ing an application to any Cloud Foundry. Every system you deploy should have to first justify why it cannot be deployed to Cloud Foundry, Heroku, or Google App Engine.
 
-If you do need to "go down the stack" and take responsibility for more than you will need more help. Either your organization will need to expect less from you and your team, or you'll need more tooling, automation, and education.
+If you do need to "go down the stack" and take responsibility for more, than you will need more help. Either your organization will need to expect less from you and your team, or you'll need more tooling, automation, and education.
 
 ## Assumptions
 
 The Ultimate Guide to BOSH assumes you need the latter: you need tooling, automation, and education.
 
-It also assumes that you have direct access to your virtualisation/cloud infrastructure - you have suitable AWS credentials, or a Google Compute account or vSphere admin access.
+It also assumes that you have direct access to your virtualisation/cloud infrastructure - you have suitable AWS credentials, a Google Compute account, or vSphere admin access.
 
 The Ultimate Guide to BOSH assumes you are prepared to learn a new tool, its features, and its quirks.
 

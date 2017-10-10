@@ -54,3 +54,34 @@ instance_groups:
   networks:
   - name: default
 ```
+
+## Use of Deployment Manifest
+
+The deployment manifest is used by `bosh deploy` command to instruct your BOSH environment to create or update a deployment.
+
+You can provide a full-formed manifest:
+
+```
+bosh deploy zookeeper-release/manifests/zookeeper.yml
+```
+
+Alternately, you can amend a base manifest with `-o` [Operator files](/deployment-updates/#operator-files) and `-v` [Variables](/deployment-updates/#deployment-manifest-variables). For example, to modify the deployment name of the uploaded deployment manifest to use the current `$BOSH_DEPLOYMENT` value:
+
+```
+export BOSH_DEPLOYMENT=zookeeper-demo
+cat > change-deployment-name.yml <<YAML
+---
+- type: replace
+  path: /name
+  value: ((deployment-name))
+YAML
+bosh deploy zookeeper-release/manifests/zookeeper.yml \
+  -o change-deployment-name.yml \
+  -v deployment-name=$BOSH_DEPLOYMENT
+```
+
+## Deployment Name
+
+```yaml
+name: zookeeper
+```

@@ -248,7 +248,7 @@ Or we can use an Operator file to add the missing `properties.max_client_connect
 
 Note the special use of `?` question mark in `/properties?/max_client_connections`. This means, "if `/properties` attribute is missing, then please create it first". Operator files are nothing if not courteous. They will not insert new attributes into a YAML file without permission from the `?` postfix operator.
 
-## Deployment manifest variables
+## Deployment Manifest Variables
 
 In addition to `-o` Operator files, the `bosh deploy` command also allows you to pass in variables with the `-v` flag. Variables are a simpler way to specify values than the relatively complex Operator file syntax. But you can only provide variables if the deployment manifest wants them.
 

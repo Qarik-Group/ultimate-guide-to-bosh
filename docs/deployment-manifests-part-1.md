@@ -241,7 +241,7 @@ In the subsequent section [Networking](/networking), I will introduce computer n
 
 But first, let's look at how each zookeeper process is configured to know where its cluster peers are located.
 
-In the section [Job Templates](/instances#job-templates), we discussed that all files for running and configuring processes are inside the `/var/vcap/jobs` subfolders. Each subfolder is a job template provided by a BOSH release.
+In the section [Job Templates](/instances/#job-templates), we discussed that all files for running and configuring processes are inside the `/var/vcap/jobs` subfolders. Each subfolder is a job template provided by a BOSH release.
 
 Another look within the `zookeeper` job template on a `zookeeper` deployment instance:
 

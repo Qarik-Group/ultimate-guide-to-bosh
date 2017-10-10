@@ -24,9 +24,9 @@ You merely had to run `bosh deploy` and your BOSH environment does everything el
 
 Growing your infrastructure has never been easier.
 
-We first looked at disks in the section [Persistent Volumes](/instances#persistent-volumes).
+We first looked at disks in the section [Persistent Volumes](/instances/#persistent-volumes).
 
-Each instance of an instance group can have a fully managed persistent disk (see [Multiple Persistent Disks](/disks#multiple-persistent-disks) to move to multiple disks). It will be mounted at `/var/vcap/store` and is shared across all job templates collocated on the same instance.
+Each instance of an instance group can have a fully managed persistent disk (see [Multiple Persistent Disks](/disks/#multiple-persistent-disks) to move to multiple disks). It will be mounted at `/var/vcap/store` and is shared across all job templates collocated on the same instance.
 
 This section will discuss persistent disk types, the provisioning and mounting sequence, and how the BOSH director fully manages the resizing of persistent disks between deployments.
 

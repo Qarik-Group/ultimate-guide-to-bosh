@@ -38,7 +38,7 @@ At this point, it becomes the installed software's responsibility to do things t
 
 ## New Deployments of ZooKeeper
 
-Let's revisit each of these actions for the specific case of our 5-instance deployment of Zookeeper running on AWS.
+Let's revisit each of these actions for the specific case of our 5-instance deployment of ZooKeeper running on AWS.
 
 ```
 > export BOSH_DEPLOYMENT=zookeeper
@@ -69,7 +69,7 @@ Right now think of BOSH as three things:
 
 * BOSH CLI - the `bosh` command being referenced in the earlier examples. The CLI is a client to the:
 * BOSH director - an HTTP API that receives requests from the CLI and either communicates directly with instances or with your cloud infrastructure. Communication with your cloud infrastructure is via a:
-* Cloud Provider Interface (CPI) - the specific implementation of how a BOSH director communicates with AWS, GCP, vSphere, OpenStack or any other target.
+* Cloud Provider Interface (CPI) - the specific implementation of how a BOSH director communicates with AWS, GCP, vSphere, OpenStack, or any other target.
 
 ## CPI - The Ultimate Cloud Provider Interface Abstraction
 

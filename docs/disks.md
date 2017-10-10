@@ -20,9 +20,11 @@ The BOSH director will now orchestrate the following sequence for you:
 1. detach the older persistent disk
 1. delete the older, orphaned persistent disk in 5 days
 
+You merely had to run `bosh deploy` and your BOSH environment does everything else above.
+
 Growing your infrastructure has never been easier.
 
-We first looked at disks in the section [Persistent Volumes](#persistent-volumes).
+We first looked at disks in the section [Persistent Volumes](/instances#persistent-volumes).
 
 Each instance of an instance group can have a fully managed persistent disk (see [Multiple Persistent Disks](#multiple-persistent-disks) to move to multiple disks). It will be mounted at `/var/vcap/store` and is shared across all job templates collocated on the same instance.
 

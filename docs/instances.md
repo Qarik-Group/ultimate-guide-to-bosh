@@ -75,7 +75,7 @@ worker/194ac3c7-0a07-4681-ade9-afbf0e47a1a9     -             running         10
 ~                                               garden        running         -
 ```
 
-In this deployment we have 4 different instance groups: `db`, `haproxy`, `web` (there are two instances), and `worker` (I've show one of them above but our deployment of [Concourse](https://concourse.ci/) has many `worker` instances).
+In this deployment we have four different instance groups: `db`, `haproxy`, `web` (there are two instances), and `worker` (I've show one of them above but our deployment of [Concourse](https://concourse.ci/) has many `worker` instances).
 
 Each `worker` instance is running three processes: `baggageclaim`, `beacon`, and `garden`.
 
@@ -172,7 +172,7 @@ $ sudo su -
 root
 ```
 
-If an example does not include a shell prompt (`>`, `$`, or `#`) then it is the contents of a shell script, or the output from a command.
+If an example does not include a shell prompt (`>`, `$`, or `#`) then it is the contents of a shell script or the output from a command.
 
 
 **If you `bosh ssh` into a production system and have changed to `root` user then please place a large cowboy hat on your head. A big one. Everyone needs to know you're a cowboy.**
@@ -221,7 +221,7 @@ Earlier in [New Deployments](/deployments/#new-deployments) I introduced the ter
 
 > BOSH will construct configuration files for the packages and commence running the software (called "job templates")
 
-Job templates are where we configure Monit processes, which in turn runs processes, which in turn results in a running system (of Zookeeper or Concourse or whatever our deployment is designed for). Job templates also configure the processes, describe how to start a process, and how to stop a process.
+Job templates are where we configure Monit processes, which in turn runs processes, which in turn results in a running system (of ZooKeeper, Concourse, or whatever our deployment is designed for). Job templates also configure the processes, describe how to start a process, and how to stop a process.
 
 First, let's finish tying up the story of Monit processes.
 
@@ -293,7 +293,7 @@ When Monit needs to stop `beacon` it will invoke `/var/vcap/jobs/groundcrew/bin/
 
 The `groundcrew` job template will always be located at `/var/vcap/jobs/groundcrew`. The `garden` job template will always be located at `/var/vcap/jobs/garden`.
 
-As it happens, within our `zookeeper` example deployment each `zookeeper` instance includes a job template called `zookeeper`. This means there will be a `/vcap/vcap/jobs/zookeeper` job template folder. This folder contains a `monit` control script with `create program zookeeper`. Consistency of names - using `zookeeper` as the name of the instance group, job template, and monit process - is convenient once you understand what is going on and is a common pattern that you will see.
+As it happens, within our `zookeeper` example deployment each `zookeeper` instance includes a job template called `zookeeper`. This means there will be a `/vcap/vcap/jobs/zookeeper` job template folder. This folder contains a `monit` control script with `create program zookeeper`. Consistency of names - using `zookeeper` as the name of the instance group, job template, and Monit process - is convenient once you understand what is going on and is a common pattern that you will see.
 
 In summary, all job templates - the configuration of how software is configured and executed - are located on every BOSH instance around the world in the same location: `/var/vcap/jobs/`
 
@@ -324,7 +324,7 @@ $ tree
     └── zookeeper
 ```
 
-As discussed above, the `monit` file is the entry point for a job template being used to run Linux processes. The contents of this file tell monit what command to run to start or stop any Linux processes that are required:
+As discussed above, the `monit` file is the entry point for a job template being used to run Linux processes. The contents of this file tell Monit what command to run to start or stop any Linux processes that are required:
 
 ```
 check process zookeeper
@@ -381,7 +381,7 @@ The expression `$$` is PID of the current shell (the running `bin/ctl` script). 
 
 The `bin/ctl` running script is then uses `exec` to replace the current running shell (the wrapper `bin/ctl` script) with a new command `/var/vcap/packages/zookeeper/bin/zkServer.sh`
 
-If the script only used `echo $$ > pid` and `exec run-software` then the software would be run with escalated root user privileges. Instead, the zookeeper application will be run as a restricted `vcap` user and `vcap` group using the `chpst` command.
+If the script only used `echo $$ > pid` and `exec run-software` then the software would be run with escalated root user privileges. Instead, the ZooKeeper application will be run as a restricted `vcap` user and `vcap` group using the `chpst` command.
 
 Combined together we have a common pattern in many BOSH job templates:
 
@@ -444,7 +444,7 @@ bosh logs --follow
 
 The `bosh logs --follow` flag also has the short alias `bosh logs -f`.
 
-FIXME: `bosh logs --follow` did not work as expected on Zookeeper https://github.com/cloudfoundry/bosh-cli/issues/315
+FIXME: `bosh logs --follow` did not work as expected on ZooKeeper https://github.com/cloudfoundry/bosh-cli/issues/315
 
 Some systems only emit logs if interesting things are happening. These can be pleasant logs to view.
 
@@ -499,7 +499,7 @@ Every Linux process can emit two pipes called "standard out" (stdout) and "stand
 
 When we run applications in a terminal or SSH session, anything appearing in these two pipes will be displayed on the screen.
 
-When we use Monit to run applications there is no terminal screen for a human to see. The contents of these two pipes might be ignored. That is, we would not know if applications were emitting good output or error messages.
+When we use Monit to run applications, there is no terminal screen for a human to see. The contents of these two pipes might be ignored. That is, we would not know if applications were emitting good output or error messages.
 
 One option is to explicitly redirect these two pipes to local files. That is what is happening in the `bin/ctl start` example above.
 
@@ -520,7 +520,7 @@ If the BOSH director ever discovers that an instance has disappeared or has beco
 
 **Resurrection of infrastructure is an incredibly powerful feature of BOSH that makes it essential to your organization.** And your personal life.
 
-If the original server is missing (perhaps the cloud provider lost the host machine or perhaps someone with admin permissions accidentally deleted it), the BOSH director create a new server.
+If the original server is missing (perhaps the cloud provider lost the host machine or perhaps someone with admin permissions accidentally deleted it), the BOSH director creates a new server.
 
 Alternately, if the cloud provider API believes the original server still exists but the BOSH director cannot access it, then the BOSH director will request that the server be destroyed and will then create a replacement.
 
@@ -528,7 +528,7 @@ Cloud servers will also be destroyed and recreated during normal BOSH operations
 
 Routinely you will want to upgrade all the base operating systems for all the instances of all your deployments to push out security patches. The base operating system is called a BOSH "stemcell." These are maintained by the BOSH Core team and are regularly released with new security fixes (thanks also go to Canonical who maintain the Ubuntu distribution). You might find one or two new stemcells are released each month containing security fixes in the base operating system alone.
 
-Fortunately, upgrading all your deployments to new BOSH stemcells is a very easy operation and we will definitely we returning to this topic soon. For now, you need to know that this process will result in your application processes being stopped (via Monit), the original servers being deleted (via the CPI) and new servers being created to replace them (via the CPI). Any files written arbitrarily to the filesystem will be lost.
+Fortunately, upgrading all your deployments to new BOSH stemcells is a very easy operation and we will definitely we returning to this topic soon. For now, you need to know that this process will result in your application processes being stopped (via Monit), the original servers being deleted (via the CPI), and new servers being created to replace them (via the CPI). Any files written arbitrarily to the filesystem will be lost.
 
 Another routing operation you will perform that causes instances to be stopped, and the servers deleted and replaced, is resizing or scaling up your instances. BOSH CPIs assume that cloud providers do not know how to resizing a running server, so they will emulate "resizing" by deleting the original small server and replacing it with a new larger server. Any files written arbitrarily to the filesystem will be lost.
 
@@ -631,7 +631,7 @@ BOSH packaging is similar to [Homebrew](https://brew.sh/) packaging for MacOS/OS
 
 This model of "a package is a folder" is not compliant with the [Filesystem Hierarchy Standard](https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard). But then again, you didn't know that the FHS existed until I just mentioned it.
 
-There is a comfortable convenience to standard Linux filesystems. Your `PATH` environment variable is already setup for the common locations of executables. For example, on a BOSH instance it is:
+There is a comfortable convenience to standard Linux filesystems. Your `PATH` environment variable is already setup for the common locations of executables. For example, on a BOSH instance, it is:
 
 ```
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
@@ -639,7 +639,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/us
 
 That's right, there are two folders included in `PATH` for games. I had to look it up - these are not mentioned in the [FHS wikipedia page](https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard).
 
-But I personally have a dissatisfaction with the standard Linux filesystem hierarchy: the knowledge of which files belong to each package is obscure. At the time that you need to know "how does this process get started and stopped" or "where are the log files for this process", its normally urgent and you're in a bad mood.
+But I personally have a dissatisfaction with the standard Linux filesystem hierarchy: the knowledge of which files belong to each package is obscure. At the time that you need to know, "How does this process get started and stopped," or, "Where are the log files for this process." It's normally urgent and you're in a bad mood.
 
 This is a big positive for the BOSH filesystem hierarchy: you can find everything in a hurry.
 

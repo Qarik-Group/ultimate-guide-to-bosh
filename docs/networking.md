@@ -377,7 +377,7 @@ The third `type: dynamic` is used with AWS original networking, and legacy OpenS
 
 In production environments, you will wish for the security features and control from more complex networking. Or someone in your organisation will do this wishing for you.
 
-If you are using AAWS today, you will instead VPC networking, and with OpenStack you will use Neutron networking. These are both represented in BOSH `cloud-config` as `type: manual` networking.
+If you are using AWS today, you will instead use VPC networking, and with OpenStack you will use Neutron networking. These are both represented in BOSH `cloud-config` as `type: manual` networking.
 
 ### Manual Networks with AWS VPC
 

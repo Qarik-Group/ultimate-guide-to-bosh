@@ -15,7 +15,7 @@ Later in the guide you will deploy your own BOSH and use it to deploy systems. A
 
 ## Joyful Operations
 
-You're a professional. You're resourceful. You're a king maker. You keep your organization in the business of winning.
+You're a professional. You're resourceful. You're a king maker. You keep your organisation in the business of winning.
 
 In past lives you might have been called: developer, sysadmin, or devops.
 
@@ -38,6 +38,12 @@ Sanity check that the ZooKeeper cluster is working:
 
 ```
 bosh run-errand smoke-tests
+```
+
+Check the status of each node in the ZooKeeper cluster:
+
+```
+bosh run-errand status
 ```
 
 Upgrade to new version of ZooKeeper:
@@ -78,11 +84,39 @@ Run a command on each ZooKeeper server and display results:
 bosh ssh -c '/var/vcap/jobs/zookeeper/bin/ctl status' -r
 ```
 
-Tear down your ZooKeeper cluster:
+Tear down your ZooKeeper cluster, but retain the persistent disks for five days and then delete them:
 
 ```
 bosh delete-deployment
 ```
+
+## What is BOSH?
+
+BOSH is project of the Cloud Foundry Foundation. It was originally created to help the developers of Cloud Foundry to absolutely describe and test each commit and each release; and to help the site reliability engineers (SREs) tasked with running Cloud Foundry as a service.
+
+Cloud Foundry has a micro-services architecture - bespoke applications written in Ruby, Java, C, and Golang - combined with stateful data services such as PostgreSQL, Redis, and local disks for storing user-uploaded application code. The developers wanted to work with the SREs to reduce the time of upgrades to new releases, to reduce the time between new releases, to reduce the time to deploy security fixes, and to help SREs and developers communicate about issues in production.
+
+TODO twitter joke about laptop going into production
+
+The solution was:
+
+* to have an absolute declaration of what specific versions of all bespoke and upstream projects combined together to form a "release";
+* to own responsibility for the lifecycle of the underlying infrastructure upon which Cloud Foundry would run, including healing activities after infrastructure failures;
+* to own responsibility for pushing out security patches to the base operating systems, the bespoke code, and the upstream dependencies
+* to give developers and SREs the same tool to use thus removing "it works on my machine" scenarios
+
+The "tool" that implemented this solution is a running server - a BOSH environment - which:
+
+* receives requests from operators, who primarily use the `bosh` CLI;
+* interacts with cloud infrastructures to provision and de-provision cloud servers and disks;
+* interacts with running servers to configure and monitor long-running processes;
+* monitors the health of cloud servers and performs remedial actions to recreate or fix any missing infrastructure
+
+Today, small teams and large businesses are using BOSH to run a wide variety of systems including but not limited to platforms such as Cloud Foundry, Kubernetes, DC/OS, Docker, Habitat, and Nomad. It is used to run database clusters. It can run source control systems. It can run web applications.
+
+Some teams use it only for its provisioning/infrastructure lifecycles features, and use their own packaging, container, and configuration management tools.
+
+Some teams put their BOSH environment behind an API, such as the Open Service Broker API, and dynamically provision and de-provision entire systems on demand. For example, Pivotal Container Services is an API driven system to deploy entire Kubernetes clusters, all using BOSH.
 
 ## About the Author
 

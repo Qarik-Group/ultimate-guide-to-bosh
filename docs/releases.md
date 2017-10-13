@@ -45,7 +45,7 @@ You can manually upload a BOSH release using the `bosh upload-release` command:
 
 The URL must resolve to a `tgz` file that was original produced by the `bosh create-release` command. We are currently discussing BOSH releases that were published by other teams, and they used the `bosh create-release` command to do this. Later in the Ultimate Guide to BOSH we too will learn how to create our own BOSH releases.
 
-Approximately, `bosh upload-release https://url/to/someone-else-release-1.2.3.tgz` is similar to using a package manager to install a pre-created package, such as Debian `apt-get install someone-eles-package`. The distinction here is that `bosh upload-release` only populates the external BOSH release into our BOSH environment. We do not use the BOSH release until we run `bosh deploy` and the releases are applied to instances via job templates and packages.
+Approximately, `bosh upload-release https://url/to/someone-else-release-1.2.3.tgz` is similar to using a package manager to install a pre-created package, such as Debian `apt-get install someone-eles-package`. The distinction here is that `bosh upload-release` only populates the external BOSH release into our BOSH environment. We do not use the BOSH release until we run `bosh deploy` and the releases are applied to instances via job templates and packages. So perhaps `bosh upload-release` is more similar to copying an upstream Debian package into your own Debian package cache, and `bosh deploy` is similar to running `apt-get install` from your own package cache.
 
 ## External Release
 

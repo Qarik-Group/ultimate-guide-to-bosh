@@ -11,10 +11,11 @@ pages:
     - Disks: disks.md
     - Cloud Config Updates: cloud-config-updates.md
     - Deployment Updates: deployment-updates.md
-    - Complete Deployment Example: complete-deployment-example.md
     - Complete Deployment Manifest: complete-deployment-manifest.md
     - Targeting BOSH environments: targeting-bosh-envs.md
     - Stemcells: stemcells.md
+  - Complete Tutorials:
+    - bosh-lite on VirtualBox: tutorials/bosh-lite-virtualbox.md
   - Spread the Word:
     - Meetups: spread-the-word/meetups.md
   - Ask For Help:

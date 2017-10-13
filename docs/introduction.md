@@ -12,6 +12,9 @@ The guide uses sample commands and videos to show you real systems instead of ex
 
 Later in the guide you will deploy your own BOSH and use it to deploy systems. At that point, you will install the `bosh` command-line tool, and you will need to decide which target cloud infrastructure you will use.
 
+If you'd like to share a section with someone, wave your mouse cursor over the heading and a permanent link icon will appear. You can click it or copy it. It is my invisible gift to you so you can give to others.
+
+If you'd like to fix some spelling, some grammar, or help out with the guide in some way, there is an "edit" button at the top right of each page. This will link you to the Github project page and let you submit a pull request. Good things happen to people who submits pull requests.
 
 ## Joyful Operations
 
@@ -96,7 +99,7 @@ BOSH is project of the Cloud Foundry Foundation. It was originally created to he
 
 Cloud Foundry has a micro-services architecture - bespoke applications written in Ruby, Java, C, and Golang - combined with stateful data services such as PostgreSQL, Redis, and local disks for storing user-uploaded application code. The developers wanted to work with the SREs to reduce the time of upgrades to new releases, to reduce the time between new releases, to reduce the time to deploy security fixes, and to help SREs and developers communicate about issues in production.
 
-TODO twitter joke about laptop going into production
+TODO twitter joke about laptop going into production https://twitter.com/oising/status/298464920717099009
 
 The solution was:
 

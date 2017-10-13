@@ -16,6 +16,8 @@ If you'd like to share a section with someone, wave your mouse cursor over the h
 
 If you'd like to fix some spelling, some grammar, or help out with the guide in some way, there is an "edit" button at the top right of each page. This will link you to the Github project page and let you submit a pull request. Good things happen to people who submits pull requests.
 
+Each text block has a copy-and-paste icon. Click it to copy the text block into your clipboard.
+
 ## Joyful Operations
 
 You're a professional. You're resourceful. You're a king maker. You keep your organisation in the business of winning.

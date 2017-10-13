@@ -118,6 +118,8 @@ Once a BOSH deployment has been created successfully, many other `bosh` commands
 
 ## Releases Attribute
 
+* [Releases](/releases/)
+
 ```yaml
 releases:
 - name: zookeeper
@@ -127,7 +129,7 @@ releases:
 
 ## Stemcells
 
-[Stemcells](/stemcells/#stemcells-in-deployment-manifests)
+* [Stemcells](/stemcells/#stemcells-in-deployment-manifests)
 
 ```yaml
 stemcells:

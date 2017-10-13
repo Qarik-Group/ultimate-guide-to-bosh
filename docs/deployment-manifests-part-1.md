@@ -135,7 +135,7 @@ Compare this manifest to the earlier version and see that we have modified the f
 * we've resized the persistent disk from 10GB to 20GB
 * errand `smoke-tests` renamed to `smoke-tests-errand`
 
-These were the only attributes in our manifest subset that were easily modifiable or renamable.
+These were the only attributes in our manifest subset that were easily modifiable or renameable.
 
 Conversely, the following attributes of the manifest were not easily modifiable:
 

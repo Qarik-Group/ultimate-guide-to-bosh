@@ -124,3 +124,14 @@ releases:
   version: 0.0.7
   url: git+https://github.com/cppforlife/zookeeper-release
 ```
+
+## Stemcells
+
+[Stemcells](/stemcells/#stemcells-in-deployment-manifests)
+
+```yaml
+stemcells:
+- alias: default
+  os: ubuntu-trusty
+  version: latest
+```

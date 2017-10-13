@@ -78,11 +78,10 @@ cat > change-deployment-name.yml <<YAML
 ---
 - type: replace
   path: /name
-  value: ((deployment-name))
+  value: $BOSH_DEPLOYMENT
 YAML
 bosh deploy zookeeper-release/manifests/zookeeper.yml \
-  -o change-deployment-name.yml \
-  -v deployment-name=$BOSH_DEPLOYMENT
+  -o change-deployment-name.yml
 ```
 
 ## Name Attribute

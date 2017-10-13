@@ -169,21 +169,21 @@ On the smaller end - our consultancy [Stark & Wayne](https://www.starkandwayne.c
 
 ## Why Write the Ultimate Guide to BOSH?
 
-BOSH has been my not-so-secret weapon since 2012. Yet, you might not yet be using BOSH.
+I have been using BOSH since 2012. Since then I have not found any system like BOSH despite the fast paced and highly competitive fields of Platforms, Containers, DevOps, and Cloud Infrastructure.
 
-I don't want to write a book.
-
-I wrote a PhD thesis in 2001 and six people read it (two supervisors, three judges, and myself). Fortunately this is enough people to be awarded a doctorate. Unfortunately, it doesn't really qualify as "sharing knowledge."
+I didn't want to write a book. I had written a PhD thesis in 2001 and six people read it (two supervisors, three judges, and myself). Fortunately, this is enough people to be awarded a doctorate. Unfortunately, it doesn't really qualify as "sharing knowledge."
 
 I wrote my first blog post in 2006 and when I quickly reached seven subscribers; I knew I'd found my preferred medium for sharing.
 
 I enjoy the continuous publication and feedback loop of blogging, and of sharing open source projects. I enjoy a relaxed writing style.
 
-I don't want to write a "book" book.
+I didn't want to write a "book" book. Not a boring book. Not a reference book.
 
 I want to share all the wonders of BOSH with you. I want you to use BOSH. I want you to feel great using BOSH. I want you to feel like a superhero. I want you to convince your friends and colleagues to use BOSH. I want you to help me evangelise BOSH.
 
-I also want you to switch to Queen's English, learn more about Australia, and to use the Oxford comma.
+I want this to be a book that you enjoy reading. I hope you enjoy my manner of introducing each topic, and how the topics segue as we gradually introduce more complex topics. I hope you enjoy my sense of humour.
+
+I also want you to switch to Queen's English, to visit me in Australia, and to use the Oxford comma.
 
 ## Additional Sources of Information
 

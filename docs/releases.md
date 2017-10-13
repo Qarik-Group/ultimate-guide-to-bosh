@@ -29,7 +29,7 @@ The information about the required BOSH releases is defined in the top-level of 
 
 ## Version Requirement
 
-```yaml
+```yaml hl_lines="3"
 releases:
 - name: zookeeper
   version: 0.0.7
@@ -51,7 +51,7 @@ Approximately, `bosh upload-release https://url/to/someone-else-release-1.2.3.tg
 
 A wonderful feature of a base BOSH deployment manifest can be to include the specific details for `bosh deploy` to discover and install the version that is required. This reduces the additional steps for an operator to bootstrap a new system or upgrade an existing deployment. They can simply run `bosh deploy`. Any missing releases will be automatically fetched and installed into the BOSH environment.
 
-```yaml
+```yaml hl_lines="3 4"
 releases:
 - name: zookeeper
   version: 0.0.7

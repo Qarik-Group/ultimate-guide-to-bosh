@@ -4,7 +4,7 @@ A deployment is made up of instances. Normally, instances represent long-running
 
 The BOSH CLI makes it easy to see the list of instances for a deployment and their basic health status with the `bosh instances` command:
 
-```
+``` hl_lines="1"
 > bosh instances
 Using environment '10.0.0.4' as client 'admin'
 
@@ -35,7 +35,7 @@ Each instance has at least one assigned IP address. The `zookeeper.yml` manifest
 
 With the BOSH CLI we can also start to introspect what is running on each instance with `bosh instances --ps`:
 
-```
+``` hl_lines="3 4"
 Instance                                          Process    Process State  IPs
 smoke-tests/dd931466-4329-46cc-971e-34aeee3f8baf  -          -              -
 zookeeper/146229c3-648a-4280-b725-692b0092eae9    -          running        10.0.0.9
@@ -54,7 +54,7 @@ Each `zookeeper` instance is running a process called `zookeeper`. Very educatio
 
 Let's look at another BOSH deployment that collocates more processes and is more interesting. The following deployment is for the Stark & Wayne CI system https://ci.starkandwayne.com.
 
-```
+```yaml hl_lines="15 16 17 18"
 Deployment 'concourse'
 
 Instance                                        Process       Process State   IPs
@@ -77,7 +77,7 @@ worker/194ac3c7-0a07-4681-ade9-afbf0e47a1a9     -             running         10
 
 In this deployment we have four different instance groups: `db`, `haproxy`, `web` (there are two instances), and `worker` (I've show one of them above but our deployment of [Concourse](https://concourse.ci/) has many `worker` instances).
 
-Each `worker` instance is running three processes: `baggageclaim`, `beacon`, and `garden`.
+Each highlighted `worker` instance is running three processes: `baggageclaim`, `beacon`, and `garden`.
 
 The `haproxy` instance has two IP addresses. The latter `184.98.185.163` is a public IP on the Internet. All the other IPs are private to the vSphere data centre. This `haproxy` instance is an inbound HTTP load balancer and has a statically assigned public IP for the benefit of configuring the external CloudFlare service which sits in front receiving https://ci.starkandwayne.com traffic.
 

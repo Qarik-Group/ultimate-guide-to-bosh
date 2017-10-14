@@ -205,6 +205,20 @@ The version number of a BOSH release is part of the communication strategy of it
 
 A BOSH release, and its accompanying deployment manifests, operator files, and documentation, is not about packaging software like traditional software packages. A BOSH release is a point-in-time description of a running system. As such, its developers will have an independent version number from any of the upstream bundled software it includes.
 
-## Compiling Packages
+## Transparent Packaging
+
+As a user of a traditional software packaging distribution, you will typically download a pre-compiled version of the package for your operating system and architecture. For example, if you used a traditional package system to install ZooKeeper you would not expect to see the ZooKeeper Java source code be downloaded and then compiled. From your perspective the "ZooKeeper package" is the resulting pre-compiled package that you download. But from the package author's perspective, the pre-compiled package you download is a byproduct of the package distribution system you are using. Traditional software package distribution systems have been so wonderful that you've probably never needed to worry about how they work, nor perhaps who is doing the work.
+
+This opaque two-sided system -- package authors and the distribution system on one side, and the packaging-consuming users on the other side -- has some downsides. The consumers do not know what is being installed. The consumers do not know how to modify what is being installed. The consumers do not know who is maintaining the packages (if they are independent of the upstream software they are packaging). The consumers are subsequently not actively encouraged to help with the long-term maintenance of packages. These are not insurmountable problems, but every barrier to discovery and participation reduces their likelihood.
+
+At the time I discovered BOSH, I was working for Engine Yard which maintained its own Gentoo distribution. I worked there for two years and never figured out the tool chain nor the social rules associated with creating or fixing our Gentoo packages.
+
+Not all package systems are awful. The rapid rise of the MacOS [Homebrew](https://brew.sh) package system comes from the openness of how each package is defined -- a simple file written in Ruby programming language -- and how new packages can be contributed to the collective distribution system.
+
+In the era of Docker and the `Dockerfile`, a growing number of people have started bypassing packaging systems for the explicit declarations of how they want to compile and install software. This scenario is growing because there are many public `Dockerfile`s with examples of explicitly compiling and installing software. One of the primary benefits of Docker and Dockerfiles is to breakdown the walls between packaging/distribution and operations. Packaging and using software is becoming the same role.
+
+BOSH releases also help with transparency and enablement. After you've used a BOSH release, you can quick discover how the BOSH release is constructed, and then contribute fixes and improvements. The entire tool chain for maintaining a BOSH release is at your finger tips with the `bosh` CLI.
+
+## Compiled Packages
 
 One of the built-in features of a BOSH environment is to compile packages on demand.

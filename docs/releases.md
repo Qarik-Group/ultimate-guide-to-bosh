@@ -161,16 +161,15 @@ To fetch all the blobs referenced in the current `config/blobs.yml` file:
 
 ```
 bosh sync-blobs
+bosh blobs
 ```
 
 The files referenced in `config/blobs.yml` will be downloaded into the `blobs` folder:
 
 ```
-blobs
-├── java
-│   └── jdk-1.7.0_51.tar.gz
-└── zookeeper
-    └── zookeeper-3.4.10.tar.gz
+Path                               Size     Blobstore ID                          Digest
+java/jdk-1.7.0_51.tar.gz           132 MiB  8a697fac-6cc4-443f-7009-b1c62e3d22b8  bee3b085a90439c833ce18e138c9f1a615152891
+zookeeper/zookeeper-3.4.10.tar.gz  33 MiB   868354bd-c49e-41b7-49a9-b110091a82af  eb2145498c5f7a0d23650d3e0102318363206fba
 ```
 
 To discover the nature of `blobs/java/java-1.7.0_51.tar.gz` we can use the `tar` application to look at its files. Its `LICENSE` file gives us the biggest clue that it is Oracle Java:

@@ -223,7 +223,7 @@ BOSH releases also help with transparency and enablement. After you've used a BO
 
 If you are debugging a BOSH deployment which includes BOSH releases authored by other teams, it can be relatively simple to discover the location of the source code.
 
-Either fetch the entire BOSH deployment manifest:
+Either fetch the entire BOSH deployment manifest from your BOSH environment:
 
 ```
 bosh manifest
@@ -245,7 +245,22 @@ The output of the latter might be:
 
 The `url` value here gives us our answer: https://github.com/cppforlife/zookeeper-release
 
-We can clone this Git repository to see its contents. Even better, using the same `bosh` CLI we can create and test variations of the BOSH release.
+Alternately, the output might include `url` values that infer the location of the Git repostiory:
+
+```yaml hl_lines="3 7"
+- name: binary-buildpack
+  sha1: c5ba6b6d99b972ec34dece478302351d8b4f6bbc
+  url: https://bosh.io/d/github.com/cloudfoundry/binary-buildpack-release?v=1.0.14
+  version: 1.0.14
+- name: capi
+  sha1: 94da536a79b95bf9b723d30ab42a944938cf2e76
+  url: https://bosh.io/d/github.com/cloudfoundry/capi-release?v=1.43.0
+  version: 1.43.0
+```
+
+Fortunately, the two `url` values transparently include the original source location of each BOSH release: https://github.com/cloudfoundry/binary-buildpack-release, and https://github.com/cloudfoundry/capi-release respectively.
+
+We can clone these Git repositories to see their contents. Even better, using the same `bosh` CLI we can create and test variations of the BOSH releases.
 
 ## Building and Testing a BOSH Release
 

@@ -58,7 +58,7 @@ releases:
   url: git+https://github.com/cppforlife/zookeeper-release
 ```
 
-When you run `bosh deploy`, the CLI will assume that https://github.com/cppforlife/zookeeper-release is a `git` repository. The CLI will look inside the repository for the job templates and packages for the `version: 0.0.7`. The CLI will then download these job templates and packages to your local computer or jumpbox, and then it will upload them to your BOSH environment.
+When you run `bosh deploy`, the CLI will see the `git+https` protocol determine that https://github.com/cppforlife/zookeeper-release is a Git repository containing information about all releases. The CLI will look inside the repository for the job templates and packages for the `version: 0.0.7`. The CLI will then download these job templates and packages to your local computer or jumpbox, and then it will upload them to your BOSH environment.
 
 The `bosh deploy` command will use your local `git` configuration and credentials to access Git repositories, thus making it possible to use private Git repositories.
 
@@ -70,17 +70,19 @@ One location to discover existing BOSH releases is https://bosh.io/releases.
 
 Another idea is to search Github https://github.com/search?q=bosh+release.
 
+Talk to mysterious strangers at dinner parties.
+
 ## What is a BOSH Release?
 
-A BOSH release is a versioned bundle of job templates, and their dependent packages, that describe running systems. The developers of a BOSH release benefit by iterating on bespoke application source code, dependency package versions, and configuration file templates all in the one project. The operators of a BOSH release benefit by using a combination of file templates and packages that are exactly the same combination as the developers intended.
+A BOSH release is a versioned bundle of job templates, and their dependent packages, that describe a complete running system. The developers of a BOSH release benefit by iterating on bespoke application source code, dependency package versions, and configuration file templates all in the one project. The operators of a BOSH release benefit by using a combination of file templates and packages that are exactly the same combination as the developers intended.
 
-We original encountered [job templates](/instances/#job-templates) and [packages](/instances/#packages) when we were looking inside running BOSH instances. Monit was configured to start and keep processes running. These processes were configured within job templates: how to run the process and how to configure the application within the process. The job templates need software to be pre-installed, which we
+We originally encountered [job templates](/instances/#job-templates) and [packages](/instances/#packages) when we were looking inside running BOSH instances. Monit was configured to start and keep processes running. These processes were configured within job templates: how to run the process and how to configure the application within the process. The job templates need software packages to be pre-installed. These packages need to have been pre-compiled from trusted source files.
 
 ## Comparing BOSH Releases to Traditional Software Packages
 
 A BOSH release is similar to a collection of traditional software packages, such as Debian APT or MacOS Homebrew packages.
 
-A traditional software package focused on installing a singular piece of software. Perhaps it is an executable, perhaps also a library, and some documentation for users and developers. The installed package will have already been compiled into its executable form for the current operating system and underlying host machine architecture.
+A traditional software package focused on installing a single piece of software. Perhaps it is an executable, perhaps also a library, and some documentation for users and developers. The installed package will have already been compiled into its executable form for the current operating system and underlying host machine architecture.
 
 If this software package has any dependencies, then when you install the software package you will automatically also download and install its dependencies, and their dependencies.
 
@@ -95,7 +97,7 @@ A BOSH release combines all these functions. A BOSH release that is installed in
 
 {==
 
-An important distinction is a BOSH release is like a tiny single-purpose collection of packages and their job templates. Traditional software packages are assumed to be dependencies of some resulting use case.
+A BOSH release is a single-purpose collection of packages and their job templates.
 
 ==}
 
@@ -178,3 +180,5 @@ Please refer to http://java.com/license
 ```
 
 Whilst a BOSH release might not retain the metadata about the origins of its blobs, it does guarantee that all developers and operators of a BOSH release will be using the same blobs.
+
+## Compiling Packages

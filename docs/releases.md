@@ -102,3 +102,79 @@ An important distinction is a BOSH release is like a tiny single-purpose collect
 A traditional database package might configure and run a database, but in reality you would want to manage the specific configuration files for the specific disk volumes, and the other members of the database cluster running on different machines etc.
 
 The `zookeeper` BOSH release exists to run a cluster of Apache ZooKeeper nodes. A traditional software package of Apache ZooKeeper will be authored to install ZooKeeper software.
+
+## Specific Collection of Packages
+
+Each version of the `zookeeper` BOSH release bundles an explicit version of Apache ZooKeeper, like a traditional software package. But a BOSH release also bundles an explicit version of its dependencies. For a `zookeeper` BOSH release, this means it bundles a specific distribution and version of a Java Virtual Machine.
+
+## Caching Upstream Software
+
+A BOSH release contains its own copy of software to ensure the BOSH release can always be re-built. It does not assume that the specific version of Apache ZooKeeper will forever be available for download on demand.
+
+A BOSH release contains its own copy of software in part to isolate BOSH operators from upstream dependencies being hacked. A BOSH release guarantees an operator that the exact same version of source code will be used as the original developers selected.
+
+## Blobs
+
+These copies of explicitly selected software are called "blobs". Blobs guarantee that a BOSH operator, and subsequent developer of a BOSH release, will be downloading and using the same files.
+
+We use the integrity of the BOSH release Git repository to track the blobs used in each BOSH release version.
+
+```
+git clone https://github.com/cppforlife/zookeeper-release
+git checkout v0.0.7
+cd zookeeper-release
+cat config/blobs.yml
+```
+
+At the time of writing, the blobs used in v0.0.7 of https://github.com/cppforlife/zookeeper-release were:
+
+```yaml hl_lines="1 5"
+java/jdk-1.7.0_51.tar.gz:
+  size: 138199690
+  object_id: 8a697fac-6cc4-443f-7009-b1c62e3d22b8
+  sha: bee3b085a90439c833ce18e138c9f1a615152891
+zookeeper/zookeeper-3.4.10.tar.gz:
+  size: 35042811
+  object_id: 868354bd-c49e-41b7-49a9-b110091a82af
+  sha: eb2145498c5f7a0d23650d3e0102318363206fba
+```
+
+We can see that v0.0.7 of the BOSH release contains upstream versions:
+
+* Apache ZooKeeper v3.4.10
+* Java JDK v1.7.0_51
+
+## Origins of Blobs
+
+One omission from BOSH release specifications is that there is no declaration of the original location from where each blob was sourced. Consider the two blobs in the example above:
+
+* `zookeeper/zookeeper-3.4.10.tar.gz` - was this the original v3.4.10 release from the Apache download website?
+* `java/jdk-1.7.0_51.tar.gz` - is this Oracle Java or OpenJDK? Were any modifications made from the original downloaded files?
+
+Ideally, a BOSH release blobs will be the original files from their original locations, and the authors will document from where these blobs are being sourced. If patches need to be applied to these projects, then this can be done during the compilation phase of a package.
+
+If your BOSH release does not document any metadata about the origins of each blob, then can always download the blobs and look inside them.
+
+To fetch all the blobs referenced in the current `config/blobs.yml` file:
+
+```
+bosh sync-blobs
+```
+
+The files referenced in `config/blobs.yml` will be downloaded into the `blobs` folder:
+
+```
+blobs
+├── java
+│   └── jdk-1.7.0_51.tar.gz
+└── zookeeper
+    └── zookeeper-3.4.8.tar.gz
+```
+
+To discover the nature of `blobs/java/java-1.7.0_51.tar.gz` we can use the `tar` application to look at its files. Its `LICENSE` file gives us the biggest clue that it is Oracle Java:
+
+```
+Please refer to http://java.com/license
+```
+
+Whilst a BOSH release might not retain the metadata about the origins of its blobs, it does guarantee that all developers and operators of a BOSH release will be using the same blobs.

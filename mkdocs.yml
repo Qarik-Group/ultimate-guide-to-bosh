@@ -14,6 +14,7 @@ pages:
     - Releases: releases.md
     - Stemcells: stemcells.md
     - Complete Deployment Manifest: complete-deployment-manifest.md
+    - Service Discovery: service-discovery.md
     - Targeting BOSH environments: targeting-bosh-envs.md
   - Complete Tutorials:
     - bosh-lite on VirtualBox: tutorials/bosh-lite-virtualbox.md

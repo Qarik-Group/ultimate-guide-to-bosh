@@ -182,3 +182,5 @@ Please refer to http://java.com/license
 Whilst a BOSH release might not retain the metadata about the origins of its blobs, it does guarantee that all developers and operators of a BOSH release will be using the same blobs.
 
 ## Compiling Packages
+
+One of the built-in features of a BOSH environment is to compile packages on demand.

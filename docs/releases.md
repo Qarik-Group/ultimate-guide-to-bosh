@@ -217,7 +217,39 @@ Not all package systems are awful. The rapid rise of the MacOS [Homebrew](https:
 
 In the era of Docker and the `Dockerfile`, a growing number of people have started bypassing packaging systems for the explicit declarations of how they want to compile and install software. This scenario is growing because there are many public `Dockerfile`s with examples of explicitly compiling and installing software. One of the primary benefits of Docker and Dockerfiles is to breakdown the walls between packaging/distribution and operations. Packaging and using software is becoming the same role.
 
-BOSH releases also help with transparency and enablement. After you've used a BOSH release, you can quick discover how the BOSH release is constructed, and then contribute fixes and improvements. The entire tool chain for maintaining a BOSH release is at your finger tips with the `bosh` CLI.
+BOSH releases also help with transparency and enablement. After you've used a BOSH release, you can quickly discover how the BOSH release is constructed, and then contribute fixes and improvements. The entire tool chain for maintaining a BOSH release is at your finger tips with the `bosh` CLI.
+
+## Discovering the Source of a BOSH Release
+
+If you are debugging a BOSH deployment which includes BOSH releases authored by other teams, it can be relatively simple to discover the location of the source code.
+
+Either fetch the entire BOSH deployment manifest:
+
+```
+bosh manifest
+```
+
+Or fetch only the `releases` section:
+
+```
+bosh int <(bosh manifest) --path /releases
+```
+
+The output of the latter might be:
+
+```yaml hl_lines="3"
+- name: zookeeper
+  version: 0.0.7
+  url: git+https://github.com/cppforlife/zookeeper-release
+```
+
+The `url` value here gives us our answer: https://github.com/cppforlife/zookeeper-release
+
+We can clone this Git repository to see its contents. Even better, using the same `bosh` CLI we can create and test variations of the BOSH release.
+
+## Building and Testing a BOSH Release
+
+
 
 ## Compiled Packages
 

@@ -170,7 +170,7 @@ blobs
 ├── java
 │   └── jdk-1.7.0_51.tar.gz
 └── zookeeper
-    └── zookeeper-3.4.8.tar.gz
+    └── zookeeper-3.4.10.tar.gz
 ```
 
 To discover the nature of `blobs/java/java-1.7.0_51.tar.gz` we can use the `tar` application to look at its files. Its `LICENSE` file gives us the biggest clue that it is Oracle Java:
@@ -180,6 +180,30 @@ Please refer to http://java.com/license
 ```
 
 Whilst a BOSH release might not retain the metadata about the origins of its blobs, it does guarantee that all developers and operators of a BOSH release will be using the same blobs.
+
+## Versions
+
+Perhaps you've noticed that our continuing example `zookeeper` BOSH release is at version v0.0.7 but it bundles Apache ZooKeeper v3.4.10. Perhaps this worries you. Deeply. Why is a BOSH release for running a cluster of Apache ZooKeeper versioned so independently from the version of Apache ZooKeeper it is running?
+
+You're not a bad person for being a versionoholic. And I'm not here to make you feel bad for a problem you are imagining. Although I do notice I'm using negative words to describe your condition. "Your condition," HA! I did it again.
+
+Traditional software packages themselves have not always had a simple job of versioning themselves in alignment with the upstream software they are bundling. Sometimes the version number must leak into the name of the package itself. Consider Python. In most packaging distributions, such as Debian, if you install a package called `python` you will get Python v2.7.10 or similar. If you install `python3` then you will get v3.X.Y. The forking of Python packaging into two packages `python` and `python3` was because packaged applications that depended on a `python` package assumed version v2+ and generally were flexible about which minor version of Python 2 they run upon. But those same packaged applications did not run upon Python 3. So the maintainers of Python packages made a decision to protect `python` v2+ applications by bundling Python 3 in an independently named package `python3`.
+
+Without knowing this abridged history of Python language and the downstream packaging communities, the names and version numbers of the two families of Python packages is confusing at a glance. If you install `python3` package you get a Python version that is v3+, but there may be no `python2` package, and `python` package does not install v1+ but rather installs v2+.
+
+BOSH release version number suffer from a similar situation, but it is aggravated because BOSH releases bundle many software projects which each have their own independent version sequence. For example, earlier we discovered that the `zookeeper/0.0.7` BOSH release contained Oracle Java 1.7.0_51 and Apache ZooKeeper 3.4.10.
+
+Any change to the BOSH release will result in an upward change to the version number of the BOSH release.
+
+If the current version of a BOSH release is `0.0.7`, then the developers must decide that the next release version will be: `0.0.8`, `0.1.0`, `1.0.0`, or perhaps something else.
+
+Changing the bundled version of Java or ZooKeeper might mean the developers decide one a small version change, say `0.0.8`, or a larger version change, say `0.1.0` or `1.0.0`.
+
+Fixing the `zookeeper` job template might result in a small version change, say to `0.0.8`. Drastically changing the names of operator-provided properties to the `zookeeper` job template might suggest a larger version increase, say `0.1.0` or `1.0.0`.
+
+The version number of a BOSH release is part of the communication strategy of its developers to you the operators who want to upgrade their production systems. But the version number is just one part. With each new BOSH release version, hopefully its developers are including release notes or a changelog, are updating documentation, as well as updating the base deployment manifest and operator files to help operators perform their upgrades with confidence.
+
+A BOSH release, and its accompanying deployment manifests, operator files, and documentation, is not about packaging software like traditional software packages. A BOSH release is a point-in-time description of a running system. As such, its developers will have an independent version number from any of the upstream bundled software it includes.
 
 ## Compiling Packages
 

@@ -264,8 +264,14 @@ We can clone these Git repositories to see their contents. Even better, using th
 
 ## Building and Testing a BOSH Release
 
+TODO
 
+```
+bosh create-release --force
+bosh upload-release --rebase
+bosh deploy manifests/zookeeper.yml -o manifests/dev.yml
+```
 
-## Compiled Packages
+## Compiling Packages
 
 One of the built-in features of a BOSH environment is to compile packages on demand.

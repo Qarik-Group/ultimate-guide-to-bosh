@@ -46,5 +46,35 @@ In this scenario, you would commit in advance to using the five IP addresses. Yo
 
 ## BOSH DNS
 
+Static IP addresses might be the least complex method - you buy some Post-It Notes, you pick some IP addresses - but what if you're a normal human being and have no ambitions to keep track of what systems have been allocated what IP addresses. Or you don't have Post-It Notes.
+
+Your BOSH environment can have the ability to automatically advertise all deployments' instances as DNS hostnames within all other BOSH instances. This means that any deployment can know in advance what its hostnames will be, without knowing in advance the IP addresses allocated or using static IPs.
+
+First, confirm that your BOSH environment has this BOSH DNS feature enabled. Run `bosh env` to view your environment's attributes:
+
+``` hl_lines="10"
+> bosh env
+Using environment '192.168.50.6' as user 'admin' (openid, bosh.admin)
+
+Name      Bosh Lite Director
+UUID      d855fe91-a9cb-43be-b977-f44eea870775
+Version   263.2.0 (00000000)
+CPI       warden_cpi
+Features  compiled_package_cache: disabled
+          config_server: disabled
+          dns: enabled
+          snapshots: disabled
+User      admin
+```
+
+TODO: why is `dns: disabled` appearing on my `-o local_dns.yml` bosh-lite?
+
+TODO: what about GCP?
+
+TODO: finish section
 
 ## BOSH Links
+
+The final service discovery option provided by your BOSH environment is called "links". At the time a job template is being installed into an instance, it is provided with information about other job templates within the same deployment, and possibly other deployments.
+
+BOSH links is the method by which the five instances in our `zookeeper` deployment can find each other and form a cluster.

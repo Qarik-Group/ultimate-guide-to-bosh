@@ -225,9 +225,7 @@ Most job templates have optional or required properties. So far in our `zookeepe
 
 We can provide a property within an instance group with the optional `properties` attribute. For example, the `zookeeper` job template has a property `max_client_connections` with a default value `60`. To explicitly declare this property with a value of `120`, we can either modify the deployment manifest directly:
 
-```yaml
-name: zookeeper
-
+```yaml hl_lines="7 8"
 instance_groups:
 - name: zookeeper
   instances: 5
@@ -240,7 +238,7 @@ instance_groups:
 
 Or we can use an Operator file to add the missing `properties.max_client_connections` attribute:
 
-```
+``` hl_lines="2"
 - type: replace
   path: /instance_groups/name=zookeeper/jobs/name=zookeeper/properties?/max_client_connections
   value: 120

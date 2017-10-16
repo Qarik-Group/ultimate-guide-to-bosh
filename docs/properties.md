@@ -109,4 +109,20 @@ We can see that two properties from `zookeeper` have been removed, one new prope
 
 ## Implementation of Properties
 
-TODO
+Here's a handy one-liner to find all places where the property `max_client_connections` is referenced in the BOSH release source repository:
+
+```
+> egrep -ir max_client_connections jobs/**/* | sort | uniq
+```
+
+The results are:
+
+```yaml
+jobs/zookeeper/spec:  max_client_connections:
+jobs/zookeeper/templates/zoo.cfg.erb:maxClientCnxns=<%= p('max_client_connections') %>
+```
+
+The two files are:
+
+* `jobs/zookeeper/spec` is the file declaring that `max_client_connections` is a valid property
+* `jobs/zookeeper/templates/zoo.cfg.erb` is a `template` file which will be rendered during a `bosh deploy`

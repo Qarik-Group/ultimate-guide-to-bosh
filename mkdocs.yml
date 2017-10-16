@@ -44,6 +44,7 @@ markdown_extensions:
   - pymdownx.betterem(smart_enable=all)
   - pymdownx.critic
   - pymdownx.magiclink
+  - pymdownx.mark
   - pymdownx.superfences
   - toc(permalink=true)
 

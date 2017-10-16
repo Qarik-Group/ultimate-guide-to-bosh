@@ -92,7 +92,7 @@ git diff v0.0.3..v0.0.6 -- jobs/zookeeper/spec
 git diff v0.0.3..v0.0.6 -- jobs/*/spec
 ```
 
-We can see that two properties from `zookeeper` have been removed, one new property added, but fortunately no properties have had their default values changed:
+We can see that two properties from `zookeeper` have been removed, one new property added, ==and fortunately no properties have had their default values changed==:
 
 ```
 -  user:

@@ -123,6 +123,24 @@ Some teams use it only for its provisioning/infrastructure lifecycles features, 
 
 Some teams put their BOSH environment behind an API, such as the Open Service Broker API, and dynamically provision and de-provision entire systems on demand. For example, Pivotal Container Services is an API driven system to deploy entire Kubernetes clusters, all using BOSH.
 
+## Help Users Run Long-Term Systems
+
+The publisher of software ultimately cares about their users **running** their software. At first their users will trial the software: to feel it work, to believe that the software might solve the user's problems, and to get a feel for how to run the software in production. That's Day 1. Day 2 is every day onwards.
+
+Any system that runs for a few years will go through the following events:
+
+* **Upgrades to primary software.** For example, upgrading to new Apache ZooKeeper versions within a running cluster of ZooKeeper.
+* **Upgrades to secondary software dependencies.** For example, ZooKeeper runs upon Java so a ZooKeeper cluster will need to upgrade to new Java versions. We will need to perform dependency upgrades at the very least for push out critical security fixes. We might always want to use newer dependencies if they improve performance, reduce CPU or RAM usage, or have additional features. We might also need to upgrade dependencies if our primary software ceases to support ageing dependencies.
+* **Upgrades to operating system kernels and core software.** If your system is running upon an Ubuntu host machine and/or an Ubuntu container image, then you will need to upgrade or replace the base host machine and/or the containers as soon as possible after the security notices are published. For example, see [Ubuntu Security Notices](https://usn.ubuntu.com/usn/). Security vulnerabilities are continually discovered within all layers of each operating system distribution and pushed out throughout the year.
+* **Resizing of the infrastructure.** As a system becomes increasingly used by end users, or as it acquires more data, it will need to grow. Persistent disks will need to be enlarged. Host machines will need to be replaced by larger machines. Container constraints may need to be increased.
+* **Healing of the infrastructure.** Host machines disappear. Physical disks can corrupt. Your users' systems will need to heal.
+* **Debugging of the software and its dependencies.** The brilliance of self-hosting your own software as a service is that only your team needs to debug your software. Conversely, when you distribute your software to other operations teams, it will be those teams that need to debug the entire system. They will want to be able to perform remediation if they can. If not, next they will want to help the software publisher with debugging and resolution. They want their system to be running and healthy. They want their own end users to be happy.
+* **Monitoring of the software and its dependencies.** End users of running systems don't enjoy being the first and only line of notification of downtime. They want to know how they can monitor the running software and its dependencies, they want to know what to look to actively detect imminent misbehaviour, and they definitely want to know if the system is currently failing.
+* **Backup/recovery of data.** If the operators of your software discover that they need to restore data from archives, how will they do that? How much data will be lost? How bad is this situation for the end users of the system? How bad is the situation for all stakeholders? To put it another way, if the operators of your software lose data, what apology email will they be sending out to their own users? What letter will their chairman be sending out to shareholders?
+
+Your software will need to support each of these lifecycle events.
+
+
 ## About the Author
 
 I did not invent BOSH. A group of engineers from the Cloud Foundry project at VMWare conceived of BOSH and built the first iteration of BOSH. BOSH is architecturally still very similar to its original public incarnation in 2012.

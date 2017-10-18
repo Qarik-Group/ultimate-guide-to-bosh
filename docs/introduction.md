@@ -138,8 +138,21 @@ Any system that runs for a few years will go through the following events:
 * **Monitoring of the software and its dependencies.** End users of running systems don't enjoy being the first and only line of notification of downtime. They want to know how they can monitor the running software and its dependencies, they want to know what to look to actively detect imminent misbehaviour, and they definitely want to know if the system is currently failing.
 * **Backup/recovery of data.** If the operators of your software discover that they need to restore data from archives, how will they do that? How much data will be lost? How bad is this situation for the end users of the system? How bad is the situation for all stakeholders? To put it another way, if the operators of your software lose data, what apology email will they be sending out to their own users? What letter will their chairman be sending out to shareholders?
 
-Your software will need to support each of these lifecycle events.
+Your software will need to support each of these lifecycle events. It is even better if you help your end users to make great choices about how they run your software in production.
 
+{==
+
+If you author your software and its BOSH release in parallel, you will be giving your end users the ability to run a system, rather than just some software to install.
+
+==}
+
+Publishing a BOSH release is like taking your users on a packaged, guided tour of ancient Roman ruins.
+
+Shipping them installable software to end users is like a leaving a Post-It Note on their fridge, "We went to Rome. You should go some day."
+
+Publishing a BOSH release shows that you care about your users' long term success running the systems.
+
+Only shipping installable software is like saying "Works on my machine."
 
 ## About the Author
 

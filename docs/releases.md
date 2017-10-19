@@ -1,6 +1,8 @@
 # Releases
 
-Every BOSH deployment describes one or more instance groups, upon each is layered one or more job templates, and each job template can had a dependency on packages. The origin of these job templates and packages will become clear now as we introduce BOSH releases, and the top-level deployment manifest attribute `releases`.
+Every BOSH deployment describes a set of cloud server, each which is configured to run software that has been installed.
+
+Using BOSH terminology, a BOSH deployment describes one or more instance groups, resulting in instances, upon each is layered one or more job templates, and each job template can had a dependency on packages. The origin of these job templates and packages will become clear now as we introduce BOSH releases, and the top-level deployment manifest attribute `releases`.
 
 Consider this abridged deployment manifest:
 
@@ -35,7 +37,9 @@ releases:
   version: 0.0.7
 ```
 
-This deployment manifest will require that `zookeeper/0.0.7` has already been installed in your BOSH environment.
+This deployment manifest will require that a BOSH release with the name `zookeeper` and version `0.0.7` be already uploaded to your BOSH environment.
+
+## Upload Releases
 
 You can manually upload a BOSH release using the `bosh upload-release` command:
 
@@ -43,11 +47,15 @@ You can manually upload a BOSH release using the `bosh upload-release` command:
 > bosh upload-release https://bosh.io/d/github.com/cppforlife/zookeeper-release?v=0.0.7
 ```
 
-The URL must resolve to a `tgz` file that was original produced by the `bosh create-release` command. We are currently discussing BOSH releases that were published by other teams, and they used the `bosh create-release` command to do this. Later in the Ultimate Guide to BOSH we too will learn how to create our own BOSH releases.
+This URL must ultimately resolve to a file original produced by the `bosh create-release` command. Later in the Ultimate Guide to BOSH you will learn how to create and publish your own BOSH releases.
 
-Approximately, `bosh upload-release https://url/to/someone-else-release-1.2.3.tgz` is similar to using a package manager to install a pre-created package, such as Debian `apt-get install someone-eles-package`. The distinction here is that `bosh upload-release` only populates the external BOSH release into our BOSH environment. We do not use the BOSH release until we run `bosh deploy` and the releases are applied to instances via job templates and packages. So perhaps `bosh upload-release` is more similar to copying an upstream Debian package into your own Debian package cache, and `bosh deploy` is similar to running `apt-get install` from your own package cache.
+Approximately, `bosh upload-release https://url/to/someone-else-release-1.2.3.tgz` is similar to using a package manager to install a pre-created package, such as Debian `apt-get install someone-eles-package`.
 
-## External Release
+A distinction is that `bosh upload-release` only populates the external BOSH release into our BOSH environment; it does not unpack the release into any running deployment instances. We do not use a newly uploaded BOSH release until we run `bosh deploy`.
+
+So perhaps `bosh upload-release` is more similar to copying an upstream Debian package into your own Debian package cache, and `bosh deploy` is similar to running `apt-get install` against your own package cache.
+
+## Automatically Upload Releases
 
 A wonderful feature of a base BOSH deployment manifest can be to include the specific details for `bosh deploy` to discover and install the version that is required. This reduces the additional steps for an operator to bootstrap a new system or upgrade an existing deployment. They can simply run `bosh deploy`. Any missing releases will be automatically fetched and installed into the BOSH environment.
 
@@ -58,17 +66,19 @@ releases:
   url: git+https://github.com/cppforlife/zookeeper-release
 ```
 
-When you run `bosh deploy`, the CLI will see the `git+https` protocol determine that https://github.com/cppforlife/zookeeper-release is a Git repository containing information about all releases. The CLI will look inside the repository for the job templates and packages for the `version: 0.0.7`. The CLI will then download these job templates and packages to your local computer or jumpbox, and then it will upload them to your BOSH environment.
+When you run `bosh deploy`, the CLI will see the `git+https` protocol determine that https://github.com/cppforlife/zookeeper-release is a Git repository containing information about all releases. The CLI will look inside the repository for the job templates and packages for `version: 0.0.7`. The CLI will then download these job templates and packages to your local computer or jumpbox, and then it will upload them to your BOSH environment.
 
-The `bosh deploy` command will use your local `git` configuration and credentials to access Git repositories, thus making it possible to use private Git repositories.
+The `bosh deploy` command will use your local `git` configuration and credentials to access Git repositories, thus making it possible to use private Git repositories to describe BOSH releases.
 
 ## Finding Existing BOSH Releases
 
-There are many existing BOSH releases that you might like to use, before going down the path of authoring your own BOSH releases later in the Ultimate Guide to BOSH.
+There are many existing BOSH releases that you might like to use. Here are some suggestions for discovering them.
 
-One location to discover existing BOSH releases is https://bosh.io/releases.
+You can discover existing BOSH releases at https://bosh.io/releases.
 
-Another idea is to search Github https://github.com/search?q=bosh+release.
+Try searching Github https://github.com/search?q=bosh+release.
+
+Look thru the [Ask for Help](/ask-for-help/suggestions/) suggestions to find other BOSH users or consultants who can help.
 
 Talk to mysterious strangers at dinner parties.
 
@@ -76,7 +86,7 @@ Talk to mysterious strangers at dinner parties.
 
 A BOSH release is a versioned bundle of job templates, and their dependent packages, that describe a complete running system. The developers of a BOSH release benefit by iterating on bespoke application source code, dependency package versions, and configuration file templates all in the one project. The operators of a BOSH release benefit by using a combination of file templates and packages that are exactly the same combination as the developers intended.
 
-We originally encountered [job templates](/instances/#job-templates) and [packages](/instances/#packages) when we were looking inside running BOSH instances. Monit was configured to start and keep processes running. These processes were configured within job templates: how to run the process and how to configure the application within the process. The job templates need software packages to be pre-installed. These packages need to have been pre-compiled from trusted source files.
+We originally encountered [job templates](/instances/#job-templates) and [packages](/instances/#packages) when we were trawling through the inside of BOSH instances. Monit was configured to start and keep processes running. These processes were configured within job templates: how to run the process and how to configure the application within the process. The job templates need software packages to be pre-installed. These packages need to have been pre-compiled from trusted source files.
 
 ## Comparing BOSH Releases to Traditional Software Packages
 
@@ -217,6 +227,22 @@ Not all package systems are awful. The rapid rise of the MacOS [Homebrew](https:
 In the era of Docker and the `Dockerfile`, a growing number of people have started bypassing packaging systems for the explicit declarations of how they want to compile and install software. This scenario is growing because there are many public `Dockerfile`s with examples of explicitly compiling and installing software. One of the primary benefits of Docker and Dockerfiles is to breakdown the walls between packaging/distribution and operations. Packaging and using software is becoming the same role.
 
 BOSH releases also help with transparency and enablement. After you've used a BOSH release, you can quickly discover how the BOSH release is constructed, and then contribute fixes and improvements. The entire tool chain for maintaining a BOSH release is at your finger tips with the `bosh` CLI.
+
+## Comparing BOSH Packages to Traditional Software Packages
+
+There are obvious similarities and some subtle distinctions between the packages within a BOSH release and traditional software packages. Discussing the similarities and differences might help you.
+
+When a BOSH package is installed, during `bosh deploy`, all of its files will be placed within a single folder `/var/vcap/data/packages/package-name/some-long-guid`. Remember, `/var/vcap/data` is a large ephemeral disk, not the possibly small root disk. The job templates do not reference this folder directly. Instead a symlink `/var/vcap/packages/package-name/` will be created. Job templates will need to setup the `$PATH` variable to access the executables within each package.
+
+When a traditional software package is installed, say using `apt-get install package-name`, its files will be placed throughout the file system. The location of files is encoded within the package, and so it cannot benefit from knowledge about large ephemeral disks on the target server.
+
+A BOSH package will be installed with specific dependency packages from the same BOSH release. The BOSH release author curates an explicit pairing of packages that have been tested together. You will deploy exactly the same combination. Your probability of success is higher, and the author's ability to provide support is higher.
+
+A traditional software package can specify very loose dependencies. An operator who updates a software package might not be aware of desirable updates to dependencies. The author of a traditional software package that allows very loose dependencies might never be able to truly test their software against all permutations of dependencies, and the dependencies of those dependencies, and so on.
+
+A BOSH package is transparently authored within its BOSH release, and collocated with the source files and upstream blobs that it uses.
+
+A traditional software package is convenient to install, but can be very difficult to find the source for the packaging scripts and the specific upstream files that went into the installable package.
 
 ## Discovering the Source of a BOSH Release
 

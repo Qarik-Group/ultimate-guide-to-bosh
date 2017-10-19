@@ -18,7 +18,7 @@ You also have the Ultimate Guide to BOSH right in front of you. It has been writ
 
 Register at https://slack.cloudfoundry.org, login, and join the `#bosh` channel.
 
-Dmitriy Kalanin (`@dkalinin`) is the product manager for the BOSH project, its core repositories, and the https://bosh.io website and its subsystems. He also has a range of person Github projects relating to BOSH at https://github.com/cppforlife. His Github username should be a warning: be careful what you tattoo on your social media usernames.
+Dmitriy Kalanin (`@dkalinin`) is the product manager for the BOSH project, its core repositories, and the https://bosh.io website and its subsystems. He also has a range of personal Github projects relating to BOSH at https://github.com/cppforlife. His Github username should be a warning: be careful what you tattoo on your social media usernames.
 
 There are many other BOSH Core and general community members who might be available and might be able to answer your questions.
 

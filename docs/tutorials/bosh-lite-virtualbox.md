@@ -39,8 +39,10 @@ bosh create-env bosh-deployment/bosh.yml \
   -o bosh-deployment/bosh-lite.yml \
   -o bosh-deployment/bosh-lite-runc.yml \
   -o bosh-deployment/jumpbox-user.yml \
+  -o bosh-deployment/uaa.yml \
+  -o bosh-deployment/credhub.yml \
   --vars-store vbox/creds.yml \
-  -v director_name="Bosh Lite Director" \
+  -v director_name="Bosh-Lite-Director" \
   -v internal_ip=192.168.50.6 \
   -v internal_gw=192.168.50.1 \
   -v internal_cidr=192.168.50.0/24 \
@@ -451,8 +453,10 @@ bosh delete-env bosh-deployment/bosh.yml \
   -o bosh-deployment/bosh-lite.yml \
   -o bosh-deployment/bosh-lite-runc.yml \
   -o bosh-deployment/jumpbox-user.yml \
+  -o bosh-deployment/uaa.yml \
+  -o bosh-deployment/credhub.yml \
   --vars-store vbox/creds.yml \
-  -v director_name="Bosh Lite Director" \
+  -v director_name="Bosh-Lite-Director" \
   -v internal_ip=192.168.50.6 \
   -v internal_gw=192.168.50.1 \
   -v internal_cidr=192.168.50.0/24 \
@@ -462,3 +466,18 @@ bosh delete-env bosh-deployment/bosh.yml \
 Visit the VirtualBox application to confirm the VM has been deleted:
 
 ![vbox-no-envs](/images/virtualbox/vbox-no-envs.png)
+
+## SSH into BOSH Environment
+
+```
+mkdir ssh
+chmod 700 ssh
+bosh int vbox/creds.yml --path /jumpbox_ssh/private_key > ssh/vbox.pem
+ssh-add ssh/vbox.pem
+```
+
+Now you can SSH into your BOSH environment using `jumpbox` user:
+
+```
+ssh jumpbox@192.168.50.6
+```

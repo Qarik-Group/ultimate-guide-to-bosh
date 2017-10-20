@@ -244,6 +244,38 @@ A BOSH package is transparently authored within its BOSH release, and collocated
 
 A traditional software package is convenient to install, but can be very difficult to find the source for the packaging scripts and the specific upstream files that went into the installable package.
 
+## Comparing BOSH Releases to Docker Images
+
+A popular tool for describing, distributing, and running software is [Docker](https://www.docker.com/). There is a lot to like about Docker. You can iterate quickly to build and test your Docker images. You can easily upload your Docker image to a central repository. Operators will be running the same Docker image that the author tested.
+
+This is the same delightful experience as shared with BOSH release authors and the operators who deploy the releases.
+
+One distinction between curating BOSH releases and Docker images is responsibility for the base operating system.
+
+A BOSH release makes very light assumptions about the underlying base operating system (provided by a BOSH stemcell). It might assume that `gcc` is installed, and perhaps a few other system libraries. But fundamentally a BOSH release will package all the primary software and dependencies that are used. The author of a BOSH release only needs to monitor the security vulnerabilities of the primary software and dependencies. All BOSH release authors do not need to monitor and patch their BOSH releases for vulnerabilities in the shared base operating system layer. Instead the BOSH stemcells are continously maintained by the BOSH core team.
+
+It is the operators responsibility to ensure that all vulnerabilities are patched in the stemcell and BOSH releases, and that BOSH deployments are updated to use the new stemcells and releases as soon as possible. Fortunately for operators, the `bosh deploy` command makes this very easy for everyone in the team.
+
+A Docker image bundles a base operating system. An operator looking to deploy a Docker image could look at the original `Dockerfile` and discover the intended base operating system:
+
+```dockerfile
+FROM ubuntu:16.04
+```
+
+This Docker image is built upon Canonical Ubuntu 16.04.
+
+Later in the `Dockerfile` we might see that the "latest" packages are being installed:
+
+```dockerfile
+RUN apt-get update && apt-get install curl -y
+```
+
+Unfortunately, this brief description does not communicate the relative recency of neither the base operating system nor the packages. It only indicates that the author/publisher used the latest versions at the time they built that layer of the Docker image.
+
+It is the operators responsibility to ensure that all vulnerabilities are patched as quickly as possible within Docker images, and that running containers are shutdown and restarted to use the new Docker images.
+
+But this responsibility is bottlenecked by each Docker image author's effective stewardship to monitor all vulnerabilities at all layers of the operating system, packaging system, and their own bespoke software.
+
 ## Discovering the Source of a BOSH Release
 
 If you are debugging a BOSH deployment which includes BOSH releases authored by other teams, it can be relatively simple to discover the location of the source code.
@@ -270,7 +302,7 @@ The output of the latter might be:
 
 The `url` value here gives us our answer: https://github.com/cppforlife/zookeeper-release
 
-Alternately, the output might include `url` values that infer the location of the Git repostiory:
+Alternately, the output might include `url` values that infer the location of the Git repository:
 
 ```yaml hl_lines="3 7"
 - name: binary-buildpack

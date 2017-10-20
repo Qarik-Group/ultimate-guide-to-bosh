@@ -1,8 +1,8 @@
 # Releases
 
-Every BOSH deployment describes a set of cloud server, each which is configured to run software that has been installed.
+Every BOSH deployment manifest describes a set of cloud servers, their disks, and the software to be installed, configured, and run.
 
-Using BOSH terminology, a BOSH deployment describes one or more instance groups, resulting in instances, upon each is layered one or more job templates, and each job template can had a dependency on packages. The origin of these job templates and packages will become clear now as we introduce BOSH releases, and the top-level deployment manifest attribute `releases`.
+Stated again using BOSH terminology, a BOSH deployment manifest describes one or more instance groups, resulting in instances, upon each is layered one or more job templates, and each job template can had a dependency on packages. The origin of these job templates and packages will become clear now as we introduce BOSH releases, and the top-level deployment manifest attribute `releases`.
 
 Consider this abridged deployment manifest:
 

@@ -530,7 +530,7 @@ Routinely you will want to upgrade all the base operating systems for all the in
 
 Fortunately, upgrading all your deployments to new BOSH stemcells is a very easy operation and we will definitely we returning to this topic soon. For now, you need to know that this process will result in your application processes being stopped (via Monit), the original servers being deleted (via the CPI), and new servers being created to replace them (via the CPI). Any files written arbitrarily to the filesystem will be lost.
 
-Another routing operation you will perform that causes instances to be stopped, and the servers deleted and replaced, is resizing or scaling up your instances. BOSH CPIs assume that cloud providers do not know how to resizing a running server, so they will emulate "resizing" by deleting the original small server and replacing it with a new larger server. Any files written arbitrarily to the filesystem will be lost.
+Another routine operation you will perform that causes instances to be stopped, and the servers deleted and replaced, is resizing or scaling up your instances. BOSH CPIs assume that cloud providers do not know how to resizing a running server, so they will emulate "resizing" by deleting the original small server and replacing it with a new larger server. Any files written arbitrarily to the filesystem will be lost.
 
 ## Persistent Volumes
 

@@ -279,7 +279,7 @@ Succeeded
 > bosh errands
 ```
 
-Our `zookeeper` deployment has two one-off tasks, called [Errands](/errands) that we can run upon our deployment:
+Our `zookeeper` deployment has two one-off tasks, called [Errands](https://bosh.io/docs/errands.html) that we can run upon our deployment:
 
 ```
 Name
@@ -290,7 +290,7 @@ status
 The purpose and behaviour of these two errands will be documented by the `zookeeper-release` project. From their errand name, and the output of `bosh instances` above, we can infer:
 
 * `bosh run-errand smoke-tests` will use a dedicated new instance to perform some sort of tests, probably upon the running cluster
-* `bosh run-errand status` will check the local status of each `zookeeper` instance. The `status` errand does not have a dedicate instance, so we know it will be invoked within the running instances of the deployment.
+* `bosh run-errand status` will check the local status of each `zookeeper` instance. The `status` errand does not have a dedicated instance, so we know it will be invoked within the running instances of the deployment.
 
 The two errand names do not infer that they are destructive or harmful. Let's run them. Put on your cowboy hat.
 

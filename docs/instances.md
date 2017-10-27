@@ -301,7 +301,7 @@ In summary, all job templates - the configuration of how software is configured 
 
 Job templates must contain a `monit` file, but that `monit` file can be empty if the job template does not require any processes to be run.
 
-Job templates will also be able to provide any configuration files used by the running processes. Some software requires configuration files. Or software might be configured with environment variables. Job templates will be written to suite the software it is configuring to run.
+Job templates will also be able to provide any configuration files used by the running processes. Some software requires configuration files. Or software might be configured with environment variables. Job templates will be written to suit the software it is configuring to run.
 
 Let's look at the files within the `zookeeper` job template on a `zookeeper` deployment instance:
 

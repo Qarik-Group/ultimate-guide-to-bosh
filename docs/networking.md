@@ -185,7 +185,7 @@ instance_groups:
   - name: default
 ```
 
-When the abbreviated `zookeeper-release/manifests/zookeeper.yml` was first introduced in (Deployment manifests, part 1)[#deployment-manifests-part-1] above, the `azs` and `networks` attributes were omitted.
+When the abbreviated `zookeeper-release/manifests/zookeeper.yml` was first introduced in [Deployment manifests, part 1](/deployment-manifests-part-1) above, the `azs` and `networks` attributes were omitted.
 
 Each `instance_groups` item must include an `azs` and `networks` attribute. At a glance you can see that the `azs` values correspond to the `azs` from the sample `cloud-config` above, and the `networks` name `default` corresponds to one of the `cloud-config` `networks` items.
 
@@ -269,7 +269,7 @@ networks:
     reserved: [((internal_gw))/30]
 ```
 
-The `((internal_gw))` variable is used to describe the gateway to the subnet range. If `((internal_gw))` is `10.0.0.1`, then the `reserved: [((internal_gw))/30]` effectively evaluates to `reserved: [10.0.0.0-10.0.0.3]`. We will properly introduce BOSH [Operator files][Operator files](/deployment-updates/#operator-files) and [Variables](/deployment-updates/#deployment-manifest-variables) soon.
+The `((internal_gw))` variable is used to describe the gateway to the subnet range. If `((internal_gw))` is `10.0.0.1`, then the `reserved: [((internal_gw))/30]` effectively evaluates to `reserved: [10.0.0.0-10.0.0.3]`. We will properly introduce BOSH [Operator files](/deployment-updates/#operator-files) and [Variables](/deployment-updates/#deployment-manifest-variables) soon.
 
 ## Gateway
 
@@ -295,7 +295,7 @@ There are two systems of pre-defined IP addresses that you can consider.
 
 ### Manual Static Addresses
 
-Rather than delegate the selection of IP addresses to BOSH, your deployment manifest can explicitly request specific IP addresses for each instance in an instance group. We add the attribute `statip_ips` to our instance group's `networks` section.
+Rather than delegate the selection of IP addresses to BOSH, your deployment manifest can explicitly request specific IP addresses for each instance in an instance group. We add the attribute `static_ips` to our instance group's `networks` section.
 
 The abridged manifest for an instance group with static IPs might be:
 

@@ -295,7 +295,7 @@ There are two systems of pre-defined IP addresses that you can consider.
 
 ### Manual Static Addresses
 
-Rather than delegate the selection of IP addresses to BOSH, your deployment manifest can explicitly request specific IP addresses for each instance in an instance group. We add the attribute `statip_ips` to our instance group's `networks` section.
+Rather than delegate the selection of IP addresses to BOSH, your deployment manifest can explicitly request specific IP addresses for each instance in an instance group. We add the attribute `static_ips` to our instance group's `networks` section.
 
 The abridged manifest for an instance group with static IPs might be:
 

@@ -64,11 +64,11 @@ bosh int vbox/creds.yml --path /admin_password
 ```
 
 ```
+export BOSH_ENVIRONMENT=vbox
 bosh login
 ```
 
 ```
-export BOSH_ENVIRONMENT=vbox
 bosh update-cloud-config bosh-deployment/warden/cloud-config.yml
 ```
 

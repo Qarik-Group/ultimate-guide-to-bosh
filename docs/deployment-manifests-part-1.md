@@ -61,7 +61,7 @@ We will review how the BOSH director performs these transformations of existing 
 
 If we keep this manifest the same, we will always get the same deployment of instances, job templates, and packages year after year. This is achieved by our explicit declaration of `releases`.
 
-In the example above, we explicit require `zookeeper/0.0.7` BOSH release. The `0.0.7` version number is only relative to preceding versions of the same BOSH release, not to any upstream packages. At the time of writing, the `zookeeper` BOSH release being used was packaging Apache ZooKeeper v3.4.10 ([list of source blobs](https://github.com/cppforlife/zookeeper-release/blob/207c9d79eb12399dffe6df7f89abd854d4888f3e/config/blobs.yml)).
+In the example above, we explicitly require `zookeeper/0.0.7` BOSH release. The `0.0.7` version number is only relative to preceding versions of the same BOSH release, not to any upstream packages. At the time of writing, the `zookeeper` BOSH release being used was packaging Apache ZooKeeper v3.4.10 ([list of source blobs](https://github.com/cppforlife/zookeeper-release/blob/207c9d79eb12399dffe6df7f89abd854d4888f3e/config/blobs.yml)).
 
 If you deployed `zookeeper/0.0.7` every day for a year, you would always be deploying Apache ZooKeeper v3.4.10 as it is packaged inside the BOSH release. It would always use the same Monit control script, the same Monit start/stop wrapper script, and the same configuration templates.
 

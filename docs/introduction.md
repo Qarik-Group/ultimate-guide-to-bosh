@@ -97,7 +97,7 @@ bosh delete-deployment
 
 ## What is BOSH?
 
-BOSH is project of the Cloud Foundry Foundation. It was originally created to help the developers of Cloud Foundry to absolutely describe and test each commit and each release; and to help the site reliability engineers (SREs) tasked with running Cloud Foundry as a service.
+BOSH is a project of the Cloud Foundry Foundation. It was originally created to help the developers of Cloud Foundry to absolutely describe and test each commit and each release; and to help the site reliability engineers (SREs) tasked with running Cloud Foundry as a service.
 
 Cloud Foundry has a micro-services architecture - bespoke applications written in Ruby, Java, C, and Golang - combined with stateful data services such as PostgreSQL, Redis, and local disks for storing user-uploaded application code. The developers wanted to work with the SREs to reduce the time of upgrades to new releases, to reduce the time between new releases, to reduce the time to deploy security fixes, and to help SREs and developers communicate about issues in production.
 

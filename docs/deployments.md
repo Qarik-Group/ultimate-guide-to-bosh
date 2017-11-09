@@ -45,7 +45,7 @@ Let's revisit each of these actions for the specific case of our 5-instance depl
 > bosh deploy zookeeper-release/manifests/zookeeper.yml
 ```
 
-Inside `zookeeper.yml` is the description of an group of five instances, each with a 10GB persistent disk volume (we will review the contents of this file soon).
+Inside `zookeeper.yml` is the description of a group of five instances, each with a 10GB persistent disk volume (we will review the contents of this file soon).
 
 * BOSH sends requests to AWS API for five EC2 VMs, using a specified Amazon Machine Image (AMI) as the base file system/operating system
 * BOSH will manage the allocation of IPs within the VPC subnet rather than using DHCP (more on networking later)
@@ -87,7 +87,7 @@ The BOSH CLI forwards this file on to the BOSH director.
 
 The BOSH director decides that it is a new deployment (it has a name that the BOSH director does not know yet). The BOSH director decides it needs to provision five new virtual machines and five persistent disks (we will investigate the contents of `zookeeper.yml` soon). The BOSH director delegates this activity to the BOSH CPI for AWS (where we are attempting to deploy ZooKeeper in our example).
 
-The BOSH CPI is a local command line application hosted inside the BOSH director. You will never need to touch it, find it, or run it manually. But it can be helpful to understand its nature. A CPI - the abstraction for how an BOSH director can interact with any cloud infrastructure - is just a CLI. The BOSH director - a long-running HTTP API process - calls out to the CPI executable and invokes commands using a JSON payload. When the CPI completes its task - creating a VM, creating a disk, etc - it will return JSON with success/failure information.
+The BOSH CPI is a local command line application hosted inside the BOSH director. You will never need to touch it, find it, or run it manually. But it can be helpful to understand its nature. A CPI - the abstraction for how a BOSH director can interact with any cloud infrastructure - is just a CLI. The BOSH director - a long-running HTTP API process - calls out to the CPI executable and invokes commands using a JSON payload. When the CPI completes its task - creating a VM, creating a disk, etc - it will return JSON with success/failure information.
 
 For ZooKeeper running on AWS, our BOSH director will be running with the AWS CPI CLI (TLA BINGO - three, three letter acronyms in a row) installed on the same server. The combination of the BOSH director and a collocated CPI CLI is the magic of how a BOSH director can be configured to communicate with any cloud infrastructure. The CPI CLIs can be written in different programming languages than BOSH director, and be maintained by different engineering teams at different companies. It is a wonderful, powerful design pattern.
 

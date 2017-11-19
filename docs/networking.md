@@ -337,11 +337,11 @@ instance_groups:
     default: [dns, gateway]
   - name: elastic
     static_ips:
-    - 10.0.0.220
-    - 10.0.0.221
-    - 10.0.0.222
-    - 10.0.0.223
-    - 10.0.0.224
+    - 54.1.2.3
+    - 56.2.3.4
+    - 58.4.5.6
+    - 123.1.2.3
+    - 124.2.3.4
 ```
 
 This deployment manifest example for AWS uses two `networks`, which map to the two `networks` from the AWS `cloud-config` example earlier by their names `default` and `elastic`:

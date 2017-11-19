@@ -46,7 +46,7 @@ When we discuss using BOSH in different infrastructures, we will look at some sp
 
 ## Example Networking in Cloud-Config
 
-To help frame the mini guide to networking, I'll first introduce where networking configuration appears within `bosh cloud-config` and deployment manifests.
+To help frame this mini-guide to networking, I'll first introduce where networking configuration appears within `bosh cloud-config` and deployment manifests.
 
 ### Networking Configuration in Cloud-Config
 

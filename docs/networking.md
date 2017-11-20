@@ -28,7 +28,7 @@ When processes within a distributed system cannot discover or communicate with i
 
 ### Discovering That a Distributed System is Failing is Nontrivial
 
-A process might refuse to start successfully because it cannot connect to a dependent subsystem. Monit will then restart that process over and over infinitely. Another process might start running even if it cannot access its dependencies, but when users interact with that process it might when return errors. Or it might provide a subset of normal behaviour, rather than explicitly error. Some erroneous behaviour might be intermittent.
+A process might refuse to start successfully because it cannot connect to a dependent subsystem. Monit will then restart that process over and over infinitely. Another process might start running even if it cannot access its dependencies, but when users interact with that process it might then return errors. Or it might provide a subset of normal behaviour, rather than explicitly error. Some erroneous behaviour might be intermittent.
 
 ### Debugging a Distributed System is Nontrivial
 
@@ -46,7 +46,7 @@ When we discuss using BOSH in different infrastructures, we will look at some sp
 
 ## Example Networking in Cloud-Config
 
-To help frame the mini guide to networking, I'll first introduce where networking configuration appears within `bosh cloud-config` and deployment manifests.
+To help frame this mini-guide to networking, I'll first introduce where networking configuration appears within `bosh cloud-config` and deployment manifests.
 
 ### Networking Configuration in Cloud-Config
 

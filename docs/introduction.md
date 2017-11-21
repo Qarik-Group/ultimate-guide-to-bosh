@@ -107,7 +107,7 @@ The solution was:
 
 * to have an absolute declaration of what specific versions of all bespoke and upstream projects combined together to form a "release";
 * to own responsibility for the lifecycle of the underlying infrastructure upon which Cloud Foundry would run, including healing activities after infrastructure failures;
-* to own responsibility for pushing out security patches to the base operating systems, the bespoke code, and the upstream dependencies
+* to own responsibility for pushing out security patches to the base operating systems, the bespoke code, and the upstream dependencies;
 * to give developers and SREs the same tool to use thus removing "it works on my machine" scenarios
 
 The "tool" that implemented this solution is a running server - a BOSH environment - which:
@@ -130,8 +130,8 @@ The publisher of software ultimately cares about their users **running** their s
 Any system that runs for a few years will go through the following events:
 
 * **Upgrades to primary software.** For example, upgrading to new Apache ZooKeeper versions within a running cluster of ZooKeeper.
-* **Upgrades to secondary software dependencies.** For example, ZooKeeper runs upon Java so a ZooKeeper cluster will need to upgrade to new Java versions. We will need to perform dependency upgrades at the very least for push out critical security fixes. We might always want to use newer dependencies if they improve performance, reduce CPU or RAM usage, or have additional features. We might also need to upgrade dependencies if our primary software ceases to support ageing dependencies.
-* **Upgrades to operating system kernels and core software.** If your system is running upon an Ubuntu host machine and/or an Ubuntu container image, then you will need to upgrade or replace the base host machine and/or the containers as soon as possible after the security notices are published. For example, see [Ubuntu Security Notices](https://usn.ubuntu.com/usn/). Security vulnerabilities are continually discovered within all layers of each operating system distribution and pushed out throughout the year.
+* **Upgrades to secondary software dependencies.** For example, ZooKeeper runs upon Java so a ZooKeeper cluster will need to upgrade to new Java versions. We will need to perform dependency upgrades to, at the very least, push out critical security fixes. We might always want to use newer dependencies if they improve performance, reduce CPU or RAM usage, or have additional features. We might also need to upgrade dependencies if our primary software ceases to support ageing dependencies.
+* **Upgrades to operating system kernels and core software.** If your system is running upon a Ubuntu host machine and/or a Ubuntu container image, then you will need to upgrade or replace the base host machine and/or the containers as soon as possible after the security notices are published. For example, see [Ubuntu Security Notices](https://usn.ubuntu.com/usn/). Security vulnerabilities are continually discovered within all layers of each operating system distribution and pushed out throughout the year.
 * **Resizing of the infrastructure.** As a system becomes increasingly used by end users, or as it acquires more data, it will need to grow. Persistent disks will need to be enlarged. Host machines will need to be replaced by larger machines. Container constraints may need to be increased.
 * **Healing of the infrastructure.** Host machines disappear. Physical disks can corrupt. Your users' systems will need to heal.
 * **Debugging of the software and its dependencies.** The brilliance of self-hosting your own software as a service is that only your team needs to debug your software. Conversely, when you distribute your software to other operations teams, it will be those teams that need to debug the entire system. They will want to be able to perform remediation if they can. If not, next they will want to help the software publisher with debugging and resolution. They want their system to be running and healthy. They want their own end users to be happy.
@@ -150,7 +150,7 @@ Publishing a BOSH release is like taking your users on a packaged, guided tour o
 
 Shipping them installable software to end users is like a leaving a Post-It Note on their fridge, "We went to Rome. You should go some day."
 
-Publishing a BOSH release shows that you care about your users' long term success running the systems.
+Publishing a BOSH release shows that you care about your users' long-term success in running the system.
 
 Only shipping installable software is like saying "Works on my machine."
 
@@ -158,13 +158,13 @@ Only shipping installable software is like saying "Works on my machine."
 
 I did not invent BOSH. A group of engineers from the Cloud Foundry project at VMWare conceived of BOSH and built the first iteration of BOSH. BOSH is architecturally still very similar to its original public incarnation in 2012.
 
-Nor have I ever worked on BOSH as a full-time job. The BOSH project is sponsored heavily by full-time employees from Pivotal, as well as IBM, and other Cloud Foundry Foundation members. Your joy and happiness from BOSH is in huge thanks to VMWare, Pivotal, IBM, Stark & Wayne and the vast community of contributors who have contributed in large and small to make it fantastic.
+Nor have I ever worked on BOSH as a full-time job. The BOSH project is sponsored heavily by full-time employees from Pivotal, as well as IBM, and other Cloud Foundry Foundation members. Your joy and happiness from BOSH is in huge thanks to VMWare, Pivotal, IBM, Stark & Wayne and the vast community of contributors who have contributed in large and small ways to make it fantastic.
 
 My initial role in the history of BOSH was small - I was one of the first people outside VMWare to be publicly excited about BOSH. My relationship with BOSH and its community has snowballed ever since.
 
 In the years before BOSH, I was the VP of Technology at Engine Yard. Engine Yard was a "devops as a service" or "platform as a service" company. Or more crassly, it was a web hosting company.
 
-Several years earlier, the Engine Yard platform had been hastily prototyped on the new AWS platform using an also-new configuration management tool called Chef. The Engine Yard platform worked and many customers' entire business ran successfully upon it to this day. The internal cost for allowing customers to continually run their applications - even if they didn't want to upgrade and maintain their code bases - was tremendous. Upgrading the Engine Yard platform was difficult. The surface area of the implicit contract we made with customers - the base operating system, available packages, the version of Chef - was vast. Every change we wanted to make needed to be considered from the perspective of 2000 different web applications, run by 2000 different development teams, running 2000 different business.
+Several years earlier, the Engine Yard platform had been hastily prototyped on the new AWS platform using an also-new configuration management tool called Chef. The Engine Yard platform worked and many customers' entire business run successfully upon it to this day. The internal cost of allowing customers to continually run their applications - even if they didn't want to upgrade and maintain their code bases - was tremendous. Upgrading the Engine Yard platform was difficult. The surface area of the implicit contract we made with customers - the base operating system, available packages, the version of Chef - was vast. Every change we wanted to make needed to be considered from the perspective of 2000 different web applications, run by 2000 different development teams, running 2000 different business.
 
 Some of our internal systems were not as automated as others. We did not have a nice way to publish new AMIs to AWS. Since we didn't publish new AMIs, we also didn't initially have a way to share them with customers. We had spent a year preparing, curating, and releasing the second-ever edition of our base AMI, when I saw BOSH for the first time. The demonstration I was shown was incredible - a small change was made to a YAML file, they run `bosh deploy`, and in the vCenter window it could be seen that all the VMs were being progressively destroyed and replaced by new ones built upon a new base machine image, with newly compiled packages for that machine image. It was also replacing VMs with bigger ones. And it was resizing the persistent disks for the databases. BOSH was incredible.
 
@@ -182,10 +182,10 @@ In 2013, the BOSH project was taken over by Pivotal engineering and has been gif
 
 There are many people in the history of BOSH who have directly made BOSH what it is, actively sponsored its investment, or evangelised it.
 
-* James Watters, SVP Product at Pivotal, has been the loudest cheerleader of BOSH on the planet
-* Ferran Rodenas, has been my BOSH friend since 2012 and who created some of the greatest BOSH community contributions, including [docker-boshrelease](https://github.com/cloudfoundry-community/docker-boshrelease)
+* James Watters, SVP Product at Pivotal, has been the loudest cheerleader of BOSH on the planet.
+* Ferran Rodenas, has been my BOSH friend since 2012 and who created some of the greatest BOSH community contributions, including [docker-boshrelease](https://github.com/cloudfoundry-community/docker-boshrelease).
 * James Bayer, VP Project Management at Pivotal, was the creator of the Clam logo for BOSH. I love the clam.
-* Dmitriy Kalinin, Product Manager for BOSH, has been driving his incredible vision for BOSH
+* Dmitriy Kalinin, Product Manager for BOSH, has been driving his incredible vision for BOSH.
 * Original BOSH team at VMware - Mark Lucovsky, Vadim Spivak, Oleg Shaldybin, Martin Englund - who had the original vision and execution to create the ultimate tool for release engineering, deployment, lifecycle management, and monitoring of distributed systems.
 * Stark & Wayne staff - I've been ever so lucky to have started an organisation that has attracted so many wonderful team members around the world, who've gone on to continuously expand the BOSH ecosystem with releases, tools, and 200+ blog posts.
 
@@ -193,7 +193,7 @@ There are many people in the history of BOSH who have directly made BOSH what it
 
 BOSH is the core technology to Pivotal Ops Manager and its Pivotal Network delivery system for complex on-premise software systems. BOSH is the deployment technology used behind the scenes for [Pivotal Web Services](https://run.pivotal.io) which runs upon AWS.
 
-BOSH is the deployment technology used behind the scenes by [IBM BlueMix](https://www.ibm.com/cloud-computing/bluemix/) on its Soft Layer infrastructure.
+BOSH is the deployment technology used behind the scenes by [IBM BlueMix](https://www.ibm.com/cloud-computing/bluemix/) on its SoftLayer infrastructure.
 
 BOSH is the deployment technology used by GE [Predix](https://www.predix.io/) which runs on various clouds and data centres.
 
@@ -205,11 +205,11 @@ On the smaller end - our consultancy [Stark & Wayne](https://www.starkandwayne.c
 
 ## Why Write the Ultimate Guide to BOSH?
 
-I have been using BOSH since 2012. Since then I have not found any system like BOSH despite the fast paced and highly competitive fields of Platforms, Containers, DevOps, and Cloud Infrastructure.
+I have been using BOSH since 2012. I have yet to find any system like BOSH, despite the fast paced and highly competitive fields of Platforms, Containers, DevOps, and Cloud Infrastructure.
 
 I didn't want to write a book. I had written a PhD thesis in 2001 and six people read it (two supervisors, three judges, and myself). Fortunately, this is enough people to be awarded a doctorate. Unfortunately, it doesn't really qualify as "sharing knowledge."
 
-I wrote my first blog post in 2006 and when I quickly reached seven subscribers; I knew I'd found my preferred medium for sharing.
+I wrote my first blog post in 2006, and when I quickly reached seven subscribers; I knew I'd found my preferred medium for sharing.
 
 I enjoy the continuous publication and feedback loop of blogging, and of sharing open source projects. I enjoy a relaxed writing style.
 

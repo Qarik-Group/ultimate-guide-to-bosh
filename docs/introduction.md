@@ -193,7 +193,7 @@ There are many people in the history of BOSH who have directly made BOSH what it
 
 BOSH is the core technology to Pivotal Ops Manager and its Pivotal Network delivery system for complex on-premise software systems. BOSH is the deployment technology used behind the scenes for [Pivotal Web Services](https://run.pivotal.io) which runs upon AWS.
 
-BOSH is the deployment technology used behind the scenes by [IBM BlueMix](https://www.ibm.com/cloud-computing/bluemix/) on its SoftLayer infrastructure.
+BOSH is the deployment technology used behind the scenes by [IBM Cloud](https://www.ibm.com/cloud/).
 
 BOSH is the deployment technology used by GE [Predix](https://www.predix.io/) which runs on various clouds and data centres.
 

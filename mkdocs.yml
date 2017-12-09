@@ -24,10 +24,9 @@ pages:
   - Ask For Help:
     - Suggestions: ask-for-help/suggestions.md
 
-theme: 'material'
-theme_dir: 'theme-overrides'
-
-extra:
+theme:
+  name: 'material'
+  custom_dir: 'theme-overrides'
   palette:
     primary: 'orange'
     accent: 'amber'

@@ -4,7 +4,7 @@ One of the first demonstrations of BOSH I ever saw in April 2012 was "let's resi
 
 As a user, it is just two steps:
 
-1. change the persisent disk size or selected a different persisent disk type in the deployment manifest
+1. change the persisent disk size or select a different persisent disk type in the deployment manifest
 1. run `bosh deploy` to request the BOSH director orchestrate the changes
 
 The BOSH director will now orchestrate the following sequence for you:
@@ -58,7 +58,7 @@ If there is a persistent disk mounted at `/var/vcap/store` then the file `/var/v
 
 If there is no persistent disk mounted at `/var/vcap/store`, then the file `/var/vcap/store/zookeeper/mydb.dat` will be be stored upon the root volume `/`. The root volume is typically small (large enough only for the system's packages), ephemeral (changes to the root volume will be lost when the cloud server is recreated), and fixed in size (root volumes are typically not resized during the life of a deployment). Eventually the root volume will fill up and the instance's processes and perhaps system processes will begin to fail.
 
-If your instances are ever experiencing failure, run `df -h` to check that your disks have not filled up. If the root volume `/` is at 100% then you have probably forgotten to include a persistent disk; or a job template has an mistake in it and is writing files outside of `/var/vcap/store` or `/var/vcap/data` volumes.
+If your instances are ever experiencing failure, run `df -h` to check that your disks have not filled up. If the root volume `/` is at 100% then you have probably forgotten to include a persistent disk; or a job template has a mistake in it and is writing files outside of `/var/vcap/store` or `/var/vcap/data` volumes.
 
 ## Simple Persistent Disk
 

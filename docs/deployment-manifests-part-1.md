@@ -140,7 +140,7 @@ These were the only attributes in our manifest subset that were easily modifiabl
 Conversely, the following attributes of the manifest were not easily modifiable:
 
 * the `name` of each item in the `releases` section comes from the BOSH release we use; we cannot rename or alias them within the manifest
-* the `verion` and `url` are related to each other to describe which BOSH release to use; if we want to upgrade to a newer release we would change these
+* the `version` and `url` are related to each other to describe which BOSH release to use; if we want to upgrade to a newer release we would change these
 * within `jobs` sections of instance groups the `release` must match one of the names in the top-level `releases` section. At the top-level these are immutable, so they are correspondingly immutable within the `jobs` sections of instance groups.
 * within `jobs` sections of instance groups, the `name` of a job template is derived from the BOSH release itself (more on this soon), and cannot be renamed or aliased within a deployment manifest.
 
@@ -220,7 +220,7 @@ instance_groups:
     release: zookeeper
 ```
 
-The name `default` is not particularly meaningful. If the deployment manifest above there is no indication of the amount of resources each `zookeeper` cloud server will be allocated on the target cloud infrastructure. 1GB RAM or 16GB? How many CPUs?
+The name `default` is not particularly meaningful. In the deployment manifest above there is no indication of the amount of resources each `zookeeper` cloud server will be allocated on the target cloud infrastructure. 1GB RAM or 16GB? How many CPUs?
 
 As a counter example, the community method for deploying Cloud Foundry assumes that your `cloud-config` contains multiple `vm_types` that are named ([see `cf-deployment.yml`](https://github.com/cloudfoundry/cf-deployment/blob/master/cf-deployment.yml)):
 

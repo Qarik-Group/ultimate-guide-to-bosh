@@ -25,7 +25,7 @@ zookeeper/bc988e19-a8e6-41c4-bc2d-3cad00306aef    running        10.0.0.8
 Succeeded
 ```
 
-This is my 5-node cluster of ZooKeper, running on one cloud infrastructure or another.
+This is my 5-node cluster of ZooKeeper, running on one cloud infrastructure or another.
 
 We can see that all the `zookeeper` instances are `running`. There is a sixth instance `smoke-tests` which does not have a Process State. It is an errand instance which has no VM running for it at the time the instances were listed.
 

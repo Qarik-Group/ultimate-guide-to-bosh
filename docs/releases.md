@@ -2,7 +2,7 @@
 
 Every BOSH deployment manifest describes a set of cloud servers, their disks, and the software to be installed, configured, and run.
 
-Stated again using BOSH terminology, a BOSH deployment manifest describes one or more instance groups, resulting in instances, upon each is layered one or more job templates, and each job template can had a dependency on packages. The origin of these job templates and packages will become clear now as we introduce BOSH releases, and the top-level deployment manifest attribute `releases`.
+Stated again using BOSH terminology, a BOSH deployment manifest describes one or more instance groups, resulting in instances, upon each is layered one or more job templates, and each job template can have a dependency on packages. The origin of these job templates and packages will become clear now as we introduce BOSH releases, and the top-level deployment manifest attribute `releases`.
 
 Consider this abridged deployment manifest:
 
@@ -47,7 +47,7 @@ You can manually upload a BOSH release using the `bosh upload-release` command:
 > bosh upload-release https://bosh.io/d/github.com/cppforlife/zookeeper-release?v=0.0.7
 ```
 
-This URL must ultimately resolve to a file original produced by the `bosh create-release` command. Later in the Ultimate Guide to BOSH you will learn how to create and publish your own BOSH releases.
+This URL must ultimately resolve to a file originally produced by the `bosh create-release` command. Later in the Ultimate Guide to BOSH you will learn how to create and publish your own BOSH releases.
 
 Approximately, `bosh upload-release https://url/to/someone-else-release-1.2.3.tgz` is similar to using a package manager to install a pre-created package, such as Debian `apt-get install someone-eles-package`.
 
@@ -165,7 +165,7 @@ One omission from BOSH release specifications is that there is no declaration of
 
 Ideally, a BOSH release blobs will be the original files from their original locations, and the authors will document from where these blobs are being sourced. If patches need to be applied to these projects, then this can be done during the compilation phase of a package.
 
-If your BOSH release does not document any metadata about the origins of each blob, then can always download the blobs and look inside them.
+If your BOSH release does not document any metadata about the origins of each blob, you can always download the blobs and look inside them.
 
 To fetch all the blobs referenced in the current `config/blobs.yml` file:
 

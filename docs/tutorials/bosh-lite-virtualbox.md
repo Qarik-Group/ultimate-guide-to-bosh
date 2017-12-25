@@ -108,7 +108,7 @@ git clone https://github.com/cppforlife/zookeeper-release
 cat zookeeper-release/manifests/zookeeper.yml
 ```
 
-This base deployment manifest is lovely. It has no Variables[Variables](/deployment-updates/#deployment-manifest-variables); it "Just Works".
+This base deployment manifest is lovely. It has no [Variables](/deployment-updates/#deployment-manifest-variables); it "Just Works".
 
 We can confirm that our `BOSH_DEPLOYMENT` name is correct:
 

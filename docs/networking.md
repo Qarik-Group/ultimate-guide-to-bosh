@@ -12,7 +12,7 @@ Instead, the sociopaths involved in computer networking made them look like:
 
 I will try hard to never discuss [IPv6](https://en.wikipedia.org/wiki/IPv6_address) again.
 
-As a consumer of computers, networking and addressing of computers talking to each other is hidden. `google.com` in a browser just works. For there you go to other URLs and their pages appear in your browser. It all just works. But you're no longer a consumer of computers. You are a purveyor of fine software systems.
+As a consumer of computers, networking and addressing of computers talking to each other is hidden. `google.com` in a browser just works. From there you go to other URLs and their pages appear in your browser. It all just works. But you're no longer a consumer of computers. You are a purveyor of fine software systems.
 
 ## Why Learn Networking?
 

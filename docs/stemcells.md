@@ -45,7 +45,7 @@ stemcells:
 
 Although each BOSH release will have an implicit preference for a stemcell (most BOSH releases are developed/tested/deployed against Ubuntu stemcells), there is no metadata or contract within a BOSH release to help `bosh deploy` fail fast or fail with helpful error messages if you use the wrong stemcell.
 
-In the case of the `zookeeper` deployment manifest, the selection of an `os: ubuntu-trusty` stemcell can discovered from the project's own [sample deployment manifest](https://github.com/cppforlife/zookeeper-release/blob/6f073fdbbf411babbde11085abb7f43cced8b8d3/manifests/zookeeper.yml#L9-L12). Good BOSH releases or deployment projects will provide sample BOSH deployment manifests.
+In the case of the `zookeeper` deployment manifest, the selection of an `os: ubuntu-trusty` stemcell can be discovered from the project's own [sample deployment manifest](https://github.com/cppforlife/zookeeper-release/blob/6f073fdbbf411babbde11085abb7f43cced8b8d3/manifests/zookeeper.yml#L9-L12). Good BOSH releases or deployment projects will provide sample BOSH deployment manifests.
 
 The selection of `os: ubuntu-trusty` means that the BOSH director must already have an `ubuntu-trusty` stemcell preloaded before running `bosh deploy`. At the time of writing there is no facilities in the BOSH CLI nor BOSH director to automatically discover, download, and install the required stemcell for a deployment manifest.
 
@@ -98,7 +98,7 @@ You can discover stemcells for your CPI at http://bosh.io/stemcells. At the time
 
 The Ubuntu stemcells are the most commonly used base images, are the most battle tested in production systems around the world, and seem to the author to have the most security updates pushed out. I would recommend you always use an Ubuntu stemcell unless you have a strong requirement to choose an alternate.
 
-The BOSH release you are deployment will have a specific requirement for either a Linux or Windows stemcell. If the BOSH release specifically requires CentOS Linux, then it will indicate this in its documentation and sample deployment manifests.
+The BOSH release you are deploying will have a specific requirement for either a Linux or Windows stemcell. If the BOSH release specifically requires CentOS Linux, then it will indicate this in its documentation and sample deployment manifests.
 
 ## Light Stemcells
 

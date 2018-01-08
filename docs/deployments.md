@@ -115,7 +115,7 @@ In the Google Cloud Platform console, your list of VM instances (including a NAT
 
 ![zookeeper-deployment-google](images/zookeeper-deployment-google.png)
 
-Never used VMWare vSphere before? Here is the command for deploying a five ESXi virtual machines using a concept of persistent disks, on any cluster of physical servers in the world. And they will be ZooKeeper:
+Never used VMWare vSphere before? Here is the command for deploying five ESXi virtual machines using a concept of persistent disks, on any cluster of physical servers in the world. And they will be ZooKeeper:
 
 ```
 > bosh deploy zookeeper-release/manifests/zookeeper.yml

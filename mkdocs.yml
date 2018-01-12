@@ -51,3 +51,4 @@ repo_name: 'help fix the book'
 repo_url: 'https://github.com/starkandwayne/ultimate-guide-to-bosh'
 edit_uri: edit/master/docs/
 extra_css: [print.css]
+google_analytics: ['UA-50822525-5', 'utlimateguidetobosh.com']

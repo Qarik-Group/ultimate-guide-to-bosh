@@ -14,7 +14,7 @@ Later in the guide you will deploy your own BOSH and use it to deploy systems. A
 
 If you'd like to share a section with someone, wave your mouse cursor over the heading and a permanent link icon will appear. You can click it or copy it. It is my invisible gift to you so you can give to others.
 
-If you'd like to fix some spelling, some grammar, or help out with the guide in some way, there is an "edit" button at the top right of each page. This will link you to the Github project page and let you submit a pull request. Good things happen to people who submits pull requests.
+If you'd like to fix some spelling, some grammar, or help out with the guide in some way, there is an "edit" button at the top right of each page. This will link you to the Github project page and let you submit a pull request. Good things happen to people who submit pull requests.
 
 Each text block has a copy-and-paste icon. Click it to copy the text block into your clipboard.
 
@@ -121,7 +121,7 @@ Today, small teams and large businesses are using BOSH to run a wide variety of 
 
 Some teams use it only for its provisioning/infrastructure lifecycles features, and use their own packaging, container, and configuration management tools.
 
-Some teams put their BOSH environment behind an API, such as the Open Service Broker API, and dynamically provision and de-provision entire systems on demand. For example, Pivotal Container Services is an API driven system to deploy entire Kubernetes clusters, all using BOSH.
+Some teams put their BOSH environment behind an API, such as the Open Service Broker API, and dynamically provision and de-provision entire systems on demand. For example, [Pivotal Container Services](https://pivotal.io/platform/pivotal-container-service) is an API driven system to deploy entire Kubernetes clusters, all using BOSH.
 
 ## Help Users Run Long-Term Systems
 
@@ -131,7 +131,7 @@ Any system that runs for a few years will go through the following events:
 
 * **Upgrades to primary software.** For example, upgrading to new Apache ZooKeeper versions within a running cluster of ZooKeeper.
 * **Upgrades to secondary software dependencies.** For example, ZooKeeper runs upon Java so a ZooKeeper cluster will need to upgrade to new Java versions. We will need to perform dependency upgrades to, at the very least, push out critical security fixes. We might always want to use newer dependencies if they improve performance, reduce CPU or RAM usage, or have additional features. We might also need to upgrade dependencies if our primary software ceases to support ageing dependencies.
-* **Upgrades to operating system kernels and core software.** If your system is running upon a Ubuntu host machine and/or a Ubuntu container image, then you will need to upgrade or replace the base host machine and/or the containers as soon as possible after the security notices are published. For example, see [Ubuntu Security Notices](https://usn.ubuntu.com/usn/). Security vulnerabilities are continually discovered within all layers of each operating system distribution and pushed out throughout the year.
+* **Upgrades to operating system kernels and core software.** If your system is running upon an Ubuntu host machine and/or an Ubuntu container image, then you will need to upgrade or replace the base host machine and/or the containers as soon as possible after the security notices are published. For example, see [Ubuntu Security Notices](https://usn.ubuntu.com/usn/). Security vulnerabilities are continually discovered within all layers of each operating system distribution and pushed out throughout the year.
 * **Resizing of the infrastructure.** As a system becomes increasingly used by end users, or as it acquires more data, it will need to grow. Persistent disks will need to be enlarged. Host machines will need to be replaced by larger machines. Container constraints may need to be increased.
 * **Healing of the infrastructure.** Host machines disappear. Physical disks can corrupt. Your users' systems will need to heal.
 * **Debugging of the software and its dependencies.** The brilliance of self-hosting your own software as a service is that only your team needs to debug your software. Conversely, when you distribute your software to other operations teams, it will be those teams that need to debug the entire system. They will want to be able to perform remediation if they can. If not, next they will want to help the software publisher with debugging and resolution. They want their system to be running and healthy. They want their own end users to be happy.
@@ -164,7 +164,7 @@ My initial role in the history of BOSH was small - I was one of the first people
 
 In the years before BOSH, I was the VP of Technology at Engine Yard. Engine Yard was a "devops as a service" or "platform as a service" company. Or more crassly, it was a web hosting company.
 
-Several years earlier, the Engine Yard platform had been hastily prototyped on the new AWS platform using an also-new configuration management tool called Chef. The Engine Yard platform worked and many customers' entire business run successfully upon it to this day. The internal cost of allowing customers to continually run their applications - even if they didn't want to upgrade and maintain their code bases - was tremendous. Upgrading the Engine Yard platform was difficult. The surface area of the implicit contract we made with customers - the base operating system, available packages, the version of Chef - was vast. Every change we wanted to make needed to be considered from the perspective of 2000 different web applications, run by 2000 different development teams, running 2000 different business.
+Several years earlier, the Engine Yard platform had been hastily prototyped on the new AWS platform using an also-new configuration management tool called Chef. The Engine Yard platform worked and many customers' entire business run successfully upon it to this day. The internal cost of allowing customers to continually run their applications - even if they didn't want to upgrade and maintain their code bases - was tremendous. Upgrading the Engine Yard platform was difficult. The surface area of the implicit contract we made with customers - the base operating system, available packages, the version of Chef - was vast. Every change we wanted to make needed to be considered from the perspective of 2000 different web applications, run by 2000 different development teams, running 2000 different businesses.
 
 Some of our internal systems were not as automated as others. We did not have a nice way to publish new AMIs to AWS. Since we didn't publish new AMIs, we also didn't initially have a way to share them with customers. We had spent a year preparing, curating, and releasing the second-ever edition of our base AMI, when I saw BOSH for the first time. The demonstration I was shown was incredible - a small change was made to a YAML file, they run `bosh deploy`, and in the vCenter window it could be seen that all the VMs were being progressively destroyed and replaced by new ones built upon a new base machine image, with newly compiled packages for that machine image. It was also replacing VMs with bigger ones. And it was resizing the persistent disks for the databases. BOSH was incredible.
 
@@ -180,7 +180,7 @@ Many of those early presentations and guides were helpful to the many people who
 
 In 2013, the BOSH project was taken over by Pivotal engineering and has been gifted to the Cloud Foundry Foundation to secure its long term success as an open source, open community project. Thanks to Pivotal, IBM, and other members of the Cloud Foundry Foundation, the BOSH project has received huge consistent investment to this day.
 
-There are many people in the history of BOSH who have directly made BOSH what it is, actively sponsored its investment, or evangelised it.
+There are many people in the history of BOSH who have directly made BOSH what it is, actively sponsored its investment, or evangelized it.
 
 * James Watters, SVP Product at Pivotal, has been the loudest cheerleader of BOSH on the planet.
 * Ferran Rodenas, has been my BOSH friend since 2012 and who created some of the greatest BOSH community contributions, including [docker-boshrelease](https://github.com/cloudfoundry-community/docker-boshrelease).
@@ -215,7 +215,7 @@ I enjoy the continuous publication and feedback loop of blogging, and of sharing
 
 I didn't want to write a "book" book. Not a boring book. Not a reference book.
 
-I want to share all the wonders of BOSH with you. I want you to use BOSH. I want you to feel great using BOSH. I want you to feel like a superhero. I want you to convince your friends and colleagues to use BOSH. I want you to help me evangelise BOSH.
+I want to share all the wonders of BOSH with you. I want you to use BOSH. I want you to feel great using BOSH. I want you to feel like a superhero. I want you to convince your friends and colleagues to use BOSH. I want you to help me evangelize BOSH.
 
 I want this to be a book that you enjoy reading. I hope you enjoy my manner of introducing each topic, and how the topics segue as we gradually introduce more complex topics. I hope you enjoy my sense of humour.
 

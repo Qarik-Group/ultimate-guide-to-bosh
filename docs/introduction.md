@@ -180,7 +180,7 @@ Many of those early presentations and guides were helpful to the many people who
 
 In 2013, the BOSH project was taken over by Pivotal engineering and has been gifted to the Cloud Foundry Foundation to secure its long term success as an open source, open community project. Thanks to Pivotal, IBM, and other members of the Cloud Foundry Foundation, the BOSH project has received huge consistent investment to this day.
 
-There are many people in the history of BOSH who have directly made BOSH what it is, actively sponsored its investment, or evangelized it.
+There are many people in the history of BOSH who have directly made BOSH what it is, actively sponsored its investment, or evangelised it.
 
 * James Watters, SVP Product at Pivotal, has been the loudest cheerleader of BOSH on the planet.
 * Ferran Rodenas, has been my BOSH friend since 2012 and who created some of the greatest BOSH community contributions, including [docker-boshrelease](https://github.com/cloudfoundry-community/docker-boshrelease).
@@ -215,7 +215,7 @@ I enjoy the continuous publication and feedback loop of blogging, and of sharing
 
 I didn't want to write a "book" book. Not a boring book. Not a reference book.
 
-I want to share all the wonders of BOSH with you. I want you to use BOSH. I want you to feel great using BOSH. I want you to feel like a superhero. I want you to convince your friends and colleagues to use BOSH. I want you to help me evangelize BOSH.
+I want to share all the wonders of BOSH with you. I want you to use BOSH. I want you to feel great using BOSH. I want you to feel like a superhero. I want you to convince your friends and colleagues to use BOSH. I want you to help me evangelise BOSH.
 
 I want this to be a book that you enjoy reading. I hope you enjoy my manner of introducing each topic, and how the topics segue as we gradually introduce more complex topics. I hope you enjoy my sense of humour.
 

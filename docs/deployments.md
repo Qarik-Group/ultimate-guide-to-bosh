@@ -57,7 +57,7 @@ BOSH then begins preparing them for their role of "ZooKeeper" instance.
 
 * BOSH downloads special BOSH packages of Apache ZooKeeper, plus the Java JDK which is a dependency for running ZooKeeper.
 * BOSH downloads special BOSH job templates that describe how to configure and run a single node of ZooKeeper on each instance
-* BOSH provides each ZooKeeper job template with the IP address, client port, quorum port and leader election port for every other member of the deployment (these are ZooKeeper specific requirements to for a cluster of ZooKeeper instances)
+* BOSH provides each ZooKeeper job template with the IP address, client port, quorum port and leader election port for every other member of the deployment (these are ZooKeeper specific requirements for a cluster of ZooKeeper instances)
 
 ## BOSH Architecture, Part 1
 

@@ -379,7 +379,7 @@ echo $$ > /var/vcap/sys/run/zookeeper/pid
 
 The expression `$$` is PID of the current shell (the running `bin/ctl` script). So the command above is inserting the current running script's PID into a file. Importantly, this file is the same as the `check process zookeeper with pidfile /var/vcap/sys/run/zookeeper/pid` from the `monit` file above.
 
-The `bin/ctl` running script is then uses `exec` to replace the current running shell (the wrapper `bin/ctl` script) with a new command `/var/vcap/packages/zookeeper/bin/zkServer.sh`
+The `bin/ctl` running script then uses `exec` to replace the current running shell (the wrapper `bin/ctl` script) with a new command `/var/vcap/packages/zookeeper/bin/zkServer.sh`
 
 If the script only used `echo $$ > pid` and `exec run-software` then the software would be run with escalated root user privileges. Instead, the ZooKeeper application will be run as a restricted `vcap` user and `vcap` group using the `chpst` command.
 

@@ -33,6 +33,8 @@ theme:
   feature:
     tabs: true
 
+  logo: 'images/favicon/favicon-64.png'
+
   font:
     text: 'Bitter' # https://fonts.google.com/specimen/Bitter
     code: 'Ubuntu Mono'

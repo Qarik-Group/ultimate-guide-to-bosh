@@ -483,18 +483,3 @@ Visit the VirtualBox application to confirm the VM has been deleted:
 
 ![vbox-no-envs](/images/virtualbox/vbox-no-envs.png)
 
-## SSH into BOSH Environment
-
-```
-mkdir ssh
-chmod 700 ssh
-bosh int vbox/creds.yml --path /jumpbox_ssh/private_key > ssh/vbox.pem
-chmod 600 ssh/vbox.pem
-ssh-add ssh/vbox.pem
-```
-
-Now you can SSH into your BOSH environment using `jumpbox` user:
-
-```
-ssh jumpbox@192.168.50.6
-```

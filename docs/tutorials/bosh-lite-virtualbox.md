@@ -77,6 +77,22 @@ wget --content-disposition https://bosh.io/d/stemcells/bosh-warden-boshlite-ubun
 bosh upload-stemcell bosh-stemcell-*-warden-boshlite-ubuntu-trusty-go_agent.tgz
 ```
 
+## SSH into BOSH Environment
+
+```
+mkdir ssh
+chmod 700 ssh
+bosh int vbox/creds.yml --path /jumpbox_ssh/private_key > ssh/vbox.pem
+chmod 600 ssh/vbox.pem
+ssh-add ssh/vbox.pem
+```
+
+Now you can SSH into your BOSH environment using `jumpbox` user:
+
+```
+ssh jumpbox@192.168.50.6
+```
+
 ## Deploy ZooKeeper
 
 Return to the `workspace` parent directory:

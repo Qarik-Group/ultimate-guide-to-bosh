@@ -473,6 +473,7 @@ Visit the VirtualBox application to confirm the VM has been deleted:
 mkdir ssh
 chmod 700 ssh
 bosh int vbox/creds.yml --path /jumpbox_ssh/private_key > ssh/vbox.pem
+chmod 600 ssh/vbox.pem
 ssh-add ssh/vbox.pem
 ```
 

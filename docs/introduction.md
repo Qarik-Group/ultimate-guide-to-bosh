@@ -32,7 +32,6 @@ Deploy a 5-node cluster of Zookeeper to Amazon AWS:
 
 ```
 git clone https://github.com/cppforlife/zookeeper-release
-cd zookeeper-release
 export BOSH_ENVIRONMENT=aws
 export BOSH_DEPLOYMENT=zookeeper
 bosh deploy zookeeper-release/manifests/zookeeper.yml

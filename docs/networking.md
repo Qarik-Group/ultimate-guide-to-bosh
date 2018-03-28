@@ -381,7 +381,38 @@ If you are using AWS today, you will instead use VPC networking, and with OpenSt
 
 ### Manual Networks with AWS VPC
 
-TODO
+Consider an AWS VPC with a single subnet:
+
+![aws-subnet](/images/aws/aws-subnet.png)
+
+The basic `cloud-config` configuration would be:
+
+```yaml
+azs:
+- name: az1
+  cloud_properties: {zone: us-west-2a}
+- name: az2
+  cloud_properties: {zone: us-west-2a}
+- name: az3
+  cloud_properties: {zone: us-west-2a}
+
+networks:
+- name: default
+  type: manual
+  subnets:
+  - range: 10.0.0.0/24
+    gateway: 10.0.0.1
+    reserved: [10.0.0.1/30]
+    static: [10.0.0.10-10.0.0.19]
+    azs: [az1, az2, az3]
+    cloud_properties:
+      subnet: subnet-4cff3507
+- name: external
+  type: vip
+```
+
+Note: In AWS, 1 subnet = 1 AWS availability zone. Above, all three of the bosh AZs that we defined are within the same subnet, and therefore also within the same AWS availability zone. For the most resiliant deployment, all three cloud-config defined AZs should be in different AWS availability zones.
+
 
 ### Manual Networks with GCP VPC
 

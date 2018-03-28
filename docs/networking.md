@@ -321,8 +321,7 @@ When we introduce Links, you will see that there are relatively few reasons for 
 
 ### Virtual IP Addresses
 
-Some cloud infrastructures have a concept of virtual IP addresses. In OpenStack, they are called floating IPs, and in AWS they are called elastic IPs. Elastic IP addresses in the AWS world are public IP addresses that you lease from AWS. Amongst other things, they are useful for providing some predictability in the network reachability of AWS instances - because for one thing you don't lose them as instances - stop, restart or outright fail. In other words Elastic addresses are not ephemeral in nature.
-TODO more introduction for their purpose/benefit.
+Most cloud infrastructures have a concept of virtual IP addresses. In OpenStack, they are called floating IPs, in AWS they are called elastic IPs, and in GCP they are called static external IPs. Virtual IPs are public IP addresses that you lease or borrow from your cloud provider, for example elastic IPs are leased from AWS. Amongst other things, virtual IPs are useful for providing some predictability in the network reachability of cloud instances - because for one thing you don't lose them as instances - stop, restart or outright fail. In other words virtual addresses are not ephemeral in nature and can be moved between virtual machines. Since they belong to an organization after allocation (until released) and are not ephemeral, things like firewall rules, network ACLs, and DNS records can be created for them and will not need to be changed even if the VM they point to fails.
 
 Like networks in general, BOSH cannot provision or destroy virtual IP addresses. Instead, it can help you manage the assignment of them to instances.
 

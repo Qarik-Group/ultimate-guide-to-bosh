@@ -86,7 +86,66 @@ instance_groups:
 
 Anytime that `bosh deploy` is run, `version: latest` will be adjusted to any newer stemcells that have been uploaded to the BOSH director. The BOSH director will display this proposed update before commencing the deployment.
 
-TODO
+In this example, we have deployed zookeeper on AWS using version 3541.9 of the Ubuntu Trusty AWS Xen HVM stemcell.
+
+```
+$ bosh stemcells
+Name                                     Version  OS             CPI  CID
+bosh-aws-xen-hvm-ubuntu-trusty-go_agent  3541.9*  ubuntu-trusty  -    ami-3207964a light
+
+$ bosh deployments
+Name       Release(s)       Stemcell(s)                                     Team(s)  Cloud Config
+zookeeper  zookeeper/0.0.7  bosh-aws-xen-hvm-ubuntu-trusty-go_agent/3541.9  -        latest
+```
+
+However since this stemcell was uploaded, a new version, 3541.10 has been released and so now we will update our stemcell with the new version.
+
+```
+bosh upload-stemcell https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent
+
+Task 102
+
+Task 102 | 15:37:21 | Update stemcell: Downloading remote stemcell (00:00:01)
+Task 102 | 15:37:22 | Update stemcell: Extracting stemcell archive (00:00:00)
+Task 102 | 15:37:22 | Update stemcell: Verifying stemcell manifest (00:00:00)
+Task 102 | 15:37:28 | Update stemcell: Checking if this stemcell already exists (00:00:00)
+Task 102 | 15:37:28 | Update stemcell: Uploading stemcell bosh-aws-xen-hvm-ubuntu-trusty-go_agent/3541.10 to the cloud (00:00:08)
+Task 102 | 15:37:36 | Update stemcell: Save stemcell bosh-aws-xen-hvm-ubuntu-trusty-go_agent/3541.10 (ami-3fb42c47 light) (00:00:00)
+
+Task 102 Started  Thu Mar 29 15:37:21 UTC 2018
+Task 102 Finished Thu Mar 29 15:37:36 UTC 2018
+Task 102 Duration 00:00:15
+Task 102 done
+
+Succeeded
+
+$ bosh stemcells
+Name                                     Version  OS             CPI  CID
+bosh-aws-xen-hvm-ubuntu-trusty-go_agent  3541.10  ubuntu-trusty  -    ami-3fb42c47 light
+~                                        3541.9*  ubuntu-trusty  -    ami-3207964a light
+```
+
+On the next deployment of zookeeper - it will be rebuilt on the newer version of Ubuntu Trusty, 3541.10.
+
+```
+09:38 $ bosh deploy -d zookeeper manifests/zookeeper.yml
+
+Using deployment 'zookeeper'
+
+Release 'zookeeper/0.0.7' already exists.
+
+  stemcells:
++ - alias: default
++   os: ubuntu-trusty
++   version: '3541.10'
+- - alias: default
+-   os: ubuntu-trusty
+-   version: '3541.9'
+```
+
+This will require a re-compile of the application and then the underlying VMs will be re-created once the new version is compiled.
+
+
 
 ## Finding Stemcells
 

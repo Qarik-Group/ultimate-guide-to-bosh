@@ -79,7 +79,7 @@ In this deployment we have four different instance groups: `db`, `haproxy`, `web
 
 Each highlighted `worker` instance is running three processes: `baggageclaim`, `beacon`, and `garden`.
 
-The `haproxy` instance has two IP addresses. The latter `184.98.185.163` is a public IP on the Internet. All the other IPs are private to the vSphere data centre. This `haproxy` instance is an inbound HTTP load balancer and has a statically assigned public IP for the benefit of configuring the external CloudFlare service which sits in front receiving https://ci.starkandwayne.com traffic.
+The `haproxy` instance has two IP addresses. The latter `184.98.185.163` is a public IP on the internet. All the other IPs are private to the vSphere data centre. This `haproxy` instance is an inbound HTTP load balancer and has a statically assigned public IP for the benefit of configuring the external CloudFlare service which sits in front receiving https://ci.starkandwayne.com traffic.
 
 The labels for processes above come directly from inside the running instances. We will now look inside the `worker` instance and match up where this information comes from.
 

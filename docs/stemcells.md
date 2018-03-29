@@ -86,7 +86,7 @@ instance_groups:
 
 Anytime that `bosh deploy` is run, `version: latest` will be adjusted to any newer stemcells that have been uploaded to the BOSH director. The BOSH director will display this proposed update before commencing the deployment.
 
-In this example, we have deployed zookeeper on AWS using version 3541.9 of the Ubuntu Trusty AWS Xen HVM stemcell.
+In this example, we have deployed a small (2 instance) zookeeper deployment on AWS using version 3541.9 of the Ubuntu Trusty AWS Xen HVM stemcell.
 
 ```
 $ bosh stemcells
@@ -125,10 +125,10 @@ bosh-aws-xen-hvm-ubuntu-trusty-go_agent  3541.10  ubuntu-trusty  -    ami-3fb42c
 ~                                        3541.9*  ubuntu-trusty  -    ami-3207964a light
 ```
 
-On the next deployment of zookeeper - it will be rebuilt on the newer version of Ubuntu Trusty, 3541.10.
+On the next deployment of zookeeper - it will be rebuilt on the newer version of Ubuntu Trusty, 3541.10. This will require a re-compile of the application and then the underlying VMs will be re-created once the new version is compiled.
 
 ```
-09:38 $ bosh deploy -d zookeeper manifests/zookeeper.yml
+$ bosh deploy -d zookeeper manifests/zookeeper.yml
 
 Using deployment 'zookeeper'
 
@@ -141,9 +141,37 @@ Release 'zookeeper/0.0.7' already exists.
 - - alias: default
 -   os: ubuntu-trusty
 -   version: '3541.9'
+
+Continue? [yN]: y
+
+Task 103
+
+Task 103 | 15:39:08 | Preparing deployment: Preparing deployment (00:00:00)
+Task 103 | 15:39:08 | Preparing package compilation: Finding packages to compile (00:00:00)
+Task 103 | 15:39:08 | Compiling packages: golang-1.8-linux/3eac55db0483de642b1be389966327e931db3e3f (00:01:41)
+Task 103 | 15:40:49 | Compiling packages: zookeeper/43ee655b89f8a05cc472ca997e8c8186457241c1 (00:00:10)
+Task 103 | 15:40:59 | Compiling packages: java/c524e46e61b37894935ae28016973e0e8644fcde (00:00:29)
+Task 103 | 15:41:28 | Compiling packages: smoke-tests/ec91e258c41471227a759c2749e7295cb65eff5a (00:00:13)
+Task 103 | 15:42:17 | Updating instance zookeeper: zookeeper/587013fa-a927-44b8-9ef4-1a2b73eca415 (0) (canary) (00:03:17)
+Task 103 | 15:45:34 | Updating instance zookeeper: zookeeper/d5f3430c-5393-44bf-8030-78732846bacd (1) (canary) (00:03:21)
+
+Task 103 Started  Thu Mar 29 15:39:08 UTC 2018
+Task 103 Finished Thu Mar 29 15:48:55 UTC 2018
+Task 103 Duration 00:09:47
+Task 103 done
+
+Succeeded
 ```
 
-This will require a re-compile of the application and then the underlying VMs will be re-created once the new version is compiled.
+Once this is complete, we can see that the deployment is now running on stemcell version 3541.10.
+
+
+```
+$ bosh deployments
+Name       Release(s)       Stemcell(s)                                      Team(s)  Cloud Config
+zookeeper  zookeeper/0.0.7  bosh-aws-xen-hvm-ubuntu-trusty-go_agent/3541.10  -        latest
+
+```
 
 
 

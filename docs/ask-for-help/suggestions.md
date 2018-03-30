@@ -36,6 +36,7 @@ Creating Github Issues requires that you choose a project source repository into
 * https://github.com/cloudfoundry/bosh-deployment for questions relating to deploying or upgrading your BOSH environment, its BOSH director, and other collocated systems (UAA, Credhub)
 * https://github.com/cloudfoundry/bosh for questions relating to the behaviour of a running BOSH environment, its BOSH director, or your running instances
 * https://github.com/cloudfoundry/bosh-agent if you specifically know that the bug or problem relates to the BOSH agent running on each BOSH instance
+* https://github.com/starkandwayne/ultimate-guide-to-bosh for issues or problems with this book
 
 If you are having issues or questions about individual BOSH releases or deployment manifests, then I recommend you create issues with their own respective Github issues.
 

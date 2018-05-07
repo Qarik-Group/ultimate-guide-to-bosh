@@ -369,7 +369,7 @@ This `bin/ctl` is a very common implementation of a Monit start/stop wrapper scr
 
 * The `stop` subcommand will terminate the Linux process if it is running.
 
-Some software is capable running as a background/daemon process and managing its own PID file. Others do not manage their own PID. Some software can do either and the BOSH job template author will have decided in which mode to run the software.
+Some software is capable of running as a background/daemon process and managing its own PID file. Others do not manage their own PID. Some software can do either and the BOSH job template author will have to decided in which mode to run the software.
 
 In the `zookeeper` example above the `bin/ctl start` command it creating the PID file:
 

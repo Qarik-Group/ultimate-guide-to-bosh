@@ -147,7 +147,7 @@ If you author your software and its BOSH release in parallel, you will be giving
 
 Publishing a BOSH release is like taking your users on a packaged, guided tour of ancient Roman ruins.
 
-Shipping them installable software to end users is like a leaving a Post-It Note on their fridge, "We went to Rome. You should go some day."
+Shipping them installable software is like leaving a Post-It Note on their fridge, "We went to Rome. You should go some day."
 
 Publishing a BOSH release shows that you care about your users' long-term success in running the system.
 

@@ -169,7 +169,7 @@ Some of our internal systems were not as automated as others. We did not have a 
 
 ## Brief History of BOSH
 
-I was fortunate to see that demo. I had been invited to the VMWare campus in Palo Alto, CA, on April 11, 2012, for the unveiling of "The Outer Shell" that VMWare internally had been using to deploy Cloud Foundry. The Outer Shell was called BOSH. This is an acronym for "BOSH Outer Shell." All engineers know that recursion is funny.
+I was fortunate to see that demo. I had been invited to the VMWare campus in Palo Alto, CA, on April 11, 2012, for the unveiling of "The Outer Shell" that VMWare internally had been using to deploy Cloud Foundry. The Outer Shell was called BOSH. This is an acronym for "BOSH Outer Shell." All engineers know that [recursion is funny](https://www.google.com/search?q=recursion).
 
 I invited myself to the VMware campus for two days to meet the developers of BOSH and Cloud Foundry and came away fascinated by the vast scope of problems that the BOSH team was trying to solve. The BOSH team were kind enough to either answer a question or fix BOSH so the question was void.
 

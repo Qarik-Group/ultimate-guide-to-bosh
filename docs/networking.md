@@ -32,7 +32,7 @@ A process might refuse to start successfully because it cannot connect to a depe
 
 ### Debugging a Distributed System is Nontrivial
 
-It is hard enough for software developers to write software that works at all and provides the features that end users want. The ways in which networking errors can propogate into each application process are more numerous than the "happy path" for the application when then are no networking errors. It will be likely that many distributed systems you work with do not provide a lot of assistance in debugging what networking errors have appeared.
+It is hard enough for software developers to write software that works at all and provides the features that end users want. The ways in which networking errors can propogate into each application process are more numerous than the "happy path" for the application when there are no networking errors. It will be likely that many distributed systems you work with do not provide a lot of assistance in debugging what networking errors have appeared.
 
 More commonly, inside the error logs of one or more processes will be a variation of a "connection timeout" error or more subtle/invisible indications that a networking issue has appeared.
 

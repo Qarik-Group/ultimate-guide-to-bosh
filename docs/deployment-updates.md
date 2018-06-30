@@ -96,7 +96,7 @@ If these three YAML snippets were in a file `zookeeper-scale.yml`, then to apply
 
 ### Operator paths
 
-There are two `type` options in each Operator: `replace`, and `remove`. The former will update or insert an item in the final YAML file. The latter will remove a item from the final YAML file. The item to be modified is determined by the `path` expression.
+There are two `type` options in each Operator: `replace`, and `remove`. The former will update or insert an item in the final YAML file. The latter will remove an item from the final YAML file. The item to be modified is determined by the `path` expression.
 
 The `path` expression describes a walk up a YAML tree, so to speak. Consider the example YAML file ("tree"):
 

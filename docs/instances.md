@@ -475,7 +475,7 @@ Note, this log location is different from many other Linux conventions, such as 
 Within a BOSH instance you can try watching all the logs using `tail`:
 
 ```
-$ tail -f /var/vcap/sys/log/{*.log,*/*.log}
+# tail -f /var/vcap/sys/log/{*.log,*/*.log}
 ```
 
 Different job templates in different deployments will produce different sets of logs, but there is a convention that they will be placed under `/var/vcap/sys/log`.

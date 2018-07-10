@@ -41,7 +41,7 @@ You might define "deploying my system" at a different level to other people:
 From the perspective of your organization and their goals of efficiently using your time and energy,
 hopefully you can start as high up this stack as possible. For example, there is simply nothing faster, more time efficient, and UI consistent as `cf push`-ing an application to any Cloud Foundry. Every system you deploy should have to first justify why it cannot be deployed to Cloud Foundry, Heroku, or Google App Engine.
 
-If you do need to "go down the stack" and take responsibility for more, than you will need more help. Either your organization will need to expect less from you and your team, or you'll need more tooling, automation, and education.
+If you do need to "go down the stack" and take responsibility for more, then you will need more help. Either your organization will need to expect less from you and your team, or you'll need more tooling, automation, and education.
 
 ## Assumptions
 

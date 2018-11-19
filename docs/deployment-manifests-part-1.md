@@ -233,7 +233,7 @@ These are more descriptive than `default` but you would still need to investigat
 
 ## Instance Groups Form Clusters
 
-Without knowing how Apache ZooKeeer works, it is fair to assume that the ZooKeeper processes running on each of the five instances in our example deployment are communicating with each other. Yet, in our example deployment manifests, we have not explicitly described any relationships between them.
+Without knowing how Apache ZooKeeper works, it is fair to assume that the ZooKeeper processes running on each of the five instances in our example deployment are communicating with each other. Yet, in our example deployment manifests, we have not explicitly described any relationships between them.
 
 This is not by omission. BOSH deployment manifests allow you to ignore explicit networking configuration as much as possible. Instead, the mapping of your Cloud Infrastructure networking to BOSH is configured in the `bosh cloud-config`.
 

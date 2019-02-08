@@ -8,4 +8,4 @@ applications:
   - route: ultimate-guide-to-bosh.cfapps.io
   - route: ultimateguidetobosh.com
   - route: www.ultimateguidetobosh.com
-  stack: cflinuxfs2
+  stack: cflinuxfs3

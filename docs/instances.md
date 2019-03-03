@@ -31,7 +31,7 @@ We can see that all the `zookeeper` instances are `running`. There is a sixth in
 
 For now, we will focus on the long-running instances, and return to errands later.
 
-Each instance has at least one assigned IP address. The `zookeeper.yml` manifest did not need to allocate these IP addresses, rather if left this assignment to the BOSH director, the CPI, and the cloud infrastructure. It is possible to statically assign IP addresses in a deployment manifest, but ideally there are few reasons to do so. It is not a fun part of a human's day to keep track of IP allocations.
+Each instance has at least one assigned IP address. The `zookeeper.yml` manifest did not need to allocate these IP addresses, rather it left this assignment to the BOSH director, the CPI, and the cloud infrastructure. It is possible to statically assign IP addresses in a deployment manifest, but ideally there are few reasons to do so. It is not a fun part of a human's day to keep track of IP allocations.
 
 With the BOSH CLI we can also start to introspect what is running on each instance with `bosh instances --ps`:
 

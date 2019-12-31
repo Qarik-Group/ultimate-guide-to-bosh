@@ -3,7 +3,7 @@ meta:
   name:     (( param "Please name your pipeline" ))
   pipeline: (( grab meta.name ))
   target:   (( param "Please identify the name of the target Concourse CI" ))
-  url:      (( param "Please specify the full url of the target Concourse CI" ))
+  # url:      (( param "Please specify the full url of the target Concourse CI" ))
 
   image:
     name: starkandwayne/concourse

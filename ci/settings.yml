@@ -1,19 +1,19 @@
 meta:
   name:    ultimate-guide-to-bosh
-  # fly -t ohio-cf login -c https://ci-ohio.starkandwayne.com -n cfcommunity
-  target:  ohio-cf
-  url:     https://ci-ohio.starkandwayne.com
+  # fly -t pipes@cfcommunity login -c https://pipes.starkandwayne.com -n cfcommunity
+  target:  pipes@cfcommunity
+  # url:     https://pipes.starkandwayne.com
 
   cf:
     uri: https://api.run.pivotal.io
     organization: starkandwayne
     space-production: ultimate-guide-to-bosh
-    username: ((!cf-pws-username))
-    password: ((!cf-pws-password))
+    username: ((cf-pws-username))
+    password: ((cf-pws-password))
 
   github:
     owner: starkandwayne
     repo: ultimate-guide-to-bosh
     branch: master
-    private_key:  ((!github-private-key))
-    access_token: ((!github-access-token))
+    private_key:  ((github-private-key))
+    access_token: ((github-access-token))

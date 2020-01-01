@@ -2,7 +2,7 @@
 
 Service discovery is a mechanism for applications to discover and connect to other sub-systems. For example, a ZooKeeper node needs to be able to discover and connect to the other members of its cluster; an application to discover and connect to its database; and a mobile or internet-of-things application to discover and connect to its backend services.
 
-Systems the are deployed by BOSH may either want to discover and connect to other systems; or conversely they may want to advertise and be available for connection by clients.
+Systems are deployed by BOSH may either want to discover and connect to other systems; or conversely they may want to advertise and be available for connection by clients.
 
 The primary roles of a BOSH environment is to manage the lifecycle of the cloud infrastructure, and the lifecycle of the software running upon it. However, BOSH job templates do have some facilities for service discovery with other job templates, and there are some popular options outside of BOSH for service discovery as well.
 

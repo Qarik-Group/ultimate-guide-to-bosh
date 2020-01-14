@@ -208,7 +208,7 @@ I have been using BOSH since 2012. I have yet to find any system like BOSH, desp
 
 I didn't want to write a book. I had written a PhD thesis in 2001 and six people read it (two supervisors, three judges, and myself). Fortunately, this is enough people to be awarded a doctorate. Unfortunately, it doesn't really qualify as "sharing knowledge."
 
-I wrote my first blog post in 2006, and when I quickly reached seven subscribers; I knew I'd found my preferred medium for sharing.
+I wrote my first blog post in 2006, and, once I quickly reached seven subscribers, I knew I'd found my preferred medium for sharing.
 
 I enjoy the continuous publication and feedback loop of blogging, and of sharing open source projects. I enjoy a relaxed writing style.
 

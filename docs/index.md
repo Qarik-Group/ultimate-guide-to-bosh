@@ -5,7 +5,7 @@ image_path: /images/bookcover/book-cover-being-read.png
 
 [BOSH](https://bosh.io) is an open source tool for release engineering, deployment, lifecycle management, and monitoring of distributed systems.
 
-It's incredible. Huge companies are using it. Tiny companies are using it. You too could be using it.
+It's incredible. Huge companies are using it. Tiny companies are using it. You too could benefit from using it.
 
 This is the [Ultimate Guide to BOSH](https://ultimateguidetobosh.com).
 

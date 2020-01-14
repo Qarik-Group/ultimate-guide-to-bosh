@@ -100,7 +100,7 @@ BOSH is a project of the Cloud Foundry Foundation. It was originally created to 
 
 Cloud Foundry has a micro-services architecture - bespoke applications written in Ruby, Java, C, and Golang - combined with stateful data services such as PostgreSQL, Redis, and local disks for storing user-uploaded application code. The developers wanted to work with the SREs to reduce the time of upgrades to new releases, to reduce the time between new releases, to reduce the time to deploy security fixes, and to help SREs and developers communicate about issues in production.
 
-TODO twitter joke about laptop going into production https://twitter.com/oising/status/298464920717099009
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Dev: &quot;It works on my machine, just not on the server.&quot; Me: &quot;Ok, backup your mail. We&#39;re putting your laptop into production.&quot;</p>&mdash; Oisín Grehan (x0n) (@oising) <a href="https://twitter.com/oising/status/298464920717099009?ref_src=twsrc%5Etfw">February 4, 2013</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 The solution was:
 

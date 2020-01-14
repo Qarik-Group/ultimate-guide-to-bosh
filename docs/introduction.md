@@ -151,7 +151,7 @@ Shipping them installable software is like leaving a Post-It Note on their fridg
 
 Publishing a BOSH release shows that you care about your users' long-term success in running the system.
 
-Only shipping installable software is like saying "Works on my machine."
+Shipping installable software is not much better than saying "Works on my machine."
 
 ## About the Author
 

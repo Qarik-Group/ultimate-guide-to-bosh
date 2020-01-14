@@ -102,12 +102,12 @@ Cloud Foundry has a micro-services architecture - bespoke applications written i
 
 TODO twitter joke about laptop going into production https://twitter.com/oising/status/298464920717099009
 
-The solution was:
+The solution required addressing the following challenges:
 
 * to have an absolute declaration of what specific versions of all bespoke and upstream projects combined together to form a "release";
 * to own responsibility for the lifecycle of the underlying infrastructure upon which Cloud Foundry would run, including healing activities after infrastructure failures;
 * to own responsibility for pushing out security patches to the base operating systems, the bespoke code, and the upstream dependencies;
-* to give developers and SREs the same tool to use thus removing "it works on my machine" scenarios
+* to give developers and SREs the same tool to prevent "it works on my machine" scenarios.
 
 The "tool" that implemented this solution is a running server - a BOSH environment - which:
 

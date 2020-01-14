@@ -540,7 +540,7 @@ Each BOSH instance has its own independent persistent volume. For example, our `
 
 There is no concept in BOSH for sharing a volume between instances. If this facility is required, your deployment would include NFS or a similar network filesystem service running atop your BOSH instances and their persistent volumes.
 
-Within a BOSH instance, we can see that `/var/vcap/store` is implemented as a separate Linux volume. The `df` Linux command will display all the mounted volumes:
+Within a BOSH instance, we can see that `/var/vcap/store` is implemented as a separate Linux volume. The `df -h` Linux command will display disk usage summary for all mounted volumes:
 
 ```
 $ df -h
@@ -571,7 +571,7 @@ You will also learn that you can select different volume types and provide other
 
 ## Filesystem Layout
 
-The `df` output of filesystem volumes above begins to indicate why BOSH instances have a non-standard filesystem layout (for example, log files do not go into `/var/log` rather they go into `/var/vcap/sys/log`).
+The `df -h` command output above provides hints on why BOSH instances have a non-standard filesystem layout (for example, log files do not go into `/var/log`, but rather are stored in `/var/vcap/sys/log`).
 
 The root volume (`/`) of the instance above is very small:
 

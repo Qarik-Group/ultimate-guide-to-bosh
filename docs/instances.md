@@ -174,8 +174,8 @@ root
 
 If an example does not include a shell prompt (`>`, `$`, or `#`) then it is the contents of a shell script or the output from a command.
 
-
-**If you `bosh ssh` into a production system and have changed to `root` user then please place a large cowboy hat on your head. A big one. Everyone needs to know you're a cowboy.**
+!!! tip
+    Before changing to `root` user in a production system, please place a large high-crowned, wide-brimmed hat on your head. The biggest one you can find. Everyone should know you're a cowboy.
 
 Instead, try changing to the user for the processes you are working on. On most BOSH deployments, the convention is to use a user called `vcap`. To change from your random `bosh_xxx` user to `vcap`:
 

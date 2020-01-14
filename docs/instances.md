@@ -324,7 +324,7 @@ $ tree
     └── zookeeper
 ```
 
-As discussed above, the `monit` file is the entry point for a job template being used to run Linux processes. The contents of this file tell Monit what command to run to start or stop any Linux processes that are required:
+As discussed above, the `monit` file is the entry point for a job template being used to run Linux processes. The contents of this file tells Monit what command to run to start or stop any Linux processes that are required:
 
 ```
 check process zookeeper

@@ -444,8 +444,6 @@ bosh logs --follow
 
 The `bosh logs --follow` flag also has the short alias `bosh logs -f`.
 
-FIXME: `bosh logs --follow` did not work as expected on ZooKeeper https://github.com/cloudfoundry/bosh-cli/issues/315
-
 Some systems only emit logs if interesting things are happening. These can be pleasant logs to view.
 
 Unfortunately, other systems can emit logs with a frequency which might infer they have nothing better to do. Your screen might be continuously populated with new logs such that it is impossible to understand anything.

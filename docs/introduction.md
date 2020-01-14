@@ -12,7 +12,7 @@ The guide uses sample commands and videos to show you real systems instead of ex
 
 Later in the guide you will deploy your own BOSH and use it to deploy systems. At that point, you will install the `bosh` command-line tool, and you will need to decide which target cloud infrastructure you will use.
 
-If you'd like to share a section with someone, wave your mouse cursor over the heading and a permanent link icon will appear. You can click it or copy it. It is my invisible gift to you so you can give to others.
+If you'd like to share a section with someone, wave your mouse cursor over the heading and a permanent link icon will appear. You can click it or copy it. It is my invisible gift to you and others, so please feel free to share it.
 
 If you'd like to fix some spelling, some grammar, or help out with the guide in some way, there is an "edit" button at the top right of each page. This will link you to the Github project page and let you submit a pull request. Good things happen to people who submit pull requests.
 

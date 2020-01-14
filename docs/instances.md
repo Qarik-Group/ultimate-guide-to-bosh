@@ -221,7 +221,7 @@ Earlier in [New Deployments](/deployments/#new-deployments) I introduced the ter
 
 > BOSH will construct configuration files for the packages and commence running the software (called "job templates")
 
-Job templates are where we configure processes and how monit should interact with them. As we know, monit runs processes which represent specific applications such as ZooKeeper, Concourse, or whatever your deployment is designed for.
+Job templates are where we configure processes and how monit should interact with them. As we know, monit runs processes which represent specific software such as ZooKeeper, Concourse, or whatever your deployment is designed for.
 
 First, let's finish tying up the story of Monit processes.
 

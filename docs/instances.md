@@ -365,9 +365,9 @@ exit 0
 
 This `bin/ctl` is a very common implementation of a Monit start/stop wrapper script that you will see in most BOSH job templates. A `case` statement that takes `start` and `stop` from the first argument passed to `bin/ctl` and runs one of two different code paths:
 
-* The `start` subcommand will run a single Linux process and ensure it drops the PID of that process.
+* The `start` subcommand will run a single Linux process.
 
-* The `stop` subcommand will terminate the Linux process if it is running.
+* The `stop` subcommand will terminate the Linux process, if one is running.
 
 Some software is capable of running as a background/daemon process and managing its own PID file. Others do not manage their own PID. Some software can do either and the BOSH job template author will have to decide in which mode to run the software.
 

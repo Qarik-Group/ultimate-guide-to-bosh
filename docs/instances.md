@@ -470,7 +470,8 @@ You have some options to survive log overload.
 
 The reason that `bosh logs` can find all the process logs is a convention used amongst all BOSH deployments to place their process logs in the same subfolder `/var/vcap/sys/log`.
 
-Note, this log location is different from many other Linux conventions, such as `/var/log`. We will discuss the alternate filesystem layout of BOSH instances soon.
+!!! note
+    `/var/vcap/sys/log` location is different from many other Linux conventions, such as `/var/log`. We will discuss the alternate filesystem layout of BOSH instances soon.
 
 Within a BOSH instance you can try watching all the logs using `tail`:
 

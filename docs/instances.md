@@ -478,8 +478,6 @@ Within a BOSH instance you can try watching all the logs using `tail`:
 # tail -f /var/vcap/sys/log/{*.log,*/*.log}
 ```
 
-Different job templates in different deployments will produce different sets of logs, but there is a convention that they will be placed under `/var/vcap/sys/log`.
-
 If we revisit the `bin/ctl start` for `zookeeper` above, we can see how it is storing some logs:
 
 ```

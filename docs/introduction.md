@@ -22,7 +22,7 @@ Each text block has a copy-and-paste icon. Click it to copy the text block into 
 
 You're a professional. You're resourceful. You're a king maker. You keep your organisation in the business of winning.
 
-In past lives you might have been called: developer, sysadmin, or devops.
+In past lives you might have been called a developer, a sysadmin, or a devops engineer.
 
 You're always on the lookout for better tools, better mental models, and better systems.
 

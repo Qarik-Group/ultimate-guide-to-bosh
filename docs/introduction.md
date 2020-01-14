@@ -165,7 +165,7 @@ In the years before BOSH, I was the VP of Technology at Engine Yard. Engine Yard
 
 Several years earlier, the Engine Yard platform had been hastily prototyped on the new AWS platform using an also-new configuration management tool called Chef. The Engine Yard platform worked and many customers' entire business run successfully upon it to this day. The internal cost of allowing customers to continually run their applications - even if they didn't want to upgrade and maintain their code bases - was tremendous. Upgrading the Engine Yard platform was difficult. The surface area of the implicit contract we made with customers - the base operating system, available packages, the version of Chef - was vast. Every change we wanted to make needed to be considered from the perspective of 2000 different web applications, run by 2000 different development teams, running 2000 different businesses.
 
-Some of our internal systems were not as automated as others. We did not have a nice way to publish new AMIs to AWS. Since we didn't publish new AMIs, we also didn't initially have a way to share them with customers. We had spent a year preparing, curating, and releasing the second-ever edition of our base AMI, when I saw BOSH for the first time. The demonstration I was shown was incredible - a small change was made to a YAML file, they run `bosh deploy`, and in the vCenter window it could be seen that all the VMs were being progressively destroyed and replaced by new ones built upon a new base machine image, with newly compiled packages for that machine image. It was also replacing VMs with bigger ones. And it was resizing the persistent disks for the databases. BOSH was incredible.
+Some of our internal systems were not as automated as others. We did not have a nice way to publish new [Amazon Machine Image](https://en.m.wikipedia.org/wiki/Amazon_Machine_Image) (AMI) to AWS. Since we didn't publish new AMIs, we also didn't initially have a way to share them with customers. We had spent a year preparing, curating, and releasing the second-ever edition of our base AMI, when I saw BOSH for the first time. The demonstration I was shown was incredible - a small change was made to a YAML file, they run `bosh deploy`, and in the vCenter window it could be seen that all the VMs were being progressively destroyed and replaced by new ones built upon a new base machine image, with newly compiled packages for that machine image. It was also replacing VMs with bigger ones. And it was resizing the persistent disks for the databases. BOSH was incredible.
 
 ## Brief History of BOSH
 
@@ -200,7 +200,7 @@ BOSH is the deployment technology used by Swisscom [appCloud](https://developer.
 
 These are huge companies who have small teams running huge production systems using BOSH.
 
-On the smaller end - our consultancy [Stark & Wayne](https://www.starkandwayne.com)  - uses BOSH to run a variety of our internal systems across vSphere, AWS and Google Compute. (The rest of our systems run upon Cloud Foundry itself, such as https://www.starkandwayne.com and https://www.starkandwayne.com/blog).
+On the smaller end - our consultancy [Stark & Wayne](https://www.starkandwayne.com) - uses BOSH to run a variety of our internal systems across vSphere, AWS and Google Compute. (The rest of our systems run upon Cloud Foundry itself, such as https://www.starkandwayne.com and https://www.starkandwayne.com/blog).
 
 ## Why Write the Ultimate Guide to BOSH?
 

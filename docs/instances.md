@@ -203,7 +203,7 @@ The three `Process` entries above match directly to the three `Processes` items 
 
 Inside each VM we delegate to [Monit](https://mmonit.com/monit/) to start, stop, and monitor the health of processes.
 
-Monit plays a small, but vital role within every BOSH deployment running on Linux servers. Monit has been the process monitoring heart of BOSH instances since before BOSH was publicly open sourced in 2012. And ever since 2012, every single Product Manager of BOSH has said, "We will replace Monit with something else."
+Monit plays a small but vital role within every BOSH deployment running on Linux servers. Monit has been the process monitoring heart of BOSH instances since before BOSH was publicly open sourced in 2012. And ever since 2012, every single Product Manager of BOSH has said, "We will replace Monit with something else."
 
 If you learn about using BOSH on Windows, you will discover that instead of Monit we use native Windows Services to start, stop, and repair processes. But for Linux, it's Monit.
 

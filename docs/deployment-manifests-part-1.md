@@ -67,7 +67,7 @@ If you deployed `zookeeper/0.0.7` every day for a year, you would always be depl
 
 In the deployment manifest, we decide which instances install which job templates/packages within the `instance_groups` section.
 
-The `zookeeper.yml` example above specifies as single long-running group of instances:
+The `zookeeper.yml` example above specifies one long-running group of instances:
 
 ```yaml
 instance_groups:

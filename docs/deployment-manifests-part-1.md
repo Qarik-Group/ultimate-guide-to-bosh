@@ -276,7 +276,7 @@ exec chpst -u vcap:vcap \
 
 The `$ZOOCFGDIR` environment variable is special to the `/var/vcap/packages/zookeeper/bin/zkServer.sh` script. This script will look for `zoo.cfg` in the `$ZOOCFGDIR` folder. Notice that `$ZOOCFGDIR` is a folder within the job template above: `config/zoo.cfg`.
 
-The contents of `/var/vcap/jobs/zookeeper/config/zoo.cfg` include the following configuration that allows the `zookeeper/0` instance to discover the other four instances:
+`/var/vcap/jobs/zookeeper/config/zoo.cfg` for the `zookeeper/0` instance contains the following configuration:
 
 ```
 server.0=10.0.0.5:2888:3888
@@ -288,7 +288,10 @@ server.4=10.0.0.9:2888:3888
 clientPort=2181
 ```
 
-At a glance, Apache ZooKeeper will expect to communicate with its peer nodes on ports `2888` and `3888`, and the five cloud servers running the zookeeper processes have IP addresses `10.0.0.5` thru `10.0.0.9`. Client applications that want to use our Apache ZooKeeper system will communicate via port `2181`.
+At a glance, we learn that `zookeeper` instances representing ZooKeeper peer nodes:
+* talk to each other via ports `2888` and `3888`
+* use IP addresses from `10.0.0.5` through `10.0.0.9`
+* listen for client applications on port `2181`
 
 This `config/zoo.cfg` configuration is meaningful to Apache ZooKeeper and the `zkServer.sh` start script. The contents of the configuration file are not meaningful to BOSH, but the file was created by BOSH.
 

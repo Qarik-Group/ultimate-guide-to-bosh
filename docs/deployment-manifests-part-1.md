@@ -237,7 +237,7 @@ Without knowing how Apache ZooKeeper works, it is fair to assume that the ZooKee
 
 This is not by omission. BOSH deployment manifests allow you to ignore explicit networking configuration as much as possible. Instead, the mapping of your Cloud Infrastructure networking to BOSH is configured in the `bosh cloud-config`.
 
-In the subsequent section [Networking](/networking), I will introduce computer networking and reduce it to the parts you will need to know to help BOSH to help you deploy, scale, upgrade your distributed systems.
+In the subsequent section [Networking](/networking), I will introduce computer networking and reduce it to the parts you will need to know to let BOSH help you to deploy, scale, and upgrade your distributed systems.
 
 But first, let's look at how each ZooKeeper process is configured to know where its cluster peers are located.
 

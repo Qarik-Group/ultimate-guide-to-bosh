@@ -157,7 +157,9 @@ Each BOSH director has a Cloud Config specification. We can download and view a 
 bosh cloud-config
 ```
 
-There are several areas of configuration but for now let's look at one - `vm_type` - the specification of the size of servers. Several examples of Cloud Config `vm_types` sections for popular cloud infrastructures are presented below:
+Cloud Config configuration hierarchy is quite rich. For now let's look at server resource specifications referred to as `vm_types`.
+
+Several examples of Cloud Config `vm_types` sections for popular cloud infrastructures are presented below:
 
 * GCP:
 

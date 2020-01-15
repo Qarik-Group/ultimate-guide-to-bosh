@@ -109,7 +109,7 @@ The solution was:
 * to own responsibility for pushing out security patches to the base operating systems, the bespoke code, and the upstream dependencies;
 * to give developers and SREs the same tool to use thus removing "it works on my machine" scenarios
 
-The "tool" that implemented this solution is a running server - a BOSH environment - which does all of the below (and even more):
+The "tool" that implemented this solution is a running server - a BOSH environment - which:
 
 * receives requests from operators, who primarily use the `bosh` CLI;
 * interacts with cloud infrastructures to provision and de-provision cloud servers and disks;

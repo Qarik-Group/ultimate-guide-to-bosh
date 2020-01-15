@@ -157,7 +157,9 @@ Each BOSH director has a Cloud Config specification. We can download and view a 
 bosh cloud-config
 ```
 
-There are several areas of configuration but for now let's look at one - `vm_type` - the specification of the size of servers. An example of a `bosh cloud-config` for GCP might look like:
+There are several areas of configuration but for now let's look at one - `vm_type` - the specification of the size of servers. Several examples of Cloud Config `vm_types` sections for popular cloud infrastructures are presented below:
+
+* GCP:
 
 ```yaml
 vm_types:
@@ -168,7 +170,7 @@ vm_types:
     root_disk_type: pd-ssd
 ```
 
-For Amazon EC2 it might include:
+* Amazon EC2:
 
 ```yaml
 vm_types:
@@ -179,7 +181,7 @@ vm_types:
       size: 20_000
 ```
 
-For vSphere it might include:
+* vSphere:
 
 ```yaml
 vm_types:

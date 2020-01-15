@@ -190,9 +190,9 @@ vm_types:
     disk: 20_000
 ```
 
-Cloud Config is where BOSH becomes specific to each different cloud infrastructure. Each `vm_type` above includes configuration that is only meaningful to its CPI. Their configurations are similar (2 CPUs) but different (Google `n1-standard-2` has 7.5GB RAM, AWS `t2.medium` has 4GB RAM).
+Cloud Config is where BOSH becomes specific to each different cloud infrastructure. Each `vm_type` above includes configuration that is only meaningful to its CPI.
 
-The CPI-specific customisations are placed in the `cloud_properties` section of each `vm_type`.
+The CPI-specific customisations are placed in the `cloud_properties` section of each `vm_type`. In fact, each `vm_type` above describes similar resources: 2 CPUs, 20GB of non-persistent disk space, but different RAM (Google `n1-standard-2` has 7.5GB while AWS `t2.medium` and vSphere have only 4GB).
 
 It is likely that you will want to use various `vm_types` for your deployments. You might want small instance sizes for low CPU/low RAM activities, and large CPU/large RAM instances for other activities. Each will need an entry in your shared `vm_types` list within `bosh cloud-config`.
 

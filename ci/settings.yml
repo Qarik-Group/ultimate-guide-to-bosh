@@ -8,8 +8,8 @@ meta:
     uri: https://api.run.pivotal.io
     organization: starkandwayne
     space-production: ultimate-guide-to-bosh
-    username: ((cf-pws-username))
-    password: ((cf-pws-password))
+    username: ((cf-pws.username))
+    password: ((cf-pws.password))
 
   github:
     owner: starkandwayne

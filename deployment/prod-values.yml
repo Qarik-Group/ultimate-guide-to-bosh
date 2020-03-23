@@ -1,0 +1,23 @@
+ingress:
+  hosts:
+    - ultimateguidetobosh.com
+    - www.ultimateguidetobosh.com
+    - ultimateguidetobosh.k8s.lke.starkandwayne.com
+  tls:
+    enabled: true
+    certIssuer: "lab-ca-issuer"
+
+initImage:
+  repository: python
+  tag: 3.7
+
+app:
+  org: starkandwayne
+  repo: ultimate-guide-to-bosh
+  commitSHA: "b2735c9"
+
+  setup_script: |
+    #!/bin/sh
+    pip install 'pymdown-extensions<5.0' 'Markdown<3.0' 'mkdocs<1.0' 'mkdocs-material<3.0'
+    mkdocs build
+    mv /tmp/website/site/* /var/www/

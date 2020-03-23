@@ -1,0 +1,78 @@
+on:
+  push:
+    branches:
+      - master
+      - staging
+
+jobs:
+  DeployStaging:
+    name: Deploy Staging
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout branch
+      uses: actions/checkout@v2
+
+    - name: Save Kubeconfig
+      env:
+        KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+      run: echo "$KUBE_CONFIG" > $GITHUB_WORKSPACE/.kubeconfig
+
+    - name: Setup Helm
+      uses: stefanprodan/kube-tools@v1
+      with:
+        command: |
+          helmv3 repo add starkandwayne https://helm.starkandwayne.com
+          helmv3 repo update
+
+    - name: Deploy to K8s
+      uses: stefanprodan/kube-tools@v1
+      env:
+        KUBECONFIG: ${{ github.workspace }}/.kubeconfig
+      with:
+        command: |
+          helmv3 -n ultimateguides-staging upgrade --install ultimateguidetobosh starkandwayne/git-website -f $GITHUB_WORKSPACE/deployment/staging-values.yml
+
+    - name: Smoke Test  
+      uses: stefanprodan/kube-tools@v1
+      env:
+        KUBECONFIG: ${{ github.workspace }}/.kubeconfig
+      with:
+        command: |
+          kubectl -n ultimateguides-staging rollout status deployment/ultimateguidetobosh-website
+
+  DeployProd:
+    name: Deploy Prod
+    needs: [DeployStaging]
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout branch
+      uses: actions/checkout@v2
+
+    - name: Save Kubeconfig
+      env:
+        KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+      run: echo "$KUBE_CONFIG" > $GITHUB_WORKSPACE/.kubeconfig
+
+    - name: Setup Helm
+      uses: stefanprodan/kube-tools@v1
+      with:
+        command: |
+          helmv3 repo add starkandwayne https://helm.starkandwayne.com
+          helmv3 repo update
+
+    - name: Deploy to K8s
+      uses: stefanprodan/kube-tools@v1
+      env:
+        KUBECONFIG: ${{ github.workspace }}/.kubeconfig
+      with:
+        command: |
+          helmv3 -n ultimateguides-prod upgrade --install ultimateguidetobosh starkandwayne/git-website -f $GITHUB_WORKSPACE/deployment/prod-values.yml
+
+    - name: Smoke Test  
+      uses: stefanprodan/kube-tools@v1
+      env:
+        KUBECONFIG: ${{ github.workspace }}/.kubeconfig
+      with:
+        command: |
+          kubectl -n ultimateguides-prod rollout status deployment/ultimateguidetobosh-website

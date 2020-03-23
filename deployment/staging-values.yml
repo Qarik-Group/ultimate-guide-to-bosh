@@ -14,7 +14,6 @@ initImage:
 app:
   org: starkandwayne
   repo: ultimate-guide-to-bosh
-  commitSHA: "b2735c9"
 
   setup_script: |
     #!/bin/sh

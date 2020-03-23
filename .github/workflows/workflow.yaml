@@ -30,7 +30,7 @@ jobs:
         KUBECONFIG: ${{ github.workspace }}/.kubeconfig
       with:
         command: |
-          helmv3 -n ultimateguides-staging upgrade --install ultimateguidetobosh starkandwayne/git-website -f $GITHUB_WORKSPACE/deployment/staging-values.yml
+          helmv3 -n ultimateguides-staging upgrade --install ultimateguidetobosh starkandwayne/git-website -f $GITHUB_WORKSPACE/deployment/staging-values.yml --set app.commitSHA=${{ github.sha }}
 
     - name: Smoke Test  
       uses: stefanprodan/kube-tools@v1
@@ -67,7 +67,7 @@ jobs:
         KUBECONFIG: ${{ github.workspace }}/.kubeconfig
       with:
         command: |
-          helmv3 -n ultimateguides-prod upgrade --install ultimateguidetobosh starkandwayne/git-website -f $GITHUB_WORKSPACE/deployment/prod-values.yml
+          helmv3 -n ultimateguides-prod upgrade --install ultimateguidetobosh starkandwayne/git-website -f $GITHUB_WORKSPACE/deployment/prod-values.yml --set app.commitSHA=${{ github.sha }}
 
     - name: Smoke Test  
       uses: stefanprodan/kube-tools@v1

@@ -342,7 +342,9 @@ To **rename** the `zookeeper` instance group in our `zookeeper` deployment manif
 ```yaml
 instance_groups:
 - name: zk
-  migrated_from: [zookeeper, zookeeper-instances]
+  migrated_from:
+  - name: zookeeper
+  - name: zookeeper-instances
   ...
 ```
 

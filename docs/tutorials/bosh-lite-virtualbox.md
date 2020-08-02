@@ -157,7 +157,7 @@ Next, the CLI will display the proposed changes to the deployment. Since we are 
 + releases:
 + - name: zookeeper
 +   url: git+https://github.com/cppforlife/zookeeper-release
-+   version: 0.0.70
++   version: 0.0.10
 
 + update:
 +   canaries: 2

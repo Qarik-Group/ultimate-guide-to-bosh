@@ -73,8 +73,8 @@ bosh update-cloud-config bosh-deployment/warden/cloud-config.yml
 ```
 
 ```
-wget --content-disposition https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent
-bosh upload-stemcell bosh-stemcell-*-warden-boshlite-ubuntu-trusty-go_agent.tgz
+wget --content-disposition https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-xenial-go_agent
+bosh upload-stemcell bosh-stemcell-*-warden-boshlite-ubuntu-xenial-go_agent.tgz
 ```
 
 ## SSH into BOSH Environment
@@ -151,13 +151,13 @@ Next, the CLI will display the proposed changes to the deployment. Since we are 
 ```
 + stemcells:
 + - alias: default
-+   os: ubuntu-trusty
-+   version: '3468'
++   os: ubuntu-xenial
++   version: '621.78'
 
 + releases:
 + - name: zookeeper
 +   url: git+https://github.com/cppforlife/zookeeper-release
-+   version: 0.0.7
++   version: 0.0.10
 
 + update:
 +   canaries: 2

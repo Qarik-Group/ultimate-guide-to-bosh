@@ -17,6 +17,6 @@ app:
 
   setup_script: |
     #!/bin/sh
-    pip install 'pymdown-extensions<5.0' 'Markdown<3.0' 'mkdocs<1.0' 'mkdocs-material<3.0'
+    pip install 'pymdown-extensions<=8.0' 'Markdown<=3.2.2' 'mkdocs<=1.1.2' 'mkdocs-material<=5.5.9'
     mkdocs build
     mv /tmp/website/site/* /var/www/

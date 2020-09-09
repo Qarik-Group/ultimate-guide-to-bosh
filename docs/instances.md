@@ -75,7 +75,7 @@ worker/194ac3c7-0a07-4681-ade9-afbf0e47a1a9     -             running         10
 ~                                               garden        running         -
 ```
 
-In this deployment we have four different instance groups: `db`, `haproxy`, `web` (there are two instances), and `worker` (I've show one of them above but our deployment of [Concourse](https://concourse.ci/) has many `worker` instances).
+In this deployment we have four different instance groups: `db`, `haproxy`, `web` (there are two instances), and `worker` (I've shown one of them above but our deployment of [Concourse](https://concourse.ci/) has many `worker` instances).
 
 Each highlighted `worker` instance is running three processes: `baggageclaim`, `beacon`, and `garden`.
 

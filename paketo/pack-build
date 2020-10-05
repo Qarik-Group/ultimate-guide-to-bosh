@@ -4,6 +4,6 @@ pack build ultimate-guide-bosh \
         --builder paketobuildpacks/builder:base \
         --buildpack gcr.io/paketo-community/python \
         --buildpack gcr.io/paketo-buildpacks/procfile \
-        --env-file pip.env # \
-#        --clear-cache \
-#         --default-process build
+        --env-file pip.env \
+        --clear-cache \
+        --default-process build

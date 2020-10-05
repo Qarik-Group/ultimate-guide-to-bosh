@@ -1,5 +1,5 @@
 site_name: Ultimate Guide to BOSH
-pages:
+nav:
   - Guide:
     - Welcome: index.md
     - Introduction: introduction.md

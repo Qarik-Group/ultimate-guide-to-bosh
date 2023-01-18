@@ -32,4 +32,14 @@ locally with:
 mkdocs serve
 ```
 
+## Manual deployment
+
+```
+mkdocs build
+cd site
+
+gsutil -m rsync -r -x '\.git.*' . gs://ultimateguidetobosh-com-website
+
+```
+
 View the site and live changes at https://localhost:8000.

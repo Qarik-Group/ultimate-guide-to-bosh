@@ -137,13 +137,12 @@ Compare this manifest to the earlier version and see that we have modified the f
 
 These were the only attributes in our manifest subset that were easily modifiable or renameable.
 
-Conversely, the following attributes of the manifest were not easily modifiable:
+Conversely, the following attributes of the manifest are not easily modifiable:
 
-* the `name` of each item in the `releases` section comes from the BOSH release we use; we cannot rename or alias them within the manifest
-* the `version` and `url` are related to each other to describe which BOSH release to use; if we want to upgrade to a newer release we would change these
-* within `jobs` sections of instance groups the `release` must match one of the names in the top-level `releases` section. At the top-level these are immutable, so they are correspondingly immutable within the `jobs` sections of instance groups.
-* within `jobs` sections of instance groups, the `name` of a job template is derived from the BOSH release itself (more on this soon), and cannot be renamed or aliased within a deployment manifest.
-
+* The `name` of each item in the `releases` section comes from the BOSH release. We cannot rename or alias the name of a BOSH release within the deployment manifest.
+* The `version` and `url` are related to each other to describe which BOSH release to use. If we want to upgrade to a newer release, we would change them accordingly.
+* The `release` in the instance group's `jobs` section must match one of the names in the top-level `releases` section. At the top-level these are immutable, so they are correspondingly immutable within the `jobs` sections of instance groups.
+* The `name` of a job template in the instance group's `jobs` section is derived from the BOSH release itself (more on this soon). We cannot rename or alias the job template of a BOSH release within the deployment manifest.
 
 ## Cloud Config, Part 1
 

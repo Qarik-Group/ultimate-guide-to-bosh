@@ -93,9 +93,10 @@ jobs:
   properties: {}
 ```
 
-This `jobs` section declares that it will install a job template called `zookeeper` from the release named `zookeeper`. The consistency of naming the deployment, instance group, release, and job templates all `zookeeper` is mentally efficient eventually.
+This `jobs` section declares that it will install a job template called `zookeeper` from the release named `zookeeper`.
 
-But right now, you might find it confusing.
+!!! note
+    The consistency of naming the deployment, instance group, release, and job templates all `zookeeper` is mentally efficient eventually. But right now, you might find it confusing.
 
 ## Immutable Manifest Attributes
 

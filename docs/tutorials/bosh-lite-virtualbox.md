@@ -6,7 +6,7 @@ In this section we will start with nothing except your local laptop or desktop c
 
 You will need the `bosh` CLI.
 
-For our VirtualBox environment you will also need to download and install Oracle VirtualBox.
+For our VirtualBox environment you will also need to download and install Oracle VirtualBox. This tutorial won't work with VirtualBox 6.1+ for now, please stick with VirtualBox 6.0 series (see https://github.com/cloudfoundry/bosh-deployment/issues/378). Also, this will provision a virtual machine with 6GB of RAM, be sure your computer will have enough ressources.
 
 Install the `git` CLI to allow us to clone the `bosh-deployment` and `zookeeper-release` project repositories.
 

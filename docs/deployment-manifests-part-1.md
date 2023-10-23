@@ -222,7 +222,7 @@ instance_groups:
 
 The name `default` is not particularly meaningful. In the deployment manifest above there is no indication of the amount of resources each `zookeeper` cloud server will be allocated on the target cloud infrastructure. 1GB RAM or 16GB? How many CPUs?
 
-As a counter example, the community method for deploying Cloud Foundry assumes that your `cloud-config` contains multiple `vm_types` that are named ([see `cf-deployment.yml`](https://github.com/cloudfoundry/cf-deployment/blob/master/cf-deployment.yml)):
+As a counter example, the community method for deploying Cloud Foundry assumes that your `cloud-config` contains multiple `vm_types` (see [`cf-deployment.yml`](https://github.com/cloudfoundry/cf-deployment/blob/master/cf-deployment.yml)):
 
 * `minimal`
 * `small`

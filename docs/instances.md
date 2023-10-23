@@ -211,7 +211,7 @@ The good news is that Monit has an [extensive set of configuration](https://mmon
 
 Let's regroup and reestablish what we know:
 
-`bosh instances --ps` displays a list of processes and their `running` or otherwise state. This information comes directly from Monit running on each instance.
+`bosh instances --ps` displays a list of processes and their state, e.g. `running`. This information comes directly from Monit running on each instance.
 
 In daily life, you will run `monit summary` or `bosh instances --ps` as part of debugging.
 

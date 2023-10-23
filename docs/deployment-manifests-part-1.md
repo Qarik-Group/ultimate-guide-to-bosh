@@ -84,7 +84,7 @@ This group of instances will be known within the deployment by its name `zookeep
 
 Each instance in the group will have a 10GB persistent disk (the plain number `10240` is in MB).
 
-The software, configuration, and start/stop scripts running on each `zookeeper` instance is described by the `jobs:` section of an instance group.
+The `jobs` section of an instance group describes how to configure and run software on each `zookeeper` instance.
 
 ```yaml
 jobs:

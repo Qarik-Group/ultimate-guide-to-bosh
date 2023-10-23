@@ -6,7 +6,7 @@ A deployment manifest is the explicit declaration of what software needs to run,
 
 **The same deployment manifest deployed today should produce the same running system if you deployed it again in five years time.**
 
-Our first example deployment manifest will be `zookeeper.yml`, which I've been referring to throughout the Ultimate Guide to BOSH so far (the [original file](https://github.com/cppforlife/zookeeper-release/blob/207c9d79eb12399dffe6df7f89abd854d4888f3e/manifests/zookeeper.yml) at time of writing). Below is a subset of the manifest that references the concepts covered so far:
+Our first example deployment manifest will be `zookeeper.yml`, which I've been referring to throughout the Ultimate Guide to BOSH so far (the [original file](https://github.com/cppforlife/zookeeper-release/blob/207c9d79eb12399dffe6df7f89abd854d4888f3e/manifests/zookeeper.yml) at the time of writing). Below is a subset of the manifest that references the concepts covered so far:
 
 ```yaml
 ---

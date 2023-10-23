@@ -514,7 +514,8 @@ The ephemeral lifespan of virtual machines needs to be considered and fortunatel
 
 If the BOSH director ever discovers that an instance has disappeared or has become unresponsive, it will fix the problem. The BOSH director will resurrect any missing instances.
 
-**Resurrection of infrastructure is an incredibly powerful feature of BOSH that makes it essential to your organization.** And your personal life.
+!!! tip
+    Resurrection of infrastructure is an incredibly powerful feature of BOSH that makes it essential to your organization. And your personal life.
 
 If the original server is missing (perhaps the cloud provider lost the host machine or perhaps someone with admin permissions accidentally deleted it), the BOSH director creates a new server.
 

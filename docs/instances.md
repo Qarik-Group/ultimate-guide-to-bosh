@@ -297,7 +297,8 @@ As it happens, within our `zookeeper` example deployment each `zookeeper` instan
 
 In summary, all job templates - the configuration of how software is configured and executed - are located on every BOSH instance around the world in the same location: `/var/vcap/jobs/`
 
-**Conventions like this radically lower the mental challenges of support/debugging on running production systems.** You will discover BOSH has many pleasant conventions across all deployments.
+!!! note
+    Conventions like this radically lower the mental challenges of support/debugging on running production systems. You will discover BOSH has many pleasant conventions across all deployments.
 
 Job templates must contain a `monit` file, but that `monit` file can be empty if the job template does not require any processes to be run.
 

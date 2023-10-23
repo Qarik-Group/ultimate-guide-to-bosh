@@ -2,7 +2,7 @@
 
 To provision a new deployment, we provide a deployment manifest to the BOSH director. To make modifications to an existing deployment, we provide the BOSH director with a modified deployment manifest.
 
-A deployment manifest is the explicit declaration of what software needs to run, with specific configuration properties, on each different instance.
+A deployment manifest is an explicit declaration of what software needs to run, with specific configuration properties, on each distinct instance.
 
 **The same deployment manifest deployed today should produce the same running system if you deployed it again in five years time.**
 

@@ -40,7 +40,7 @@ The goal of a deployment manifest is to describe a deployment that will be repro
 
 In the example manifest above, the top level sections of this YAML file are:
 
-* `name` is the unique name of this deployment within a BOSH director. When a BOSH director receives subsequent deployment manifests with the same `name` it will assume it is an upgrade of the existing deployment.
+* `name` is the unique name of this deployment within a BOSH director. The BOSH director interprets a subsequent deployment manifest with the same `name` value as an upgrade of the existing deployment.
 * `releases` lists the specific BOSH release versions that are to be used, which almost means the specific sets of job templates and packages.
 * `instance_groups` lists the sets of instances that will run the same job templates/packages as each other. Instance groups will be deployed as long running instances by default. The configuration `lifecycle: errand` means they will instead be errands (to be discussed later).
 

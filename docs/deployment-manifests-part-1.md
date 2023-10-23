@@ -53,7 +53,7 @@ In our example subset manifest above, there are two attributes we can change to 
 
 For a brand new deployment, setting these attributes and invoking `bosh deploy` will establish the initial CPI requests to the cloud infrastructure.
 
-For an existing deployment, changing these attributes and invoking `bosh deploy` will perform a transformation of your system from its current cloud infrastructure servers and disks to the new requirements - more or fewer servers, and/or smaller or large persistent disks.
+For an existing deployment, changing these attributes and invoking `bosh deploy` will perform a transformation of your system from its current cloud infrastructure servers and disks to the new requirements - more or fewer servers, and/or smaller or larger persistent disks.
 
 We will review how the BOSH director performs these transformations of existing deployments later. It's pretty fabulous.
 

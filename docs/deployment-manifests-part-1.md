@@ -292,8 +292,12 @@ At a glance, Apache ZooKeeper will expect to communicate with its peer nodes on 
 
 This `config/zoo.cfg` configuration is meaningful to Apache ZooKeeper and the `zkServer.sh` start script. The contents of the configuration file are not meaningful to BOSH, but the file was created by BOSH.
 
-The deployment manifest `zookeeper.yml` did not need to explicitly allocate the five IP addresses above (also found by running `bosh instances`), nor did the manifest need to explicitly document them for the `zookeeper` job template. Instead, all the IP addresses for all members of the `zookeeper` instance group were automatically provided to the `zookeeper` job template before `monit` attempted to start any processes. We will look at how to write your own job templates in your own BOSH releases in later sections.
+The deployment manifest `zookeeper.yml` did not need to explicitly allocate the five IP addresses above (also found by running `bosh instances`), nor did the manifest need to explicitly document them for the `zookeeper` job template. Instead, all the IP addresses for all members of the `zookeeper` instance group were automatically provided to the `zookeeper` job template before `monit` attempted to start any processes. We will look at how to write your own job templates in your own BOSH releases in the later sections.
 
-The more urgent piece of information you will want to know why were these five `zookeeper` instances allocated those five IP addresses, why are the five underlying cloud servers allowed to talk to each other, is anything special required for them to communicate over ports `2888` and `3888` but prevent other systems from accessing these ports, and how are client applications allowed to access these five cloud servers over port `2181`.
+But now there are several urgent questions demanding answers:
+* Why were these five `zookeeper` instances allocated those five IP addresses?
+* Why are the five underlying cloud servers allowed to talk to each other?
+* Is anything special required for them to let `zookeeper` instances communicate over ports `2888` and `3888` while preventing other systems from accessing these ports?
+* How are client applications allowed to access these five cloud servers over port `2181`?
 
-And if you're confused at all by that last paragraph, then you are ready for the next section.
+If you're totally confused by the previous paragraph, then you are ready for the next section.

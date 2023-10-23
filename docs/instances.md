@@ -589,7 +589,8 @@ In addition to the small root volume, each BOSH instance is allocated an additio
 
 The size of `/var/vcap/data` is configurable and large, where as the `/` root volume is fixed and small.
 
-**We want to use `/var/vcap/data` for storing everything that is ephemeral, `/var/vcap/store` for everything that is permanent, and avoid the root volume.**
+!!! tip
+    BOSH design expects that `/var/vcap/data` is used to store ephemeral data,  while `/var/vcap/store` should contain permanent data. Writing data to the root volume is strongly discouraged.
 
 For example, we want to use `/var/vcap/data` to install software packages, job templates, and log files. Except I've previously indicated that the filesystem location for these three was `/var/vcap/packages`, `/var/vcap/jobs`, and `/var/vcap/sys/log`.
 

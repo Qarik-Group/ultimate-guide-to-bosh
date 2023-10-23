@@ -127,15 +127,13 @@ instance_groups:
     release: zookeeper
 ```
 
-Compare this manifest to the earlier version and see that we have modified the following attributes:
+Compare this manifest to the earlier version to see the following list of easily modifiable or renameable attributes:
 
-* deployment name changed to `zookeeper-deployment`
-* instance group `zookeeper` renamed to `zookeeper-instances`
-* we've reduced the cluster size from 5 instances to 3
-* we've resized the persistent disk from 10GB to 20GB
-* errand `smoke-tests` renamed to `smoke-tests-errand`
-
-These were the only attributes in our manifest subset that were easily modifiable or renameable.
+* deployment name `zookeeper` was changed to `zookeeper-deployment`
+* instance group `zookeeper` was renamed to `zookeeper-instances`
+* we reduced the cluster size from 5 instances to 3
+* we resized the persistent disk from 10GB to 20GB
+* errand `smoke-tests` was renamed to `smoke-tests-errand`
 
 Conversely, the following attributes of the manifest were not easily modifiable:
 

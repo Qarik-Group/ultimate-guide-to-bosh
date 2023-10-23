@@ -42,6 +42,6 @@ If you are having issues or questions about individual BOSH releases or deployme
 
 ## Consulting and commercial assistance
 
-Stark & Wayne is a boutique consultancy that offers you work with you for short and long term engagements to roll out BOSH, migrate existing systems, and deploy new systems. I founded Stark & Wayne in 2012 and it has grown from strength to strength with the rising tide of Cloud Foundry and the shared success of all Cloud Foundry Foundation members.
+Stark & Wayne is a boutique consultancy that can assist you  with short and long term engagements to roll out BOSH, migrate existing and/or deploy new systems. I founded Stark & Wayne in 2012 and it has grown from strength to strength with the rising tide of Cloud Foundry and the shared success of all Cloud Foundry Foundation members.
 
 We would very much like the opportunity to help you on your journey with BOSH, CI/CD, and devops.

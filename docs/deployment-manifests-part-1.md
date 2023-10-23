@@ -36,7 +36,7 @@ instance_groups:
 
 BOSH deployment manifests use [YAML](http://yaml.org/) markup language. YAML is a relatively human-readable format though your friendship with YAML will be stretched when deployment manifests grow beyond a 100 lines or more.
 
-The goal of a deployment manifest is to describe a deployment that will be reproducible again and again in the future. Three years from now we do not want to accidentally see different packages or configuration files being installed unless we explicit upgraded to them.
+The goal of a deployment manifest is to describe a deployment that will be reproducible again and again in the future. Three years from now we do not want to accidentally see different packages or configuration files being installed unless we explicitly upgraded to them.
 
 In the example manifest above, the top level sections of this YAML file are:
 

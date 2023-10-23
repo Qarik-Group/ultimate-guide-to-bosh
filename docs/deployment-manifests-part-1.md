@@ -147,11 +147,13 @@ Conversely, the following attributes of the manifest were not easily modifiable:
 
 ## Cloud Config, Part 1
 
-The number of instances and the size of persistent disks are attributes that are not specific to which cloud infrastructure you are using. Conversely, the specific details about the size of the servers is specific to each cloud infrastructure. On vSphere, you will want to specify the explicit allocation of CPUs, RAM, and ephemeral disk. Whereas, when using Amazon EC2 you might choose between a list of [Instance Types](https://aws.amazon.com/ec2/instance-types/) such as `m4.large` or `t2.medium`. Similarly, GCP [Machine Types](https://cloud.google.com/compute/docs/machine-types) have a list of predefined sizes you can provision, albeit with a different set of names such as `n1-standard-1` and different attributes from Amazon EC2.
+Certain deployment attributes like instances or persistent disks have the same meaning for any cloud infrastructure. In other words, both instance count or persistent disk size represent the number of servers and the disk size in MB whether we are speaking of vSphere, GCP or AWS.
 
-This crossover from the deployment manifest to specific cloud infrastructure requirements is not placed in the deployment manifest. Instead, we will have provided our BOSH director with "Cloud Config" to educate it about how we wish our deployment manifests to be applied to our cloud infrastructure.
+Conversely, other deployment attributes like the server resources specification heavily depend on the cloud infrastructure. Speaking of the server sizing for your deployment on vSphere, you reason about CPUs, RAM, and ephemeral disk which typically can be mixed and matched in the desired proportions. However, when using Amazon EC2, you need to choose one of the server resource bundles called [Instance Types](https://aws.amazon.com/ec2/instance-types/) such as `m4.large` or `t2.medium`. Similarly, GCP bundles server resources via [Machine Types](https://cloud.google.com/compute/docs/machine-types) such as `n1-standard-1` or `n1-standard-2`.
 
-Each BOSH director has a Cloud Config specification. We can download and view a BOSH director's Cloud Config:
+This crossover from the deployment manifest to specific cloud infrastructure requirements is not placed in the deployment manifest. Instead, we supply the BOSH director with cloud configuration (a.k.a. Cloud Config).
+
+Each BOSH director has a Cloud Config which is accessible via the `cloud-config` command:
 
 ```
 bosh cloud-config

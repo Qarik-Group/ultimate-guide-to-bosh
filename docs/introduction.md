@@ -114,7 +114,7 @@ The "tool" that implemented this solution is a running server - a BOSH environme
 * receives requests from operators, who primarily use the `bosh` CLI;
 * interacts with cloud infrastructures to provision and de-provision cloud servers and disks;
 * interacts with running servers to configure and monitor long-running processes;
-* monitors the health of cloud servers and performs remedial actions to recreate or fix any missing infrastructure
+* monitors the health of cloud servers and performs remedial actions to recreate or fix any missing infrastructure.
 
 Today, small teams and large businesses are using BOSH to run a wide variety of systems including, but not limited to, platforms such as Cloud Foundry, Kubernetes, DC/OS, Docker, Habitat, and Nomad. It is used to run database clusters. It can run source control systems. It can run web applications.
 
